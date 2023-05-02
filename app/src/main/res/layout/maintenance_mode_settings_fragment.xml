@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
+            style="@style/StyleStartGuideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
+            style="@style/StyleEndGuideline"/>
+
+        <include
+            android:id="@+id/includeToolbar"
+            layout="@layout/include_toolbar_back"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewMaintenanceModeText"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack14"
+            android:alpha="0.7"
+            android:text="@string/label_put_under_maintenance_mode_all_your_spaces_or_less_until_you_turn_them_back_on"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/includeToolbar"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintDisableNotifications"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            style="@style/ChangeBackgroundTintWhiteToBlack1C"
+            android:background="@drawable/dw_corner_four_bg"
+            android:layout_marginTop="@dimen/dp_16"
+            android:paddingVertical="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/textViewMaintenanceModeText">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewDisableAllNotification"
+                style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+                android:text="@string/label_disable_notifications_for_all_spaces"
+                android:layout_marginStart="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintDisableNotifications"
+                app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchDisableAllNotifications"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginEnd="@dimen/dp_16"
+                app:layout_constraintEnd_toEndOf="@id/constraintDisableNotifications"
+                app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
+               />
+
+            <RadioGroup
+                android:id="@+id/radioGroupAllNotifications"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginStart="@dimen/dp_10"
+                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_20"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/constraintDisableNotifications"
+                app:layout_constraintTop_toBottomOf="@id/textViewDisableAllNotification"
+                app:layout_constraintEnd_toEndOf="@id/constraintDisableNotifications">
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonForever"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/label_forever"
+                    android:checked="true"
+                    android:button="@drawable/dw_radio_button_selector"
+                    android:paddingStart="@dimen/dp_8"/>
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonUntil"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="@string/label_until"
+                    android:layout_marginStart="@dimen/dp_30"
+                    android:button="@drawable/dw_radio_button_selector"
+                    android:paddingStart="@dimen/dp_8"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewUntilDate"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:text="DD/MM/YY, HH:MM"
+                    android:fontFamily="@font/font_ibm_plex_sans_regular"
+                    android:textSize="@dimen/sp_14"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_marginStart="@dimen/dp_4"
+                    android:drawableEnd="@drawable/ic_arrow_down"
+                    android:drawablePadding="@dimen/dp_6"/>
+
+            </RadioGroup>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/viewOrStart"
+            android:layout_height="@dimen/dp_2"
+            android:layout_width="@dimen/dp_0"
+            style="@style/ChangeBackgroundWhiteToBlack1C"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toStartOf="@id/textViewLabelOr"
+            app:layout_constraintTop_toTopOf="@id/textViewLabelOr"
+            app:layout_constraintBottom_toBottomOf="@id/textViewLabelOr"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelOr"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_or"
+            android:layout_marginHorizontal="@dimen/dp_30"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toEndOf="@id/viewOrStart"
+            app:layout_constraintEnd_toStartOf="@id/viewOrEnd"
+            app:layout_constraintTop_toBottomOf="@id/constraintDisableNotifications"/>
+
+        <View
+            android:id="@+id/viewOrEnd"
+            android:layout_height="@dimen/dp_2"
+            android:layout_width="@dimen/dp_0"
+            style="@style/ChangeBackgroundWhiteToBlack1C"
+            app:layout_constraintStart_toEndOf="@id/textViewLabelOr"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toTopOf="@id/textViewLabelOr"
+            app:layout_constraintBottom_toBottomOf="@id/textViewLabelOr"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewDisableEachNotifications"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_disable_notifications_for_each_space_separately"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelOr"/>
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/editTextSearchServices"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppCompatEditTextSearch"
+            android:hint="@string/hint_search_services"
+            android:drawableStart="@drawable/ic_search"
+            android:drawablePadding="@dimen/dp_14"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/textViewDisableEachNotifications"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewMaintenanceMode"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            android:layout_marginTop="@dimen/dp_8"
+            tools:listitem="@layout/row_item_maintenance_mode_settings"
+            tools:itemCount="3"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/editTextSearchServices"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

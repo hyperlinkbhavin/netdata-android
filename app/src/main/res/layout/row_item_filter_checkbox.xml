@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/dp_6"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/checkBoxFilter"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:button="@drawable/dw_checkbox_selector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewFilterName"
+        style="@style/AppTheme.AppTextView.RegularBlack35ToGrey8F14"
+        tools:text="Text"
+        android:layout_marginStart="@dimen/dp_8"
+        app:layout_constraintStart_toEndOf="@id/checkBoxFilter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewPriority"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_high_priority"
+        android:layout_marginStart="@dimen/dp_10"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/textViewFilterName"
+        app:layout_constraintTop_toTopOf="@id/textViewFilterName"
+        app:layout_constraintBottom_toBottomOf="@id/textViewFilterName"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewFilterCount"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/ChangeBackgroundTintGreenToGrey53"
+        tools:text="3"
+        android:textSize="@dimen/sp_12"
+        android:textColor="@color/colorWhite"
+        android:paddingHorizontal="@dimen/dp_8"
+        android:paddingVertical="@dimen/dp_2"
+        android:background="@drawable/dw_corner_thirty_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

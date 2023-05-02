@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/ic_back_ground">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_height="@dimen/dp_38"
+        android:layout_width="@dimen/dp_48"
+        android:src="@drawable/ic_logo"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageViewNetdata"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewNetdata"
+        android:layout_height="@dimen/dp_24"
+        android:layout_width="@dimen/dp_183"
+        style="@style/ChangeTintColor"
+        android:src="@drawable/ic_netdata"
+        android:scaleType="fitXY"
+        android:layout_marginStart="@dimen/dp_16"
+        app:layout_constraintStart_toEndOf="@id/imageViewLogo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/imageViewLogo"
+        app:layout_constraintBottom_toBottomOf="@id/imageViewLogo"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

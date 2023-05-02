@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_back_ground"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        style="@style/StyleStartGuideline"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        style="@style/StyleEndGuideline" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_height="@dimen/dp_38"
+        android:layout_width="@dimen/dp_48"
+        android:layout_marginTop="@dimen/dp_100"
+        android:src="@drawable/ic_logo"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toStartOf="@id/imageViewNetdata"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewNetdata"
+        android:layout_height="@dimen/dp_24"
+        android:layout_width="@dimen/dp_183"
+        style="@style/ChangeTintColor"
+        android:src="@drawable/ic_netdata"
+        android:scaleType="fitXY"
+        android:layout_marginStart="@dimen/dp_16"
+        app:layout_constraintStart_toEndOf="@id/imageViewLogo"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintTop_toTopOf="@id/imageViewLogo"
+        app:layout_constraintBottom_toBottomOf="@id/imageViewLogo"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewWelcomeText"
+        style="@style/AppTheme.AppTextView.MediumBlack18"
+        android:layout_marginTop="@dimen/dp_30"
+        android:text="@string/label_welcome_to_netdata_notifications"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintTop_toBottomOf="@id/imageViewLogo"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonSignInWithEmailAddress"
+        style="@style/AppCompatButtonGreen"
+        android:text="@string/btn_sign_in_with_qr_code"
+        android:layout_marginBottom="@dimen/dp_24"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintBottom_toTopOf="@id/textViewOR"/>
+
+    <View
+        android:id="@+id/viewStart"
+        android:layout_height="@dimen/dp_1"
+        android:layout_width="@dimen/dp_0"
+        android:background="@color/colorWhite"
+        android:layout_marginEnd="@dimen/dp_30"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toStartOf="@id/textViewOR"
+        app:layout_constraintTop_toTopOf="@id/textViewOR"
+        app:layout_constraintBottom_toBottomOf="@id/textViewOR"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewOR"
+        style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+        android:text="@string/label_or"
+        android:layout_marginBottom="@dimen/dp_24"
+        app:layout_constraintStart_toEndOf="@id/viewStart"
+        app:layout_constraintEnd_toStartOf="@id/viewEnd"
+        app:layout_constraintBottom_toTopOf="@id/buttonSignInWithQRCode"/>
+
+    <View
+        android:id="@+id/viewEnd"
+        android:layout_height="@dimen/dp_1"
+        android:layout_width="@dimen/dp_0"
+        android:background="@color/colorWhite"
+        android:layout_marginStart="@dimen/dp_30"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@id/textViewOR"
+        app:layout_constraintTop_toTopOf="@id/textViewOR"
+        app:layout_constraintBottom_toBottomOf="@id/textViewOR"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonSignInWithQRCode"
+        style="@style/AppCompatButtonBlack"
+        android:text="@string/btn_sign_in_with_qr_code"
+        android:layout_marginBottom="@dimen/dp_20"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

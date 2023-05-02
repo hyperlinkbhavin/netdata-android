@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/dp_15"
+    android:paddingHorizontal="@dimen/dp_20"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewSettings"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/ChangeTintColor"
+        android:src="@drawable/ic_settings_maintenance_mode"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewSettingsName"
+        style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+        tools:text="Settings"
+        android:layout_marginStart="@dimen/dp_10"
+        app:layout_constraintStart_toEndOf="@id/imageViewSettings"
+        app:layout_constraintTop_toTopOf="@id/imageViewSettings"
+        app:layout_constraintBottom_toBottomOf="@id/imageViewSettings"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewSettingsDescription"
+        android:layout_width="@dimen/dp_0"
+        style="@style/AppTheme.AppTextView.RegularBlack12"
+        tools:text="From this menu you can disable all your notifications coming from your spaces until you turn them back on"
+        android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:alpha="0.7"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/constraintNext"
+        app:layout_constraintTop_toBottomOf="@id/imageViewSettings"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintNext"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/ChangeBackgroundTintWhiteToGrey8F"
+        android:paddingVertical="@dimen/dp_12"
+        android:paddingHorizontal="@dimen/dp_9"
+        android:background="@drawable/dw_corner_eight_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/textViewSettingsName"
+        app:layout_constraintBottom_toBottomOf="@id/textViewSettingsDescription">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewNext"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:elevation="@dimen/dp_1"
+            android:src="@drawable/ic_back_reverse"
+            app:layout_constraintStart_toStartOf="@id/constraintNext"
+            app:layout_constraintEnd_toEndOf="@id/constraintNext"
+            app:layout_constraintTop_toTopOf="@id/constraintNext"
+            app:layout_constraintBottom_toBottomOf="@id/constraintNext"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

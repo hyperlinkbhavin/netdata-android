@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/dw_dialog_bg"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_back_ground">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelSortBy"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_sort_by"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelClose"
+            style="@style/AppTheme.AppTextView.MediumBlack14"
+            android:text="@string/label_close"
+            android:layout_marginTop="@dimen/dp_16"
+            android:layout_marginEnd="@dimen/dp_16"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBaseline_toBaselineOf="@id/textViewLabelSortBy"/>
+
+        <View
+            android:id="@+id/viewSortBy"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelSortBy"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelTime"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_time"
+            android:layout_marginTop="@dimen/dp_7"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewSortBy"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewTime"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            tools:itemCount="2"
+            tools:listitem="@layout/row_item_select_war_rooms"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelTime"/>
+
+        <View
+            android:id="@+id/viewTime"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewTime"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelNotificationPriority"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_notification_priority"
+            android:layout_marginTop="@dimen/dp_7"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewTime"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewNotificationPriority"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            tools:itemCount="2"
+            tools:listitem="@layout/row_item_select_war_rooms"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationPriority"/>
+
+        <View
+            android:id="@+id/viewNotificationPriority"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewNotificationPriority"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelCriticality"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_criticality"
+            android:layout_marginTop="@dimen/dp_7"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewNotificationPriority"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewCriticality"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            tools:itemCount="2"
+            tools:listitem="@layout/row_item_select_war_rooms"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelCriticality"/>
+
+        <View
+            android:id="@+id/viewCriticality"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            android:layout_marginTop="@dimen/dp_4"
+            app:layout_constraintTop_toBottomOf="@id/recyclerViewCriticality"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

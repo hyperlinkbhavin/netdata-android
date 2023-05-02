@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_marginEnd="@dimen/dp_26"
+    android:layout_marginStart="@dimen/dp_26"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/dp_40"
+    style="@style/ChangeBackgroundTintWhiteToBlack1C"
+    android:background="@drawable/dw_corner_twelve_bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewTitleDeleteAccount"
+        style="@style/AppTheme.AppTextView.MediumBlack16"
+        android:text="@string/title_delete_account"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewDeleteAccountText"
+        style="@style/AppTheme.AppTextView.RegularBlack14"
+        android:alpha="0.5"
+        android:text="Lorem ipsum dolor sit amet,\nsecteturadipiscing elit. Phasellus"
+        android:layout_marginTop="@dimen/dp_8"
+        android:textAlignment="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitleDeleteAccount"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonDelete"
+        style="@style/AppCompatButtonGreenWithCorner28"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="@string/btn_delete"
+        android:textColor="@color/colorWhite"
+        android:layout_marginTop="@dimen/dp_28"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewDeleteAccountText"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonNo"
+        android:layout_width="@dimen/dp_0"
+        style="@style/AppCompatButtonGreenWithCorner28"
+        android:background="@drawable/dw_corner_twenty_six_with_border"
+        android:text="@string/btn_no"
+        android:layout_marginTop="@dimen/dp_16"
+        app:layout_constraintStart_toStartOf="@id/buttonDelete"
+        app:layout_constraintEnd_toEndOf="@id/buttonDelete"
+        app:layout_constraintTop_toBottomOf="@id/buttonDelete"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

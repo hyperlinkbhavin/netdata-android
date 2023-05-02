@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/dw_dialog_bg"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_back_ground">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
+            style="@style/StyleStartGuideline"
+            app:layout_constraintGuide_begin="@dimen/dp_16"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
+            style="@style/StyleEndGuideline"
+            app:layout_constraintGuide_end="@dimen/dp_16"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewWarRoomsBack"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_back"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewWarRoomsBack"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_back"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsBack"
+            app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsBack"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsBack"/>
+
+        <View
+            android:id="@+id/viewBack"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            app:layout_constraintTop_toBottomOf="@id/textViewWarRoomsBack"
+            android:layout_marginTop="@dimen/dp_16"
+            />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintTop"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_marginHorizontal="@dimen/dp_16"
+        app:layout_constraintTop_toBottomOf="@id/viewBack">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewWarRoomsWarning"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_space_warning"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewSpaceWarningPercent"
+            style="@style/AppTheme.AppTextView.BoldBlack14"
+            android:layout_marginStart="@dimen/dp_8"
+            android:text="54.3% •"
+            app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsWarning"
+            app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsWarning"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsWarning"
+            app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningText"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewSpaceWarningText"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack14"
+            android:layout_marginStart="@dimen/dp_4"
+            android:text="@string/label_inbound_packets_dropped_ratio"
+            app:layout_constraintStart_toEndOf="@id/textViewSpaceWarningPercent"
+            app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsWarning"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsWarning"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewGKE"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_notification_priority_gke"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/imageViewWarRoomsWarning"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewGKE"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
+            android:layout_marginStart="@dimen/dp_6"
+            app:layout_constraintStart_toEndOf="@id/imageViewGKE"
+            app:layout_constraintTop_toTopOf="@id/imageViewGKE"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewGKE"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewDiskSpace"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_disk_space"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/imageViewGKE"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewDiskSpace"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:text="disk_space._boot_efi"
+            android:layout_marginStart="@dimen/dp_6"
+            app:layout_constraintStart_toEndOf="@id/imageViewDiskSpace"
+            app:layout_constraintTop_toTopOf="@id/imageViewDiskSpace"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewDiskSpace"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/viewConstraintTop"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            app:layout_constraintTop_toBottomOf="@id/constraintTop"
+            android:layout_marginTop="@dimen/dp_16"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelNotificationExists"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_this_notification_exists_in_the_following_war_rooms"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/viewConstraintTop"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewNotificationExists"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            android:layout_marginTop="@dimen/dp_15"
+            tools:listitem="@layout/row_item_existis_war_rooms_list"
+            tools:itemCount="3"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationExists"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/ic_back_ground">
+
+    <include
+        android:id="@+id/includeToolbar"
+        layout="@layout/include_toolbar_back"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        style="@style/StyleStartGuideline"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        style="@style/StyleEndGuideline"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintDayTheme"
+        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/dp_20"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewDayTheme"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_day_theme"
+            app:layout_constraintStart_toStartOf="@id/constraintDayTheme"
+            app:layout_constraintTop_toTopOf="@id/constraintDayTheme"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewTitleDayTheme"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/label_day_theme"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:layout_marginStart="@dimen/dp_8"
+            app:layout_constraintStart_toEndOf="@id/imageViewDayTheme"
+            app:layout_constraintTop_toTopOf="@id/imageViewDayTheme"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewDayTheme"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewDayThemeText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/AppTheme.AppTextView.RegularBlack12"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@string/label_from_this_menu_you_can_change_to_light_mode"
+            app:layout_constraintTop_toBottomOf="@id/textViewTitleDayTheme"
+            app:layout_constraintStart_toStartOf="@id/constraintDayTheme"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioButtonDayTheme"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:button="@drawable/dw_radio_button_selector"
+            app:layout_constraintEnd_toEndOf="@id/constraintDayTheme"
+            app:layout_constraintTop_toTopOf="@id/textViewTitleDayTheme"
+            app:layout_constraintBottom_toBottomOf="@id/textViewDayThemeText"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintNightTheme"
+        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_0"
+        android:layout_marginTop="@dimen/dp_27"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintTop_toBottomOf="@id/constraintDayTheme">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewNightTheme"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_night_theme"
+            app:layout_constraintStart_toStartOf="@id/constraintNightTheme"
+            app:layout_constraintTop_toTopOf="@id/constraintNightTheme"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewTitleNightTheme"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/label_night_theme"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:layout_marginStart="@dimen/dp_8"
+            app:layout_constraintStart_toEndOf="@id/imageViewNightTheme"
+            app:layout_constraintTop_toTopOf="@id/imageViewNightTheme"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewNightTheme"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewNightThemeText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/AppTheme.AppTextView.RegularBlack12"
+            android:layout_marginTop="@dimen/dp_8"
+            android:text="@string/label_from_this_menu_you_can_change_to_dark_mode"
+            app:layout_constraintTop_toBottomOf="@id/textViewTitleNightTheme"
+            app:layout_constraintStart_toStartOf="@id/constraintNightTheme"/>
+
+        <androidx.appcompat.widget.AppCompatRadioButton
+            android:id="@+id/radioButtonNightTheme"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:button="@drawable/dw_radio_button_selector"
+            app:layout_constraintEnd_toEndOf="@id/constraintNightTheme"
+            app:layout_constraintTop_toTopOf="@id/textViewTitleNightTheme"
+            app:layout_constraintBottom_toBottomOf="@id/textViewNightThemeText"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonDone"
+        style="@style/AppCompatButtonGreen"
+        android:text="@string/btn_done"
+        android:layout_marginBottom="@dimen/dp_20"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

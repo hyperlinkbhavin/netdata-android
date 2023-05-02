@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/dp_20">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
+            style="@style/StyleStartGuideline"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
+            style="@style/StyleEndGuideline"/>
+
+        <include
+            android:id="@+id/includeToolbar"
+            layout="@layout/include_toolbar_back"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelNotificationPriorityText"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack14"
+            android:alpha="0.7"
+            android:text="@string/label_from_this_menu_you_can_adjust_and_apply_custom_options_per_notification_priority"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/includeToolbar"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintHighPriority"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            style="@style/ChangeBackgroundTintWhiteToBlack1C"
+            android:background="@drawable/dw_corner_four_bg"
+            android:layout_marginTop="@dimen/dp_16"
+            android:padding="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationPriorityText">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelHighPriority"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_high_priority"
+                android:drawableStart="@drawable/ic_high_priority"
+                android:drawablePadding="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                app:layout_constraintTop_toTopOf="@id/constraintHighPriority"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchHighPrioritySound"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelHighPriority"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelHighPrioritySound"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_sound"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchHighPrioritySound"
+                app:layout_constraintTop_toTopOf="@id/switchHighPrioritySound"
+                app:layout_constraintBottom_toBottomOf="@id/switchHighPrioritySound"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewHighPrioritySoundTune"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppTheme.AppTextView.RegularBlackWithBackgroundTint12"
+                android:text="tick-tack-you-don’t-stop.mp3"
+                android:layout_marginTop="@dimen/dp_16"
+                android:padding="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="gone"
+                android:background="@drawable/dw_corner_four_bg"
+                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                app:layout_constraintEnd_toStartOf="@id/buttonHighPriorityChangeSoundTune"
+                app:layout_constraintTop_toBottomOf="@id/switchHighPrioritySound"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonHighPriorityChangeSoundTune"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AppCompatButtonGreenWithCorner"
+                android:text="@string/btn_change_selected_tune"
+                android:layout_marginStart="@dimen/dp_8"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/textViewHighPrioritySoundTune"
+                app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
+                app:layout_constraintTop_toTopOf="@id/textViewHighPrioritySoundTune"
+                app:layout_constraintBottom_toBottomOf="@id/textViewHighPrioritySoundTune"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonHighPriorityApplyCustomTune"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AppCompatButtonGreenWithCorner"
+                android:text="@string/btn_apply_custom_tune_from_your_os"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                app:layout_constraintTop_toBottomOf="@id/switchHighPrioritySound"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchHighPriorityBanner"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                app:layout_constraintTop_toBottomOf="@id/buttonHighPriorityApplyCustomTune"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelHighPriorityBanner"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_banner"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchHighPriorityBanner"
+                app:layout_constraintTop_toTopOf="@id/switchHighPriorityBanner"
+                app:layout_constraintBottom_toBottomOf="@id/switchHighPriorityBanner"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchHighPriorityVibration"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                app:layout_constraintTop_toBottomOf="@id/switchHighPriorityBanner"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelHighPriorityVibration"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_vibration"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchHighPriorityVibration"
+                app:layout_constraintTop_toTopOf="@id/switchHighPriorityVibration"
+                app:layout_constraintBottom_toBottomOf="@id/switchHighPriorityVibration"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintMediumPriority"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            style="@style/ChangeBackgroundTintWhiteToBlack1C"
+            android:background="@drawable/dw_corner_four_bg"
+            android:layout_marginTop="@dimen/dp_16"
+            android:padding="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/constraintHighPriority">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelMediumPriority"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_medium_priority"
+                android:drawableStart="@drawable/ic_medium_priority"
+                android:drawablePadding="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                app:layout_constraintTop_toTopOf="@id/constraintMediumPriority"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchMediumPrioritySound"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelMediumPriority"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelMediumPrioritySound"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_sound"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchMediumPrioritySound"
+                app:layout_constraintTop_toTopOf="@id/switchMediumPrioritySound"
+                app:layout_constraintBottom_toBottomOf="@id/switchMediumPrioritySound"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewMediumPrioritySoundTune"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppTheme.AppTextView.RegularBlackWithBackgroundTint12"
+                android:text="tick-tack-you-don’t-stop.mp3"
+                android:layout_marginTop="@dimen/dp_16"
+                android:padding="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="gone"
+                android:background="@drawable/dw_corner_four_bg"
+                app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                app:layout_constraintEnd_toStartOf="@id/buttonMediumPriorityChangeSoundTune"
+                app:layout_constraintTop_toBottomOf="@id/switchMediumPrioritySound"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonMediumPriorityChangeSoundTune"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AppCompatButtonGreenWithCorner"
+                android:text="@string/btn_change_selected_tune"
+                android:layout_marginStart="@dimen/dp_8"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/textViewMediumPrioritySoundTune"
+                app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
+                app:layout_constraintTop_toTopOf="@id/textViewMediumPrioritySoundTune"
+                app:layout_constraintBottom_toBottomOf="@id/textViewMediumPrioritySoundTune"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonMediumPriorityApplyCustomTune"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AppCompatButtonGreenWithCorner"
+                android:text="@string/btn_apply_custom_tune_from_your_os"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                app:layout_constraintTop_toBottomOf="@id/switchMediumPrioritySound"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchMediumPriorityBanner"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                app:layout_constraintTop_toBottomOf="@id/buttonMediumPriorityApplyCustomTune"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelMediumPriorityBanner"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_banner"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchMediumPriorityBanner"
+                app:layout_constraintTop_toTopOf="@id/switchMediumPriorityBanner"
+                app:layout_constraintBottom_toBottomOf="@id/switchMediumPriorityBanner"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchMediumPriorityVibration"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                app:layout_constraintTop_toBottomOf="@id/switchMediumPriorityBanner"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelMediumPriorityVibration"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_vibration"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchMediumPriorityVibration"
+                app:layout_constraintTop_toTopOf="@id/switchMediumPriorityVibration"
+                app:layout_constraintBottom_toBottomOf="@id/switchMediumPriorityVibration"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLowPriority"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            style="@style/ChangeBackgroundTintWhiteToBlack1C"
+            android:background="@drawable/dw_corner_four_bg"
+            android:layout_marginTop="@dimen/dp_16"
+            android:padding="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/constraintMediumPriority">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelLowPriority"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_low_priority"
+                android:drawableStart="@drawable/ic_low_priority"
+                android:drawablePadding="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                app:layout_constraintTop_toTopOf="@id/constraintLowPriority"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchLowPrioritySound"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelLowPriority"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelLowPrioritySound"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_sound"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchLowPrioritySound"
+                app:layout_constraintTop_toTopOf="@id/switchLowPrioritySound"
+                app:layout_constraintBottom_toBottomOf="@id/switchLowPrioritySound"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLowPrioritySoundTune"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppTheme.AppTextView.RegularBlackWithBackgroundTint12"
+                android:text="tick-tack-you-don’t-stop.mp3"
+                android:layout_marginTop="@dimen/dp_16"
+                android:padding="8dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="gone"
+                android:background="@drawable/dw_corner_four_bg"
+                app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                app:layout_constraintEnd_toStartOf="@id/buttonLowPriorityChangeSoundTune"
+                app:layout_constraintTop_toBottomOf="@id/switchLowPrioritySound"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonLowPriorityChangeSoundTune"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AppCompatButtonGreenWithCorner"
+                android:text="@string/btn_change_selected_tune"
+                android:layout_marginStart="@dimen/dp_8"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@id/textViewLowPrioritySoundTune"
+                app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
+                app:layout_constraintTop_toTopOf="@id/textViewLowPrioritySoundTune"
+                app:layout_constraintBottom_toBottomOf="@id/textViewLowPrioritySoundTune"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonLowPriorityApplyCustomTune"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/AppCompatButtonGreenWithCorner"
+                android:text="@string/btn_apply_custom_tune_from_your_os"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                app:layout_constraintTop_toBottomOf="@id/switchLowPrioritySound"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchLowPriorityBanner"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                app:layout_constraintTop_toBottomOf="@id/buttonLowPriorityApplyCustomTune"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelLowPriorityBanner"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_banner"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchLowPriorityBanner"
+                app:layout_constraintTop_toTopOf="@id/switchLowPriorityBanner"
+                app:layout_constraintBottom_toBottomOf="@id/switchLowPriorityBanner"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchLowPriorityVibration"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                app:trackTint="@color/colorGreyE9"
+                android:thumb="@drawable/dw_switch_thumb_bg"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                app:layout_constraintTop_toBottomOf="@id/switchLowPriorityBanner"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelLowPriorityVibration"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_vibration"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/switchLowPriorityVibration"
+                app:layout_constraintTop_toTopOf="@id/switchLowPriorityVibration"
+                app:layout_constraintBottom_toBottomOf="@id/switchLowPriorityVibration"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

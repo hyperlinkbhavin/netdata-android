@@ -1,0 +1,277 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:overScrollMode">never</item>
+        <item name="android:windowDisablePreview">true</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:windowBackground">@drawable/ic_back_ground</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!--  Guideline Start   -->
+    <style name="StyleStartGuideline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="layout_constraintGuide_begin">@dimen/dp_20</item>
+    </style>
+
+    <!--  Guideline End   -->
+    <style name="StyleEndGuideline">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="layout_constraintGuide_end">@dimen/dp_20</item>
+    </style>
+
+    <!--  AppCompatButtonGreen   -->
+    <style name="AppCompatButtonGreen" parent="Widget.AppCompat.Button">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">@dimen/dp_0</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:paddingTop">@dimen/dp_18</item>
+        <item name="android:paddingBottom">@dimen/dp_18</item>
+        <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <!--  AppCompatButtonBlack   -->
+    <style name="AppCompatButtonBlack" parent="Widget.AppCompat.Button">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">@dimen/dp_0</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:paddingTop">@dimen/dp_18</item>
+        <item name="android:paddingBottom">@dimen/dp_18</item>
+        <item name="android:background">@color/colorBlack1C</item>
+    </style>
+
+    <!--  AppCompatButtonGreen with corner 28   -->
+    <style name="AppCompatButtonGreenWithCorner28" parent="Widget.AppCompat.Button">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:paddingTop">@dimen/dp_12</item>
+        <item name="android:paddingBottom">@dimen/dp_12</item>
+        <item name="android:paddingStart">@dimen/dp_80</item>
+        <item name="android:paddingEnd">@dimen/dp_80</item>
+        <item name="android:background">@drawable/dw_corner_thirty_bg</item>
+        <item name="android:minHeight">@dimen/dp_0</item>
+    </style>
+
+    <!--  AppCompatEditText   -->
+    <style name="AppCompatEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLength">50</item>
+        <item name="android:minHeight">@dimen/dp_55</item>
+    </style>
+
+    <style name="AppCompatEditTextSearch" parent="Widget.AppCompat.EditText">
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:background">@drawable/dw_corner_four_bg</item>
+        <item name="android:backgroundTint">@color/colorBlack1C</item>
+        <item name="android:drawableTint">@color/colorWhite</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLength">50</item>
+        <item name="android:minHeight">@dimen/dp_55</item>
+        <item name="android:paddingStart">@dimen/dp_20</item>
+        <item name="android:paddingEnd">@dimen/dp_20</item>
+        <item name="android:paddingTop">@dimen/dp_15</item>
+        <item name="android:paddingBottom">@dimen/dp_15</item>
+    </style>
+
+
+    <style name="Widget.BaseAppTextView" parent="TextAppearance.AppCompat.Widget.TextView.SpinnerItem">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+        <item name="android:textAlignment">viewStart</item>
+    </style>
+
+    <!--  Change Tint Color Change  -->
+    <style name="ChangeTintColor" parent="">
+        <item name="android:tint">@color/colorWhite</item>
+    </style>
+
+    <style name="ChangeBackgroundTintWhiteToBlack1C" parent="">
+        <item name="android:backgroundTint">@color/colorBlack1C</item>
+    </style>
+
+    <style name="ChangeBackgroundTintBlack35ToGrey8F" parent="">
+        <item name="android:backgroundTint">@color/colorGrey8F</item>
+    </style>
+
+    <style name="ChangeBackgroundTintWhiteToGrey8F" parent="">
+        <item name="android:backgroundTint">@color/colorGrey8F</item>
+    </style>
+
+    <style name="ChangeBackgroundTintBlack35ToWhite" parent="">
+        <item name="android:backgroundTint">@color/colorWhite</item>
+    </style>
+
+    <style name="ChangeBackgroundTintGreenToGrey53" parent="">
+        <item name="android:backgroundTint">@color/colorGrey53</item>
+    </style>
+
+    <style name="ChangeBackgroundBlack35ToWhite" parent="">
+        <item name="android:background">@color/colorWhite</item>
+    </style>
+
+    <style name="ChangeBackgroundWhiteToBlack2B" parent="">
+        <item name="android:background">@color/colorBlack2B</item>
+    </style>
+
+    <style name="ChangeBackgroundWhiteToBlack1C" parent="">
+        <item name="android:background">@color/colorBlack1C</item>
+    </style>
+
+    <!-- TextView Regular   -->
+    <style name="AppTheme.AppTextView.RegularBlack12" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.RegularBlackWithBackgroundTint12" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:backgroundTint">@color/colorBlack35</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.RegularBlack35ToGreyCF12" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">@color/colorGreyCF</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.RegularBlack14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.RegularBlack35ToGrey8F14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorGrey8F</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.RegularBlack16" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.RegularBlack17" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_17</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
+    </style>
+
+    <!-- TextView Medium   -->
+    <style name="AppTheme.AppTextView.MediumBlack14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_medium</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.MediumBlack16" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_medium</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.MediumBlack18" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_18</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_medium</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.MediumBlack20" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_medium</item>
+    </style>
+
+    <!-- TextView Semi Bold   -->
+    <style name="AppTheme.AppTextView.SemiBoldBlack14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.SemiBoldBlack16" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+    </style>
+
+    <!-- TextView Bold   -->
+    <style name="AppTheme.AppTextView.BoldBlack12" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_bold</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.BoldBlack35ToGrey8F12" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:textColor">@color/colorGrey8F</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_bold</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.BoldBlack14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_bold</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.BoldBlack16" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_16</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_bold</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.BoldBlack16Bg" parent="AppTheme.AppTextView.BoldBlack16">
+        <item name="android:background">@drawable/dw_corner_four_bg</item>
+        <item name="android:backgroundTint">@color/colorBlack1C</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.BoldBlack26" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_26</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_bold</item>
+    </style>
+
+</resources>

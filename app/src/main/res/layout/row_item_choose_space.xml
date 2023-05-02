@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/dp_8"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintTop"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        style="@style/ChangeBackgroundTintWhiteToBlack1C"
+        android:paddingVertical="@dimen/dp_12"
+        android:paddingHorizontal="@dimen/dp_15"
+        android:background="@drawable/dw_corner_four_bg"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewSpaceName"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            tools:text="Space 1"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewSpaceCount"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            tools:text="3"
+            android:textColor="@color/colorWhite"
+            android:paddingVertical="@dimen/dp_2"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:background="@drawable/dw_corner_thirty_bg"
+            android:backgroundTint="@color/colorPrimary"
+            android:layout_marginEnd="@dimen/dp_16"
+            app:layout_constraintEnd_toStartOf="@id/constraintNext"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintNext"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintNext"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeBackgroundTintBlack35ToGrey8F"
+            android:paddingVertical="@dimen/dp_12"
+            android:paddingHorizontal="@dimen/dp_9"
+            android:background="@drawable/dw_corner_eight_bg"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintTop">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewNext"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:elevation="@dimen/dp_1"
+                android:src="@drawable/ic_back_reverse"
+                app:layout_constraintStart_toStartOf="@id/constraintNext"
+                app:layout_constraintEnd_toEndOf="@id/constraintNext"
+                app:layout_constraintTop_toTopOf="@id/constraintNext"
+                app:layout_constraintBottom_toBottomOf="@id/constraintNext"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

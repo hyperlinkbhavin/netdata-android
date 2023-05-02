@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingVertical="@dimen/dp_8"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintDisableNotifications"
+        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_0"
+        android:background="@drawable/dw_corner_four_with_border_bg"
+        android:paddingVertical="@dimen/dp_16"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewDisableAllNotification"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            tools:text="Space 1"
+            android:layout_marginStart="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/constraintDisableNotifications"
+            app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
+            />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchDisableAllNotifications"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            app:trackTint="@color/colorGreyE9"
+            android:thumb="@drawable/dw_switch_thumb_bg"
+            android:layout_marginEnd="@dimen/dp_16"
+            app:layout_constraintEnd_toEndOf="@id/constraintDisableNotifications"
+            app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
+            />
+
+        <RadioGroup
+            android:id="@+id/radioGroupAllNotifications"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_20"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@id/constraintDisableNotifications"
+            app:layout_constraintTop_toBottomOf="@id/textViewDisableAllNotification"
+            app:layout_constraintEnd_toEndOf="@id/constraintDisableNotifications">
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioButtonForever"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/label_forever"
+                android:checked="true"
+                android:button="@drawable/dw_radio_button_selector"
+                android:paddingStart="@dimen/dp_8"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioButtonUntil"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="@string/label_until"
+                android:layout_marginStart="@dimen/dp_30"
+                android:button="@drawable/dw_radio_button_selector"
+                android:paddingStart="@dimen/dp_8"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewUntilDate"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:text="DD/MM/YY, HH:MM"
+                android:fontFamily="@font/font_ibm_plex_sans_regular"
+                android:textSize="@dimen/sp_14"
+                android:textColor="@color/colorPrimary"
+                android:layout_marginStart="@dimen/dp_4"
+                android:drawableEnd="@drawable/ic_arrow_down"
+                android:drawablePadding="@dimen/dp_6"/>
+
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
