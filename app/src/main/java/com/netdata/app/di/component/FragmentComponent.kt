@@ -7,6 +7,7 @@ import com.netdata.app.ui.auth.fragment.QRCodeLoginFragment
 import com.netdata.app.ui.auth.fragment.WelcomeFragment
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
+import com.netdata.app.ui.home.fragment.HomeFragment
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.*
 import dagger.Subcomponent
@@ -25,5 +26,6 @@ interface FragmentComponent {
     fun inject(notificationPrioritySettingsFragment: NotificationPrioritySettingsFragment)
     fun inject(changeThemeFragment: ChangeThemeFragment)
     fun inject(termsAndConditionsFragment: TermsAndConditionsFragment)
+    fun inject(homeFragment: HomeFragment)
 
 }

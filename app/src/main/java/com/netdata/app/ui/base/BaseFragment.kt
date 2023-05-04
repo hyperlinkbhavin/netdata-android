@@ -1,13 +1,13 @@
 package com.netdata.app.ui.base
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
@@ -35,7 +35,6 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
-
     override val component: FragmentComponent
         get() {
             return getComponent(ActivityComponent::class.java).plus(FragmentModule(this))
@@ -54,6 +53,24 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val window: Window = requireActivity().window
+
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+
+
+
+        val nightModeFlags = requireContext().resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorBlack2B)
+            Configuration.UI_MODE_NIGHT_NO -> window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorWhiteF2)
+        }
+
+
+
         bindData()
     }
 

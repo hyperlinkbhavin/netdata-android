@@ -61,4 +61,6 @@
     <string name="title_delete_account">Delete Account?</string>
     <string name="btn_delete">Delete</string>
     <string name="btn_no">No</string>
+    <string name="label_mark_all_as_read">Mark all as read</string>
+    <string name="label_warning">Warning</string>
 </resources>

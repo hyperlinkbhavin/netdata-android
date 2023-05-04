@@ -1,129 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/ic_back_ground">
 
     <include
         android:id="@+id/includeToolbar"
-        layout="@layout/include_toolbar_back"/>
+        layout="@layout/include_toolbar_back" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineStart"
-        style="@style/StyleStartGuideline"/>
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelineEnd"
-        style="@style/StyleEndGuideline"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintDayTheme"
-        android:layout_height="wrap_content"
-        android:layout_width="@dimen/dp_0"
-        android:layout_marginTop="@dimen/dp_20"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintTop_toBottomOf="@id/includeToolbar">
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStart"
+                style="@style/StyleStartGuideline" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewDayTheme"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            style="@style/ChangeTintColor"
-            android:src="@drawable/ic_day_theme"
-            app:layout_constraintStart_toStartOf="@id/constraintDayTheme"
-            app:layout_constraintTop_toTopOf="@id/constraintDayTheme"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEnd"
+                style="@style/StyleEndGuideline" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewTitleDayTheme"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/label_day_theme"
-            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
-            android:layout_marginStart="@dimen/dp_8"
-            app:layout_constraintStart_toEndOf="@id/imageViewDayTheme"
-            app:layout_constraintTop_toTopOf="@id/imageViewDayTheme"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewDayTheme"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintDayTheme"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewDayThemeText"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            style="@style/AppTheme.AppTextView.RegularBlack12"
-            android:layout_marginTop="@dimen/dp_8"
-            android:text="@string/label_from_this_menu_you_can_change_to_light_mode"
-            app:layout_constraintTop_toBottomOf="@id/textViewTitleDayTheme"
-            app:layout_constraintStart_toStartOf="@id/constraintDayTheme"/>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewDayTheme"
+                    style="@style/ChangeTintColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_day_theme"
+                    app:layout_constraintStart_toStartOf="@id/constraintDayTheme"
+                    app:layout_constraintTop_toTopOf="@id/constraintDayTheme" />
 
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/radioButtonDayTheme"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:button="@drawable/dw_radio_button_selector"
-            app:layout_constraintEnd_toEndOf="@id/constraintDayTheme"
-            app:layout_constraintTop_toTopOf="@id/textViewTitleDayTheme"
-            app:layout_constraintBottom_toBottomOf="@id/textViewDayThemeText"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewTitleDayTheme"
+                    style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:text="@string/label_day_theme"
+                    app:layout_constraintBottom_toBottomOf="@id/imageViewDayTheme"
+                    app:layout_constraintStart_toEndOf="@id/imageViewDayTheme"
+                    app:layout_constraintTop_toTopOf="@id/imageViewDayTheme" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewDayThemeText"
+                    style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="@string/label_from_this_menu_you_can_change_to_light_mode"
+                    app:layout_constraintStart_toStartOf="@id/constraintDayTheme"
+                    app:layout_constraintTop_toBottomOf="@id/textViewTitleDayTheme" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintNightTheme"
-        android:layout_height="wrap_content"
-        android:layout_width="@dimen/dp_0"
-        android:layout_marginTop="@dimen/dp_27"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintTop_toBottomOf="@id/constraintDayTheme">
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonDayTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/dw_radio_button_selector"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewDayThemeText"
+                    app:layout_constraintEnd_toEndOf="@id/constraintDayTheme"
+                    app:layout_constraintTop_toTopOf="@id/textViewTitleDayTheme" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewNightTheme"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            style="@style/ChangeTintColor"
-            android:src="@drawable/ic_night_theme"
-            app:layout_constraintStart_toStartOf="@id/constraintNightTheme"
-            app:layout_constraintTop_toTopOf="@id/constraintNightTheme"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewTitleNightTheme"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:text="@string/label_night_theme"
-            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
-            android:layout_marginStart="@dimen/dp_8"
-            app:layout_constraintStart_toEndOf="@id/imageViewNightTheme"
-            app:layout_constraintTop_toTopOf="@id/imageViewNightTheme"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewNightTheme"/>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintNightTheme"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_27"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/constraintDayTheme">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewNightThemeText"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            style="@style/AppTheme.AppTextView.RegularBlack12"
-            android:layout_marginTop="@dimen/dp_8"
-            android:text="@string/label_from_this_menu_you_can_change_to_dark_mode"
-            app:layout_constraintTop_toBottomOf="@id/textViewTitleNightTheme"
-            app:layout_constraintStart_toStartOf="@id/constraintNightTheme"/>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewNightTheme"
+                    style="@style/ChangeTintColor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_night_theme"
+                    app:layout_constraintStart_toStartOf="@id/constraintNightTheme"
+                    app:layout_constraintTop_toTopOf="@id/constraintNightTheme" />
 
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/radioButtonNightTheme"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:button="@drawable/dw_radio_button_selector"
-            app:layout_constraintEnd_toEndOf="@id/constraintNightTheme"
-            app:layout_constraintTop_toTopOf="@id/textViewTitleNightTheme"
-            app:layout_constraintBottom_toBottomOf="@id/textViewNightThemeText"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewTitleNightTheme"
+                    style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dp_8"
+                    android:text="@string/label_night_theme"
+                    app:layout_constraintBottom_toBottomOf="@id/imageViewNightTheme"
+                    app:layout_constraintStart_toEndOf="@id/imageViewNightTheme"
+                    app:layout_constraintTop_toTopOf="@id/imageViewNightTheme" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewNightThemeText"
+                    style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="@string/label_from_this_menu_you_can_change_to_dark_mode"
+                    app:layout_constraintStart_toStartOf="@id/constraintNightTheme"
+                    app:layout_constraintTop_toBottomOf="@id/textViewTitleNightTheme" />
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonDone"
-        style="@style/AppCompatButtonGreen"
-        android:text="@string/btn_done"
-        android:layout_marginBottom="@dimen/dp_20"
-        app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonNightTheme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@drawable/dw_radio_button_selector"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewNightThemeText"
+                    app:layout_constraintEnd_toEndOf="@id/constraintNightTheme"
+                    app:layout_constraintTop_toTopOf="@id/textViewTitleNightTheme" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonDone"
+                style="@style/AppCompatButtonGreen"
+                android:layout_marginBottom="@dimen/dp_20"
+                android:text="@string/btn_done"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

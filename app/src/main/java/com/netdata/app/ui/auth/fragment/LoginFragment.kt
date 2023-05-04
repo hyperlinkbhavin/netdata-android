@@ -43,7 +43,13 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
     }
 
     override fun bindData() {
+        manageClick()
+    }
 
+    private fun manageClick() = with(binding){
+        buttonSignIn.setOnClickListener {
+            navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
+        }
     }
 
 }

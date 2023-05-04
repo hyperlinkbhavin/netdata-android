@@ -9,8 +9,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_back_ground">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelSelectWarRooms"
@@ -25,8 +24,9 @@
             android:id="@+id/textViewLabelClose"
             style="@style/AppTheme.AppTextView.MediumBlack14"
             android:text="@string/label_close"
-            android:layout_marginTop="@dimen/dp_16"
-            android:layout_marginEnd="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:padding="@dimen/dp_6"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBaseline_toBaselineOf="@id/textViewLabelSelectWarRooms"/>
 
@@ -35,6 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_marginTop="@dimen/dp_8"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
             tools:listitem="@layout/row_item_select_war_rooms"
             app:layout_constraintTop_toBottomOf="@id/textViewLabelSelectWarRooms"/>
 

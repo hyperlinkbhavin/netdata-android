@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/dp_8"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintTop"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:paddingVertical="@dimen/dp_16"
+        android:paddingStart="@dimen/dp_16"
+        android:paddingEnd="@dimen/dp_10"
+        android:background="@drawable/dw_constraint_home_bg"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewName"
+            style="@style/AppTheme.AppTextView.BoldBlack16"
+            tools:text="inbound packets dropped ratio"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewCalendar"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColorBlack35ToGreyCF"
+            android:src="@drawable/ic_calendar"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/textViewName"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewDateTime"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:text="24 seconds ago · 04/04/2022 - 15:44:23"
+            android:layout_marginStart="@dimen/dp_6"
+            app:layout_constraintStart_toEndOf="@id/imageViewCalendar"
+            app:layout_constraintTop_toTopOf="@id/imageViewCalendar"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewCalendar"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewGKE"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColorBlack35ToGreyCF"
+            android:src="@drawable/ic_notification_priority_gke"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/imageViewCalendar"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewGKE"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
+            android:layout_marginStart="@dimen/dp_6"
+            app:layout_constraintStart_toEndOf="@id/imageViewGKE"
+            app:layout_constraintTop_toTopOf="@id/imageViewGKE"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewGKE"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewDiskSpace"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColorBlack35ToGreyCF"
+            android:src="@drawable/ic_disk_space"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/imageViewGKE"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewDiskSpace"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:text="disk_space._boot_efi"
+            android:layout_marginStart="@dimen/dp_6"
+            app:layout_constraintStart_toEndOf="@id/imageViewDiskSpace"
+            app:layout_constraintTop_toTopOf="@id/imageViewDiskSpace"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewDiskSpace"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewWarRoomsList"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColorBlack35ToGreyCF"
+            android:src="@drawable/ic_war_rooms_list"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/imageViewDiskSpace"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewWarRoomsList"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:text="War Room 1 • War Room 2 • War Room 3 • War Rom 4 "
+            android:layout_marginStart="@dimen/dp_6"
+            app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsList"
+            app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsList"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsList"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewTypeAndComponent"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColorBlack35ToGreyCF"
+            android:src="@drawable/ic_type_component"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/imageViewWarRoomsList"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewTypeAndComponent"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:text="Type &amp; Component : System • Network"
+            android:layout_marginStart="@dimen/dp_6"
+            app:layout_constraintStart_toEndOf="@id/imageViewTypeAndComponent"
+            app:layout_constraintTop_toTopOf="@id/imageViewTypeAndComponent"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewTypeAndComponent"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelWarning"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/label_warning"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/dw_corner_thirty_bg"
+            android:backgroundTint="@color/colorYellowF9"
+            android:drawableStart="@drawable/ic_settings_maintenance_mode"
+            android:drawablePadding="@dimen/dp_6"
+            android:drawableTint="@color/colorWhite"
+            android:paddingVertical="@dimen/dp_4"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_16"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/imageViewTypeAndComponent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewWarningPercent"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="54.3%"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/colorYellowF9"
+            android:background="@drawable/dw_corner_thirty_bg"
+            android:backgroundTint="@color/colorLightYellowFF"
+            android:paddingVertical="@dimen/dp_4"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_8"
+            app:layout_constraintStart_toEndOf="@id/textViewLabelWarning"
+            app:layout_constraintTop_toTopOf="@id/textViewLabelWarning"
+            app:layout_constraintBottom_toBottomOf="@id/textViewLabelWarning"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewCriticalPercent"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="54.3%"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/colorRedFF"
+            android:background="@drawable/dw_textview_critical_bg"
+            android:paddingVertical="@dimen/dp_4"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_8"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/textViewLabelWarning"
+            app:layout_constraintTop_toTopOf="@id/textViewLabelWarning"
+            app:layout_constraintBottom_toBottomOf="@id/textViewLabelWarning"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewMessageUnread"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_message_unread"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/textViewWarningPercent"
+            app:layout_constraintBottom_toBottomOf="@id/textViewWarningPercent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewMessageRead"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:scaleType="fitXY"
+            style="@style/ChangeTintColorBlack35ToGreyCF"
+            android:src="@drawable/ic_message_read"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/textViewWarningPercent"
+            app:layout_constraintBottom_toBottomOf="@id/textViewWarningPercent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewPriority"
+            android:layout_height="@dimen/dp_24"
+            android:layout_width="@dimen/dp_18"
+            android:src="@drawable/ic_high_priority"
+            android:layout_marginEnd="@dimen/dp_20"
+            app:layout_constraintEnd_toStartOf="@id/imageViewMessageRead"
+            app:layout_constraintTop_toTopOf="@id/textViewWarningPercent"
+            app:layout_constraintBottom_toBottomOf="@id/textViewWarningPercent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

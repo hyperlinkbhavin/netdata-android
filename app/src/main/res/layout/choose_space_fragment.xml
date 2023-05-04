@@ -1,70 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/ic_back_ground"
-    android:fillViewport="true">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_back_ground">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <include
+        android:id="@+id/includeToolbar"
+        layout="@layout/include_toolbar_main" />
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/ic_back_ground">
+        android:layout_height="@dimen/dp_0"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineStart"
-            style="@style/StyleStartGuideline"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guidelineEnd"
-            style="@style/StyleEndGuideline"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStart"
+                style="@style/StyleStartGuideline" />
 
-        <include
-            android:id="@+id/includeToolbar"
-            layout="@layout/include_toolbar_main"/>
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEnd"
+                style="@style/StyleEndGuideline" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewLabelChooseSpace"
-            style="@style/AppTheme.AppTextView.MediumBlack20"
-            android:layout_marginTop="@dimen/sp_10"
-            android:text="@string/label_choose_a_space_to_continue"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintTop_toBottomOf="@id/includeToolbar"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelChooseSpace"
+                style="@style/AppTheme.AppTextView.MediumBlack20"
+                android:layout_marginTop="@dimen/sp_10"
+                android:text="@string/label_choose_a_space_to_continue"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewChooseSpaceText"
-            style="@style/AppTheme.AppTextView.RegularBlack14"
-            android:layout_marginTop="@dimen/dp_16"
-            android:text="@string/label_you_have_a_total_of_3_notifications_in_your_spaces"
-            app:layout_constraintTop_toBottomOf="@id/textViewLabelChooseSpace"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewChooseSpaceText"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:layout_marginTop="@dimen/dp_16"
+                android:text="@string/label_you_have_a_total_of_3_notifications_in_your_spaces"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelChooseSpace" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/editTextSearchServices"
-            android:layout_height="wrap_content"
-            android:layout_width="@dimen/dp_0"
-            style="@style/AppCompatEditTextSearch"
-            android:hint="@string/hint_search_services"
-            android:drawableStart="@drawable/ic_search"
-            android:drawablePadding="@dimen/dp_14"
-            android:layout_marginTop="@dimen/dp_25"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toBottomOf="@id/textViewChooseSpaceText"/>
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextSearchServices"
+                style="@style/AppCompatEditTextSearch"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_25"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="@dimen/dp_14"
+                android:hint="@string/hint_search_services"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/textViewChooseSpaceText" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewChooseSpace"
-            android:layout_height="wrap_content"
-            android:layout_width="@dimen/dp_0"
-            android:layout_marginTop="@dimen/dp_25"
-            tools:listitem="@layout/row_item_choose_space"
-            tools:itemCount="5"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:orientation="vertical"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toBottomOf="@id/editTextSearchServices"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewChooseSpace"
+                android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_25"
+                android:orientation="vertical"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/editTextSearchServices"
+                tools:itemCount="5"
+                tools:listitem="@layout/row_item_choose_space" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

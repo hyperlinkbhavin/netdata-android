@@ -10,8 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/dp_30"
-        android:background="@drawable/ic_back_ground">
+        android:paddingBottom="@dimen/dp_30">
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineStart"

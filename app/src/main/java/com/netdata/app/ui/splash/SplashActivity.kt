@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import com.netdata.app.databinding.SplashActivityBinding
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.ui.auth.AuthActivity
@@ -27,6 +29,9 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
         Handler(Looper.getMainLooper()).postDelayed({
             loadActivity(AuthActivity::class.java).byFinishingAll().start()
         }, 2000)
