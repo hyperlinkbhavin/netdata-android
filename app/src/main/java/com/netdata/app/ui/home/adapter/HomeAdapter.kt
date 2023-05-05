@@ -14,7 +14,7 @@ import com.netdata.app.databinding.RowItemHomeBinding
 import com.netdata.app.utils.invisible
 import com.netdata.app.utils.visible
 
-class HomeAdapter(val callBack: (View, Int) -> Unit) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(val callBack: (View, Int, HomeDataList) -> Unit) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     var list = ArrayList<HomeDataList>()
 
@@ -42,7 +42,9 @@ class HomeAdapter(val callBack: (View, Int) -> Unit) : RecyclerView.Adapter<Home
 
         init {
             binding.apply {
-
+                imageViewPriority.setOnClickListener {
+                    callBack.invoke(it, adapterPosition, list[adapterPosition])
+                }
             }
         }
 

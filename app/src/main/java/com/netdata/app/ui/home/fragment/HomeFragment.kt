@@ -29,9 +29,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var sortByNotificationPriorityItemPosition = -1
     private var sortByCriticalityItemPosition = -1
 
-    private val homeAdapter by lazy {
-        HomeAdapter(){ view, position ->
+    private var homeList = ArrayList<HomeDataList>()
 
+    private val homeAdapter by lazy {
+        HomeAdapter(){ view, position, item ->
+            when(view.id){
+                R.id.imageViewPriority -> {
+                    bottomSheetPriority()
+                }
+            }
         }
     }
 
@@ -78,17 +84,31 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             isAllButtonSelected = true
             binding.buttonAll.isSelected = isAllButtonSelected
             binding.buttonUnread.isSelected = !isAllButtonSelected
+
+            homeAdapter.list.clear()
+            homeAdapter.list.addAll(homeList)
+            homeAdapter.notifyDataSetChanged()
         }
 
         buttonUnread.setOnClickListener {
             isAllButtonSelected = false
             binding.buttonAll.isSelected = isAllButtonSelected
             binding.buttonUnread.isSelected = !isAllButtonSelected
+
+            val data = homeList.filter { it.isRead }
+            homeAdapter.list.clear()
+            homeAdapter.list.addAll(data)
+
+            homeAdapter.notifyDataSetChanged()
         }
 
         textViewLabelMarkAllAsRead.setOnClickListener {
-            homeAdapter.list[0].isRead = true
-            homeAdapter.list[1].isRead = true
+            for(item in homeList){
+                item.isRead = true
+            }
+
+            homeAdapter.list.clear()
+            homeAdapter.list.addAll(homeList)
 
             homeAdapter.notifyDataSetChanged()
         }
@@ -124,7 +144,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun addData() {
-        homeAdapter.list.add(HomeDataList(
+        homeList.add(HomeDataList(
                 "inbound",
                 "24 second ago",
                 "gke-gke",
@@ -134,7 +154,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 true
             ))
 
-        homeAdapter.list.add(HomeDataList(
+        homeList.add(HomeDataList(
             "inbound",
             "24 second ago",
             "gke-gke",
@@ -143,8 +163,29 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             "Type and Component",
         ))
 
+        homeAdapter.list.addAll(homeList)
 
         homeAdapter.notifyDataSetChanged()
+    }
+
+    private fun bottomSheetPriority() {
+
+        val dialog = BottomSheetDialog(requireContext())
+
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_notification_priority, null)
+
+        dialog.setCancelable(false)
+        dialog.setContentView(view)
+        dialog.setCanceledOnTouchOutside(true)
+
+        dialog.setOnKeyListener { dialog, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                dialog.dismiss()
+            }
+            true
+        }
+
+        dialog.show()
     }
 
     @SuppressLint("NotifyDataSetChanged")

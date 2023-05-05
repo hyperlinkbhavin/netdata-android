@@ -132,6 +132,7 @@
                 android:id="@+id/textViewLabelMarkAllAsRead"
                 style="@style/AppTheme.AppTextView.BoldBlack12"
                 android:text="@string/label_mark_all_as_read"
+                android:paddingVertical="@dimen/dp_6"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintTop_toTopOf="@id/buttonUnread"
                 app:layout_constraintBottom_toBottomOf="@id/buttonUnread"/>

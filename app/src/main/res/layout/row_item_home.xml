@@ -205,10 +205,11 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewPriority"
-            android:layout_height="@dimen/dp_24"
-            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_32"
+            android:layout_width="@dimen/dp_30"
             android:src="@drawable/ic_high_priority"
-            android:layout_marginEnd="@dimen/dp_20"
+            android:layout_marginEnd="@dimen/dp_14"
+            android:padding="@dimen/dp_6"
             app:layout_constraintEnd_toStartOf="@id/imageViewMessageRead"
             app:layout_constraintTop_toTopOf="@id/textViewWarningPercent"
             app:layout_constraintBottom_toBottomOf="@id/textViewWarningPercent"/>
