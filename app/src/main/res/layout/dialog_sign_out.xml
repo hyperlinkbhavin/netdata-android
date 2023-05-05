@@ -10,34 +10,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textViewTitleDeleteAccount"
+        android:id="@+id/textViewTitleSignOut"
         style="@style/AppTheme.AppTextView.MediumBlack16"
-        android:text="@string/title_delete_account"
+        android:text="@string/title_sign_out_question"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/textViewDeleteAccountText"
+        android:id="@+id/textViewSignOutText"
         style="@style/AppTheme.AppTextView.RegularBlack14"
         android:alpha="0.5"
-        android:text="Lorem ipsum dolor sit amet,\nsecteturadipiscing elit. Phasellus"
+        android:text="@string/label_are_you_sure_you_want_to_sign_out"
         android:layout_marginTop="@dimen/dp_8"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewTitleDeleteAccount"/>
+        app:layout_constraintTop_toBottomOf="@id/textViewTitleSignOut"/>
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonDelete"
+        android:id="@+id/buttonSignOut"
         style="@style/AppCompatButtonGreenWithCorner28"
         android:backgroundTint="@color/colorPrimary"
-        android:text="@string/btn_delete"
+        android:text="@string/btn_sign_out"
         android:textColor="@color/colorWhite"
         android:layout_marginTop="@dimen/dp_28"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewDeleteAccountText"/>
+        app:layout_constraintTop_toBottomOf="@id/textViewSignOutText"/>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonNo"
@@ -46,8 +46,8 @@
         android:background="@drawable/dw_corner_twenty_six_with_border"
         android:text="@string/btn_no"
         android:layout_marginTop="@dimen/dp_16"
-        app:layout_constraintStart_toStartOf="@id/buttonDelete"
-        app:layout_constraintEnd_toEndOf="@id/buttonDelete"
-        app:layout_constraintTop_toBottomOf="@id/buttonDelete"/>
+        app:layout_constraintStart_toStartOf="@id/buttonSignOut"
+        app:layout_constraintEnd_toEndOf="@id/buttonSignOut"
+        app:layout_constraintTop_toBottomOf="@id/buttonSignOut"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

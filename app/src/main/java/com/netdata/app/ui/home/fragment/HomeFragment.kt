@@ -19,6 +19,7 @@ import com.netdata.app.ui.home.adapter.HomeAdapter
 import com.netdata.app.ui.home.adapter.SortByAdapter
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
+import com.netdata.app.utils.Constant
 import com.netdata.app.utils.visible
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -61,10 +62,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun toolbar() = with(binding) {
         includeToolbar.apply {
             textViewSpace.visible()
-            textViewSpace.text = "Space 1"
             imageViewSetting.visible()
             imageViewFilter.visible()
             imageViewNotification.visible()
+
+            if(appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNotEmpty()){
+                textViewSpace.text = appPreferences.getString(Constant.APP_PREF_SPACE_NAME)
+            }
         }
     }
 

@@ -35,6 +35,7 @@
             android:background="@drawable/dw_corner_thirty_bg"
             android:backgroundTint="@color/colorPrimary"
             android:layout_marginEnd="@dimen/dp_16"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@id/constraintNext"
             app:layout_constraintTop_toTopOf="@id/constraintTop"
             app:layout_constraintBottom_toBottomOf="@id/constraintNext"/>

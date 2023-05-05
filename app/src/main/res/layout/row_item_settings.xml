@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingVertical="@dimen/dp_15"
     android:paddingHorizontal="@dimen/dp_20"
+    android:id="@+id/constraintMain"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 

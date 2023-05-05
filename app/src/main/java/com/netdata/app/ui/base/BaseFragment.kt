@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.google.android.material.snackbar.Snackbar
 import com.netdata.app.R
+import com.netdata.app.core.AppPreferences
+import com.netdata.app.core.Session
 import com.netdata.app.di.HasComponent
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.di.component.FragmentComponent
@@ -21,6 +23,7 @@ import com.netdata.app.exception.ApplicationException
 import com.netdata.app.exception.AuthenticationException
 import com.netdata.app.exception.ServerException
 import com.netdata.app.ui.manager.Navigator
+import com.netdata.app.utils.Validator
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
@@ -31,6 +34,15 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
 
     @Inject
     lateinit var navigator: Navigator
+
+    @Inject
+    lateinit var appPreferences: AppPreferences
+
+    @Inject
+    open lateinit var validator: Validator
+
+    @Inject
+    open lateinit var session: Session
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory

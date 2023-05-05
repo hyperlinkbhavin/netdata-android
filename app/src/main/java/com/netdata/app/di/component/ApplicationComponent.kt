@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModelProvider
 import android.content.Context
 import android.content.res.Resources
+import com.netdata.app.core.AppPreferences
 import com.netdata.app.core.Session
 import com.netdata.app.data.repository.UserRepository
 import com.netdata.app.di.App
@@ -41,6 +42,8 @@ interface ApplicationComponent {
     fun provideValidator():Validator
 
     fun provideSession(): Session
+
+    fun provideAppPreference(): AppPreferences
 
     @Component.Builder
     interface ApplicationComponentBuilder {

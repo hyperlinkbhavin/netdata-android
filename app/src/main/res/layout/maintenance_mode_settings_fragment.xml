@@ -8,7 +8,7 @@
 
     <include
         android:id="@+id/includeToolbar"
-        layout="@layout/include_toolbar_main" />
+        layout="@layout/include_toolbar_back" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@
             style="@style/ChangeBackgroundTintWhiteToBlack1C"
             android:background="@drawable/dw_corner_four_bg"
             android:layout_marginTop="@dimen/dp_16"
-            android:paddingVertical="@dimen/dp_16"
+            android:paddingVertical="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/textViewMaintenanceModeText">
@@ -59,6 +59,7 @@
                 android:layout_marginStart="@dimen/dp_16"
                 app:layout_constraintStart_toStartOf="@id/constraintDisableNotifications"
                 app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
+                app:layout_constraintBottom_toBottomOf="@id/constraintDisableNotifications"
                 />
 
             <androidx.appcompat.widget.SwitchCompat
@@ -67,9 +68,11 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginEnd="@dimen/dp_16"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintEnd_toEndOf="@id/constraintDisableNotifications"
                 app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
+                app:layout_constraintBottom_toBottomOf="@id/constraintDisableNotifications"
                />
 
             <RadioGroup
@@ -177,6 +180,8 @@
             android:layout_marginTop="@dimen/dp_8"
             tools:listitem="@layout/row_item_maintenance_mode_settings"
             tools:itemCount="3"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="vertical"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/editTextSearchServices"/>

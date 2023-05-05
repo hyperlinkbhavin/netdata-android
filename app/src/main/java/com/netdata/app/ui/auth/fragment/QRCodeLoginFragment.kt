@@ -14,9 +14,6 @@ import javax.inject.Inject
 
 class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
 
-    @Inject
-    lateinit var validator: Validator
-
     private val viewModel by lazy {
         ViewModelProvider(this,
             viewModelFactory)[LoginViewModel::class.java]

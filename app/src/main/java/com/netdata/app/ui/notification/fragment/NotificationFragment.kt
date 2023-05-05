@@ -1,19 +1,27 @@
 package com.netdata.app.ui.notification.fragment
 
 import android.annotation.SuppressLint
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.netdata.app.R
 import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.NotificationsList
+import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
 import com.netdata.app.databinding.ChooseSpaceFragmentBinding
 import com.netdata.app.databinding.NotificationFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment
+import com.netdata.app.ui.home.adapter.AllWarRoomsAdapter
 import com.netdata.app.ui.notification.adapter.NotificationAdapter
 
 class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
+
+    private var warRoomsItemPosition = -1
 
     private val notificationsAdapter by lazy {
         NotificationAdapter() { view, position, item ->
@@ -45,7 +53,9 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
     }
 
     private fun manageClick() = with(binding) {
-
+        constraintAllWarRooms.setOnClickListener {
+            bottomSheetAllWarRooms()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -82,5 +92,59 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                 Priority.LOW_PRIORITY
             )
         )
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun bottomSheetAllWarRooms() {
+
+        val dialog = BottomSheetDialog(requireContext())
+
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_select_war_rooms, null)
+
+        val allWarRoomsAdapter by lazy {
+            AllWarRoomsAdapter() { view, position, item ->
+                when(view.id){
+                    R.id.constraintMain -> {
+                        warRoomsItemPosition = position
+                        binding.textViewLabelAllWarRooms.text = item.name
+                        dialog.dismiss()
+                    }
+                }
+            }
+        }
+
+        allWarRoomsAdapter.list.add(WarRoomsList("All War Rooms"))
+        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 1"))
+        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 2"))
+        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 3"))
+        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 4"))
+        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 5"))
+
+        val recyclerViewSelectWarRooms = view.findViewById<RecyclerView>(R.id.recyclerViewSelectWarRooms)
+        val textViewLabelClose = view.findViewById<AppCompatTextView>(R.id.textViewLabelClose)
+        recyclerViewSelectWarRooms.adapter = allWarRoomsAdapter
+
+        if(warRoomsItemPosition != -1){
+            allWarRoomsAdapter.selectionPosition = warRoomsItemPosition
+        }
+
+        allWarRoomsAdapter.notifyDataSetChanged()
+
+        textViewLabelClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setCancelable(false)
+        dialog.setContentView(view)
+        dialog.setCanceledOnTouchOutside(true)
+
+        dialog.setOnKeyListener { dialog, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                dialog.dismiss()
+            }
+            true
+        }
+
+        dialog.show()
     }
 }

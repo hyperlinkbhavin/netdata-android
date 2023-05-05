@@ -17,9 +17,6 @@ import javax.inject.Inject
 
 class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
 
-    @Inject
-    lateinit var validator: Validator
-
     private val viewModel by lazy {
         ViewModelProvider(this,
             viewModelFactory)[LoginViewModel::class.java]
