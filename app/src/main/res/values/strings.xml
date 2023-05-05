@@ -63,4 +63,5 @@
     <string name="btn_no">No</string>
     <string name="label_mark_all_as_read">Mark all as read</string>
     <string name="label_warning">Warning</string>
+    <string name="title_new_notifications">New Notifications</string>
 </resources>
