@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingVertical="@dimen/dp_8"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintTop"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/ChangeBackgroundTintWhiteToBlack1C"
+        android:background="@drawable/dw_corner_four_bg"
+        android:paddingStart="@dimen/dp_22"
+        android:paddingEnd="@dimen/dp_16"
+        android:paddingVertical="@dimen/dp_14"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewAlertInfo"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_info"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewAlertInfoName"
+            style="@style/AppTheme.AppTextView.RegularBlack14"
+            tools:text="Node:"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintStart_toEndOf="@id/imageViewAlertInfo"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewAlertInfoValue"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            tools:text="node.name12thisisanode"
+            android:layout_marginStart="@dimen/dp_4"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/textViewAlertInfoName"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintTop"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,12 +5,15 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.view.*
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.netdata.app.R
 import com.netdata.app.core.AppPreferences
@@ -147,14 +150,28 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
         hideKeyBoard()
         if (view != null) {
             val snackbar = Snackbar.make(requireView(), message, Snackbar.LENGTH_LONG)
-            snackbar.duration = 3000
-            snackbar.setActionTextColor(Color.WHITE)
-            snackbar.setAction("OK", View.OnClickListener { snackbar.dismiss() })
-            val snackView = snackbar.getView()
-            val textView = snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+            snackbar.duration = 2000
+            snackbar.setActionTextColor(Color.BLACK)
+//            snackbar.setAction("OK", { snackbar.dismiss() })
+            val snackView = snackbar.view
+            val params = snackView.layoutParams as FrameLayout.LayoutParams
+            params.gravity = Gravity.TOP
+            params.setMargins(0,20,0,0)
+            snackView.layoutParams = params
+            val textView =
+                snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
             textView.maxLines = 4
 
-            snackView.setBackgroundColor(requireActivity().getResources().getColor(R.color.colorPrimary))
+            snackView.background = ResourcesCompat.getDrawable(resources, R.color.colorPrimary, null)
+            /*snackView.setBackgroundColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.colorPrimary,
+                    null
+                )
+            )*/
+            snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
             snackbar.show()
         }
     }

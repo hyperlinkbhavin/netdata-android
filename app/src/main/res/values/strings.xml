@@ -83,4 +83,14 @@
     <string name="title_settings">Settings</string>
     <string name="label_are_you_sure_you_want_to_sign_out">Are you sure you want to sign out?</string>
     <string name="title_change_theme">Change Theme</string>
+    <string name="msg_access_media_permission_required">Access Media Permission is required</string>
+    <string name="dummy_inbound_packets_dropped_ratio">inbound packets dropped ratio</string>
+    <string name="label_alert_description">Alert Description</string>
+    <string name="dummy_average_inbound_utilization_for_the_network_interface_eth0_over_the_last_minute">Average inbound utilization for the network interface eth0 over the last minute.</string>
+    <string name="label_visit_the_documentation">Visit the documentation</string>
+    <string name="label_bandwidth">Bandwidth</string>
+    <string name="label_latest_time_value">Latest time value</string>
+    <string name="label_latest_time_value_colon">Latest time value:</string>
+    <string name="label_time_values">Time Values</string>
+    <string name="label_alert_info">Alert Info</string>
 </resources>

@@ -6,6 +6,7 @@ import com.netdata.app.R
 import com.netdata.app.databinding.HomeActivityBinding
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.ui.base.BaseActivity
+import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
 import com.netdata.app.ui.home.fragment.HomeFragment
 
 class HomeActivity : BaseActivity(), View.OnClickListener {

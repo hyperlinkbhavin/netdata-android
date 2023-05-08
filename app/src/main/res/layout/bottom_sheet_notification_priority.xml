@@ -395,23 +395,36 @@
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintTop_toBottomOf="@id/constraintPriority"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewLabelCurrentNodes"
-            style="@style/AppTheme.AppTextView.MediumBlack14"
-            android:text="Current selection of nodes"
-            android:layout_marginTop="@dimen/dp_16"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintTop_toBottomOf="@id/textViewLabelNodes"/>
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/radioButtonCurrentNodes"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintCurrentNodes"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:checked="true"
-            android:button="@drawable/dw_radio_button_selector"
-            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toTopOf="@id/textViewLabelCurrentNodes"
-            app:layout_constraintBottom_toBottomOf="@id/textViewLabelCurrentNodes"/>
+            android:layout_width="@dimen/dp_0"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelNodes">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelCurrentNodes"
+                style="@style/AppTheme.AppTextView.MediumBlack14"
+                android:text="Current selection of nodes"
+                app:layout_constraintStart_toStartOf="@id/constraintCurrentNodes"
+                app:layout_constraintTop_toTopOf="@id/constraintCurrentNodes"
+                app:layout_constraintBottom_toBottomOf="@id/constraintCurrentNodes"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioButtonCurrentNodes"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:checked="true"
+                android:padding="@dimen/dp_6"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:button="@drawable/dw_radio_button_selector"
+                app:layout_constraintEnd_toEndOf="@id/constraintCurrentNodes"
+                app:layout_constraintTop_toTopOf="@id/textViewLabelCurrentNodes"
+                app:layout_constraintBottom_toBottomOf="@id/textViewLabelCurrentNodes"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/viewCurrentNodes"
@@ -420,25 +433,37 @@
             style="@style/ChangeBackgroundBlack35ToWhite"
             android:alpha="0.4"
             android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintTop_toBottomOf="@id/textViewLabelCurrentNodes"/>
+            app:layout_constraintTop_toBottomOf="@id/constraintCurrentNodes"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewLabelAllNodes"
-            style="@style/AppTheme.AppTextView.MediumBlack14"
-            android:text="All nodes in space"
-            android:layout_marginTop="@dimen/dp_16"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintTop_toBottomOf="@id/viewCurrentNodes"/>
-
-        <androidx.appcompat.widget.AppCompatRadioButton
-            android:id="@+id/radioButtonAllNodes"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintAllNodes"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:checked="true"
-            android:button="@drawable/dw_radio_button_selector"
-            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toTopOf="@id/textViewLabelAllNodes"
-            app:layout_constraintBottom_toBottomOf="@id/textViewLabelAllNodes"/>
+            android:layout_width="@dimen/dp_0"
+            android:layout_marginTop="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/viewCurrentNodes">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelAllNodes"
+                style="@style/AppTheme.AppTextView.MediumBlack14"
+                android:text="All nodes in space"
+                app:layout_constraintStart_toStartOf="@id/constraintAllNodes"
+                app:layout_constraintTop_toTopOf="@id/constraintAllNodes"/>
+
+            <androidx.appcompat.widget.AppCompatRadioButton
+                android:id="@+id/radioButtonAllNodes"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:checked="false"
+                android:padding="@dimen/dp_6"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:button="@drawable/dw_radio_button_selector"
+                app:layout_constraintEnd_toEndOf="@id/constraintAllNodes"
+                app:layout_constraintTop_toTopOf="@id/textViewLabelAllNodes"
+                app:layout_constraintBottom_toBottomOf="@id/textViewLabelAllNodes"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/viewAllNodes"
@@ -447,7 +472,7 @@
             style="@style/ChangeBackgroundBlack35ToWhite"
             android:alpha="0.4"
             android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintTop_toBottomOf="@id/textViewLabelAllNodes"/>
+            app:layout_constraintTop_toBottomOf="@id/constraintAllNodes"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

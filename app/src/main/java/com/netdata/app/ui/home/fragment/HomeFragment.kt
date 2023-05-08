@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.netdata.app.R
@@ -24,7 +26,7 @@ import com.netdata.app.utils.visible
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
-    private var warRoomsItemPosition = -1
+    private var warRoomsItemPosition = 0
     private var sortByTimeItemPosition = -1
     private var sortByNotificationPriorityItemPosition = -1
     private var sortByCriticalityItemPosition = -1
@@ -173,6 +175,37 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val dialog = BottomSheetDialog(requireContext())
 
         val view = layoutInflater.inflate(R.layout.bottom_sheet_notification_priority, null)
+
+        val textViewLabelEditPrioritySettings = view.findViewById<AppCompatTextView>(R.id.textViewLabelEditPrioritySettings)
+        val constraintCurrentNodes = view.findViewById<ConstraintLayout>(R.id.constraintCurrentNodes)
+        val constraintAllNodes = view.findViewById<ConstraintLayout>(R.id.constraintAllNodes)
+        val radioButtonCurrentNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonCurrentNodes)
+        val radioButtonAllNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonAllNodes)
+
+        textViewLabelEditPrioritySettings.setOnClickListener {
+            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java).start()
+            dialog.dismiss()
+        }
+
+        constraintCurrentNodes.setOnClickListener {
+            radioButtonCurrentNodes.isChecked = true
+            radioButtonAllNodes.isChecked = false
+        }
+
+        constraintAllNodes.setOnClickListener {
+            radioButtonCurrentNodes.isChecked = false
+            radioButtonAllNodes.isChecked = true
+        }
+
+        radioButtonCurrentNodes.setOnClickListener {
+            radioButtonCurrentNodes.isChecked = true
+            radioButtonAllNodes.isChecked = false
+        }
+
+        radioButtonAllNodes.setOnClickListener {
+            radioButtonCurrentNodes.isChecked = false
+            radioButtonAllNodes.isChecked = true
+        }
 
         dialog.setCancelable(false)
         dialog.setContentView(view)

@@ -12,6 +12,8 @@ import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.exception.ApplicationException
 import com.netdata.app.ui.auth.viewmodel.LoginViewModel
 import com.netdata.app.ui.base.BaseFragment
+import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
+import com.netdata.app.utils.Constant
 import com.netdata.app.utils.Validator
 import javax.inject.Inject
 
@@ -45,7 +47,8 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
 
     private fun manageClick() = with(binding){
         buttonSignIn.setOnClickListener {
-            navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
+            appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+            navigator.load(ChooseSpaceFragment::class.java).replace(false)
         }
     }
 

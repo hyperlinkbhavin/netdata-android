@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/dp_8"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintTop"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        style="@style/ChangeBackgroundTintWhiteToBlack1C"
+        android:background="@drawable/dw_corner_four_bg"
+        android:padding="@dimen/dp_16"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelLatestTimeValue"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_latest_time_value_colon"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewLabelWarning"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/label_warning"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/dw_corner_thirty_bg"
+            android:backgroundTint="@color/colorYellowF9"
+            android:drawableStart="@drawable/ic_settings_maintenance_mode"
+            android:drawablePadding="@dimen/dp_6"
+            android:drawableTint="@color/colorWhite"
+            android:paddingVertical="@dimen/dp_4"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_8"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelLatestTimeValue"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewWarningPercent"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="65.65 mb/s • 32.1 %"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
+            android:textSize="@dimen/sp_14"
+            android:textColor="@color/colorWhite"
+            android:background="@drawable/dw_corner_thirty_bg"
+            android:backgroundTint="@color/colorYellowF9"
+            android:paddingVertical="@dimen/dp_4"
+            android:paddingHorizontal="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_8"
+            app:layout_constraintStart_toEndOf="@id/textViewLabelWarning"
+            app:layout_constraintTop_toTopOf="@id/textViewLabelWarning"
+            app:layout_constraintBottom_toBottomOf="@id/textViewLabelWarning"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintRaisedOn"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            style="@style/ChangeBackgroundTintGreyE9ToBlack35"
+            android:background="@drawable/dw_corner_four_bg"
+            android:layout_marginTop="@dimen/dp_8"
+            android:paddingVertical="@dimen/dp_8"
+            android:paddingHorizontal="@dimen/sp_12"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelWarning">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewCalendar"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/ChangeTintColor"
+                android:src="@drawable/ic_calendar"
+                app:layout_constraintTop_toTopOf="@id/constraintRaisedOn"
+                app:layout_constraintBottom_toBottomOf="@id/constraintRaisedOn"
+                app:layout_constraintStart_toStartOf="@id/constraintRaisedOn"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelRaisedOn"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="Raised on:"
+                android:alpha="0.9"
+                android:layout_marginStart="@dimen/dp_10"
+                app:layout_constraintTop_toTopOf="@id/constraintRaisedOn"
+                app:layout_constraintStart_toEndOf="@id/imageViewCalendar"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewRaisedOnDateTime"
+                style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+                android:text="Sat Nov 10 2021, 12:33:50 EET"
+                android:layout_marginTop="@dimen/dp_4"
+                android:alpha="0.9"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelRaisedOn"
+                app:layout_constraintStart_toStartOf="@id/textViewLabelRaisedOn"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

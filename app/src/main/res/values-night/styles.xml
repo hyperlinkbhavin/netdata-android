@@ -160,8 +160,8 @@
         <item name="android:backgroundTint">@color/colorBlack1C</item>
     </style>
 
-    <style name="ChangeBackgroundTintBlack35ToGrey8F" parent="">
-        <item name="android:backgroundTint">@color/colorGrey8F</item>
+    <style name="ChangeBackgroundTintGreyE9ToBlack35" parent="">
+        <item name="android:backgroundTint">@color/colorBlack35</item>
     </style>
 
     <style name="ChangeBackgroundTintWhiteToGrey8F" parent="">
@@ -261,6 +261,12 @@
     <style name="AppTheme.AppTextView.SemiBoldBlack14" parent="Widget.BaseAppTextView">
         <item name="android:textSize">@dimen/sp_14</item>
         <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.SemiBoldBlack35ToGrey8F14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorGrey8F</item>
         <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
     </style>
 

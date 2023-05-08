@@ -21,7 +21,7 @@ import com.netdata.app.ui.notification.adapter.NotificationAdapter
 
 class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
 
-    private var warRoomsItemPosition = -1
+    private var warRoomsItemPosition = 0
 
     private val notificationsAdapter by lazy {
         NotificationAdapter() { view, position, item ->

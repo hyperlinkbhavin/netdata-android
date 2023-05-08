@@ -71,6 +71,7 @@
     <style name="AppCompatButtonGreenWithCorner" parent="AppCompatButtonGreen">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">@dimen/sp_12</item>
+        <item name="android:minHeight">@dimen/dp_0</item>
         <item name="android:paddingTop">@dimen/dp_8</item>
         <item name="android:paddingBottom">@dimen/dp_8</item>
         <item name="android:paddingStart">@dimen/dp_8</item>
@@ -182,6 +183,10 @@
         <item name="android:backgroundTint">@color/colorPrimary</item>
     </style>
 
+    <style name="ChangeBackgroundTintGreyE9ToBlack35" parent="">
+        <item name="android:backgroundTint">@color/colorGreyE9</item>
+    </style>
+
     <style name="ChangeBackgroundBlack35ToWhite" parent="">
         <item name="android:background">@color/colorBlack35</item>
     </style>
@@ -265,6 +270,12 @@
 
     <!-- TextView Semi Bold   -->
     <style name="AppTheme.AppTextView.SemiBoldBlack14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorBlack35</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+    </style>
+
+    <style name="AppTheme.AppTextView.SemiBoldBlack35ToGrey8F14" parent="Widget.BaseAppTextView">
         <item name="android:textSize">@dimen/sp_14</item>
         <item name="android:textColor">@color/colorBlack35</item>
         <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
