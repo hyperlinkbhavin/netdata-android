@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="@dimen/dp_8"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewDot"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_priority_select_dot"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewTitle"
+        tools:text="Warning when:"
+        style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+        android:layout_marginStart="@dimen/dp_8"
+        app:layout_constraintStart_toEndOf="@id/imageViewDot"
+        app:layout_constraintTop_toTopOf="@id/imageViewDot"
+        app:layout_constraintBottom_toBottomOf="@id/imageViewDot"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintTop"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        style="@style/ChangeBackgroundTintWhiteToBlack1C"
+        android:background="@drawable/dw_corner_four_bg"
+        android:paddingStart="@dimen/dp_16"
+        android:paddingTop="@dimen/dp_16"
+        android:paddingEnd="@dimen/dp_8"
+        android:paddingBottom="@dimen/dp_8"
+        android:layout_marginTop="@dimen/dp_16"
+        app:layout_constraintTop_toBottomOf="@id/textViewTitle">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewDescription"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.PlexMonoRegularBlack14"
+            android:layout_marginBottom="@dimen/dp_8"
+            android:layout_marginEnd="8dp"
+            tools:text="Average of all values of dimension received, of chart net.eth0, starting 1 min ago and up to now, with options absolute unaligned"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintTop"
+            app:layout_constraintEnd_toStartOf="@id/imageViewCopyText"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewCopyText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_copy_icon"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"
+            app:layout_constraintBottom_toBottomOf="@id/constraintTop"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/textViewLabelMoreWarningDetails"
+        style="@style/AppTheme.AppTextView.RegularBlack12"
+        android:text="@string/label_more_warning_details_about_this_command"
+        android:layout_marginTop="@dimen/dp_8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/constraintTop"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -93,4 +93,12 @@
     <string name="label_latest_time_value_colon">Latest time value:</string>
     <string name="label_time_values">Time Values</string>
     <string name="label_alert_info">Alert Info</string>
+    <string name="label_configuration">Configuration</string>
+    <string name="label_more_warning_details_about_this_command">More <b>warning</b> details about <b>$this</b> command</string>
+    <string name="label_severity_conditions">Severity Conditions</string>
+    <string name="label_check">Check</string>
+    <string name="label_instance_values_alert_text">The alert is calculated from multiple checks running on {X} node instances that inherits the selected state bellow:</string>
+    <string name="label_edit_alert">Edit Alert</string>
+    <string name="label_if_you_wish_to_edit_and_configure_this_alert_please">If you wish to edit and configure this alert, please:</string>
+    <string name="label_check_every">Check Every:</string>
 </resources>

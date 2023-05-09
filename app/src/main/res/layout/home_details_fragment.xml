@@ -20,7 +20,8 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintTop"
             android:layout_height="match_parent"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:paddingBottom="@dimen/dp_20">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineStart"
@@ -396,6 +397,307 @@
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintTop_toBottomOf="@id/constraintAlertInfo"/>
+
+            <View
+                android:id="@+id/viewAlertInfo"
+                android:layout_height="@dimen/dp_1"
+                android:layout_width="@dimen/dp_0"
+                style="@style/ChangeBackgroundBlack35ToWhite"
+                android:alpha="0.6"
+                android:layout_marginTop="@dimen/dp_18"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewAlertInfo"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintConfiguration"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/ChangeBackgroundTintWhiteToBlack1C"
+                android:background="@drawable/dw_corner_four_bg"
+                android:paddingVertical="@dimen/dp_6"
+                android:paddingHorizontal="@dimen/dp_6"
+                android:layout_marginTop="@dimen/dp_25"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/viewAlertInfo">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewConfiguration"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    style="@style/ChangeTintColor"
+                    android:src="@drawable/ic_configuration"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelConfiguration"
+                android:width="@dimen/dp_0"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppTheme.AppTextView.BoldBlack16"
+                android:text="@string/label_configuration"
+                android:layout_marginStart="@dimen/dp_8"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/constraintConfiguration"
+                app:layout_constraintTop_toTopOf="@id/constraintConfiguration"
+                app:layout_constraintBottom_toBottomOf="@id/constraintConfiguration"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewConfiguration"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                tools:listitem="@layout/row_item_configuration"
+                tools:itemCount="2"
+                android:layout_marginTop="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelConfiguration"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelSeverityCondition"
+                style="@style/AppTheme.AppTextView.BoldBlack12"
+                android:text="@string/label_severity_conditions"
+                android:textAllCaps="true"
+                android:layout_marginTop="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewConfiguration"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewSeverityConditions"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                tools:listitem="@layout/row_item_severity_conditions"
+                tools:itemCount="2"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelSeverityCondition"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelCheck"
+                style="@style/AppTheme.AppTextView.BoldBlack12"
+                android:text="@string/label_check"
+                android:textAllCaps="true"
+                android:layout_marginTop="@dimen/sp_12"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewSeverityConditions"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintCheck"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/ChangeBackgroundTintWhiteToBlack1C"
+                android:background="@drawable/dw_corner_four_bg"
+                android:paddingStart="@dimen/dp_22"
+                android:paddingEnd="@dimen/dp_16"
+                android:paddingVertical="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelCheck">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewCheck"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    style="@style/ChangeTintColor"
+                    android:src="@drawable/ic_alert_clock"
+                    app:layout_constraintStart_toStartOf="@id/constraintCheck"
+                    app:layout_constraintTop_toTopOf="@id/constraintCheck"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintCheck"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewCheckName"
+                    style="@style/AppTheme.AppTextView.RegularBlack14"
+                    android:text="@string/label_check_every"
+                    android:layout_marginStart="@dimen/dp_10"
+                    app:layout_constraintStart_toEndOf="@id/imageViewCheck"
+                    app:layout_constraintTop_toTopOf="@id/constraintCheck"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintCheck"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewAlertInfoValue"
+                    style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+                    android:text="10 Seconds"
+                    android:layout_marginStart="@dimen/dp_4"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    app:layout_constraintStart_toEndOf="@id/textViewCheckName"
+                    app:layout_constraintTop_toTopOf="@id/constraintCheck"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintCheck"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!--<androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewCheck"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                tools:listitem="@layout/row_item_alert_info"
+                tools:itemCount="2"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelCheck"/>-->
+
+            <View
+                android:id="@+id/viewConfigurations"
+                android:layout_height="@dimen/dp_1"
+                android:layout_width="@dimen/dp_0"
+                style="@style/ChangeBackgroundBlack35ToWhite"
+                android:alpha="0.6"
+                android:layout_marginTop="@dimen/dp_25"
+                app:layout_constraintTop_toBottomOf="@id/constraintCheck"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintInstanceValues"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/ChangeBackgroundTintWhiteToBlack1C"
+                android:background="@drawable/dw_corner_four_bg"
+                android:paddingVertical="@dimen/dp_6"
+                android:paddingHorizontal="@dimen/dp_6"
+                android:layout_marginTop="@dimen/dp_25"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/viewConfigurations">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewInstanceValues"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    style="@style/ChangeTintColor"
+                    android:src="@drawable/ic_instance_values"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelInstanceValues"
+                android:width="@dimen/dp_0"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppTheme.AppTextView.BoldBlack16"
+                android:text="Instance Values - Node Instances"
+                android:layout_marginStart="@dimen/dp_8"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/constraintInstanceValues"
+                app:layout_constraintTop_toTopOf="@id/constraintInstanceValues"
+                app:layout_constraintBottom_toBottomOf="@id/constraintInstanceValues"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewInstanceValuesText"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_instance_values_alert_text"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/constraintInstanceValues"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewInstanceValues"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                tools:listitem="@layout/row_item_instance_values"
+                tools:itemCount="2"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/textViewInstanceValuesText"/>
+
+            <View
+                android:id="@+id/viewInstanceValues"
+                android:layout_height="@dimen/dp_1"
+                android:layout_width="@dimen/dp_0"
+                style="@style/ChangeBackgroundBlack35ToWhite"
+                android:alpha="0.6"
+                android:layout_marginTop="@dimen/dp_18"
+                app:layout_constraintTop_toBottomOf="@id/recyclerViewInstanceValues"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintEditAlert"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/ChangeBackgroundTintWhiteToBlack1C"
+                android:background="@drawable/dw_corner_four_bg"
+                android:paddingVertical="@dimen/dp_6"
+                android:paddingHorizontal="@dimen/dp_6"
+                android:layout_marginTop="@dimen/dp_25"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/viewInstanceValues">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewEditAlert"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    style="@style/ChangeTintColor"
+                    android:src="@drawable/ic_setting"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelEditAlert"
+                android:width="@dimen/dp_0"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppTheme.AppTextView.BoldBlack16"
+                android:text="@string/label_edit_alert"
+                android:layout_marginStart="@dimen/dp_8"
+                android:maxLines="1"
+                android:ellipsize="end"
+                app:layout_constraintStart_toEndOf="@id/constraintEditAlert"
+                app:layout_constraintTop_toTopOf="@id/constraintEditAlert"
+                app:layout_constraintBottom_toBottomOf="@id/constraintEditAlert"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewEditAlertText"
+                style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:text="@string/label_if_you_wish_to_edit_and_configure_this_alert_please"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/constraintEditAlert"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintEditAlertVisitDocumentation"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="@dimen/dp_16"
+                android:paddingVertical="@dimen/dp_6"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/textViewEditAlertText">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewLabelEditAlertVisitDocumentation"
+                    style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:text="@string/label_visit_the_documentation"
+                    app:layout_constraintStart_toStartOf="@id/constraintEditAlertVisitDocumentation"
+                    app:layout_constraintTop_toTopOf="@id/constraintEditAlertVisitDocumentation"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintEditAlertVisitDocumentation"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewEditAlertVisitDocumentationNext"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:src="@drawable/ic_next"
+                    android:layout_marginStart="@dimen/dp_6"
+                    app:layout_constraintStart_toEndOf="@id/textViewLabelEditAlertVisitDocumentation"
+                    app:layout_constraintTop_toTopOf="@id/constraintEditAlertVisitDocumentation"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintEditAlertVisitDocumentation"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

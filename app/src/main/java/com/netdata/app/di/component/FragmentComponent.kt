@@ -7,6 +7,7 @@ import com.netdata.app.ui.auth.fragment.QRCodeLoginFragment
 import com.netdata.app.ui.auth.fragment.WelcomeFragment
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
+import com.netdata.app.ui.home.fragment.HomeDetailsFragment
 import com.netdata.app.ui.home.fragment.HomeFragment
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.*
@@ -27,5 +28,6 @@ interface FragmentComponent {
     fun inject(changeThemeFragment: ChangeThemeFragment)
     fun inject(termsAndConditionsFragment: TermsAndConditionsFragment)
     fun inject(homeFragment: HomeFragment)
+    fun inject(homeDetailsFragment: HomeDetailsFragment)
 
 }

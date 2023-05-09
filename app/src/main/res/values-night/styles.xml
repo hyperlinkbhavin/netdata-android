@@ -214,6 +214,12 @@
         <item name="android:fontFamily">@font/font_ibm_plex_sans_regular</item>
     </style>
 
+    <style name="AppTheme.AppTextView.PlexMonoRegularBlack14" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_14</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_mono_regular</item>
+    </style>
+
     <style name="AppTheme.AppTextView.RegularBlack35ToGrey8F14" parent="Widget.BaseAppTextView">
         <item name="android:textSize">@dimen/sp_14</item>
         <item name="android:textColor">@color/colorGrey8F</item>
