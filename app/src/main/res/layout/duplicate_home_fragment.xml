@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ic_back_ground">
+
+    <include
+        android:id="@+id/includeToolbar"
+        layout="@layout/include_toolbar_main" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_0"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineStart"
+                style="@style/StyleStartGuideline" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guidelineEnd"
+                style="@style/StyleEndGuideline" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintAllWarRooms"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                style="@style/ChangeBackgroundTintWhiteToBlack1C"
+                android:background="@drawable/dw_corner_four_bg"
+                android:paddingVertical="@dimen/dp_10"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewAllWarRooms"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    style="@style/ChangeTintColor"
+                    android:src="@drawable/ic_all_war_rooms"
+                    app:layout_constraintStart_toStartOf="@id/constraintAllWarRooms"
+                    app:layout_constraintTop_toTopOf="@id/constraintAllWarRooms"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintAllWarRooms"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewLabelAllWarRooms"
+                    style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+                    android:text="@string/label_all_war_rooms"
+                    android:layout_marginStart="@dimen/dp_8"
+                    app:layout_constraintStart_toEndOf="@id/imageViewAllWarRooms"
+                    app:layout_constraintTop_toTopOf="@id/constraintAllWarRooms"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintAllWarRooms"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewAllWarRoomsDown"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    style="@style/ChangeTintColor"
+                    android:src="@drawable/ic_down"
+                    android:rotation="180"
+                    app:layout_constraintEnd_toEndOf="@id/constraintAllWarRooms"
+                    app:layout_constraintTop_toTopOf="@id/constraintAllWarRooms"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintAllWarRooms"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/editTextSearchServices"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                style="@style/AppCompatEditTextSearch"
+                android:hint="@string/hint_search_services"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="@dimen/dp_14"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toStartOf="@id/constraintSortBy"
+                app:layout_constraintTop_toBottomOf="@id/constraintAllWarRooms"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintSortBy"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeBackgroundTintWhiteToBlack1C"
+            android:background="@drawable/dw_corner_four_bg"
+            android:paddingVertical="@dimen/dp_12"
+            android:paddingHorizontal="@dimen/dp_12"
+            android:layout_marginStart="@dimen/dp_20"
+            app:layout_constraintStart_toEndOf="@id/editTextSearchServices"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toTopOf="@id/editTextSearchServices"
+            app:layout_constraintBottom_toBottomOf="@id/editTextSearchServices">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewSortBy"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                style="@style/ChangeTintColor"
+                android:src="@drawable/ic_sort_by"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonAll"
+                style="@style/AppCompatButtonGreenWithCorner16"
+                android:text="All (3)"
+                android:layout_marginTop="@dimen/dp_16"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintTop_toBottomOf="@id/editTextSearchServices"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/buttonUnread"
+                style="@style/AppCompatButtonGreenWithCorner16"
+                android:text="Unread (3)"
+                android:layout_marginStart="@dimen/dp_8"
+                app:layout_constraintStart_toEndOf="@id/buttonAll"
+                app:layout_constraintTop_toTopOf="@id/buttonAll"
+                app:layout_constraintBottom_toBottomOf="@id/buttonAll"/>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewLabelMarkAllAsRead"
+                style="@style/AppTheme.AppTextView.BoldBlack12"
+                android:text="@string/label_mark_all_as_read"
+                android:paddingVertical="@dimen/dp_6"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toTopOf="@id/buttonUnread"
+                app:layout_constraintBottom_toBottomOf="@id/buttonUnread"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewHome"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                tools:listitem="@layout/row_item_home"
+                tools:itemCount="3"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:orientation="vertical"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/buttonAll"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

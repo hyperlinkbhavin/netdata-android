@@ -6,6 +6,7 @@ import com.netdata.app.R
 import com.netdata.app.databinding.AuthAcitivtyBinding
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.ui.auth.fragment.LoginFragment
+import com.netdata.app.ui.auth.fragment.WelcomeFragment
 import com.netdata.app.ui.base.BaseActivity
 
 class AuthActivity : BaseActivity() {
@@ -46,7 +47,7 @@ class AuthActivity : BaseActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        load(LoginFragment::class.java).replace(false)
+        load(WelcomeFragment::class.java).replace(false)
     }
 
 }

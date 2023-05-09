@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.data.pojo.request.ChooseSpaceList
+import com.netdata.app.data.pojo.request.InstanceValuesList
 import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.RowItemChooseSpaceBinding
 import com.netdata.app.databinding.RowItemInstanceValuesBinding
@@ -15,9 +16,9 @@ import com.netdata.app.utils.gone
 import com.netdata.app.utils.invisible
 import com.netdata.app.utils.visible
 
-class InstanceValuesAdapter(val callBack: (View, Int, ChooseSpaceList) -> Unit) : RecyclerView.Adapter<InstanceValuesAdapter.ViewHolder>() {
+class InstanceValuesAdapter(val callBack: (View, Int, InstanceValuesList) -> Unit) : RecyclerView.Adapter<InstanceValuesAdapter.ViewHolder>() {
 
-    var list = ArrayList<ChooseSpaceList>()
+    var list = ArrayList<InstanceValuesList>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -51,8 +52,11 @@ class InstanceValuesAdapter(val callBack: (View, Int, ChooseSpaceList) -> Unit) 
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: ChooseSpaceList) = with(binding) {
-
+        fun bind(item: InstanceValuesList) = with(binding) {
+            textViewInstanceName.text = item.name
+            textViewLabelWarning.text = item.priority
+            textViewWarningPercent.text = item.priorityPercentage
+            textViewInstanceDateTime.text = item.dateTime
         }
 
     }

@@ -17,6 +17,16 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
     }
 
     override fun bindData() {
+        manageClick()
+    }
 
+    private fun manageClick() = with(binding){
+        buttonSignInWithEmailAddress.setOnClickListener {
+            navigator.load(LoginFragment::class.java).replace(true)
+        }
+
+        buttonSignInWithQRCode.setOnClickListener {
+            navigator.load(QRCodeLoginFragment::class.java).replace(true)
+        }
     }
 }

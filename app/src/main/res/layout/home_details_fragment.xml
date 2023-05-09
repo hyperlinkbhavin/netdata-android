@@ -39,6 +39,7 @@
                 android:background="@drawable/dw_no_corner_bg"
                 android:paddingVertical="@dimen/dp_24"
                 android:paddingHorizontal="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
                 app:layout_constraintTop_toTopOf="@id/constraintTop">
 
                 <androidx.appcompat.widget.AppCompatImageView
@@ -53,12 +54,16 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelWarRoomsList"
+                    android:layout_width="@dimen/dp_0"
                     style="@style/AppTheme.AppTextView.SemiBoldBlack14"
-                    android:text="@string/label_all_war_rooms"
+                    android:text="@string/dummy_war_room_1_war_room_2_war_room_3_war_room_4"
                     android:layout_marginStart="@dimen/dp_8"
+                    android:maxLines="1"
+                    android:ellipsize="end"
                     app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsList"
-                    app:layout_constraintTop_toTopOf="@id/constraintWarRoomsList"
-                    app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsList"/>
+                    app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsList"
+                    app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsList"
+                    app:layout_constraintEnd_toEndOf="@id/constraintWarRoomsList"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -691,6 +696,7 @@
                     android:id="@+id/imageViewEditAlertVisitDocumentationNext"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
+                    style="@style/ChangeTintColor"
                     android:src="@drawable/ic_next"
                     android:layout_marginStart="@dimen/dp_6"
                     app:layout_constraintStart_toEndOf="@id/textViewLabelEditAlertVisitDocumentation"

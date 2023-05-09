@@ -101,4 +101,7 @@
     <string name="label_edit_alert">Edit Alert</string>
     <string name="label_if_you_wish_to_edit_and_configure_this_alert_please">If you wish to edit and configure this alert, please:</string>
     <string name="label_check_every">Check Every:</string>
+    <string name="label_raised_on">Raised on:</string>
+    <string name="dummy_war_room_1_war_room_2_war_room_3_war_room_4">War Room 1 • War Room 2 • War Room 3 • War Room 4</string>
+    <string name="btn_change_notification_priority">Change notification priority</string>
 </resources>

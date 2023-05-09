@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -6,9 +7,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <com.zerobranch.layout.SwipeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        app:draggedItem="@id/constraintTop"
+        app:leftItem="@id/leftViewSwipe"
+        app:rightItem="@id/rightViewSwipe"
+        app:swipeDirection="left|right"
+        app:isFreeDragAfterOpen="true"
+        app:isFreeHorizontalDrag="true"
+        app:isTogether="true"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/leftViewSwipe"
+            android:layout_width="@dimen/dp_135"
+            android:layout_height="@dimen/dp_220"
+            android:layout_gravity="start"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_swipe_mark_as_unread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/rightViewSwipe"
+            android:layout_width="@dimen/dp_135"
+            android:layout_height="@dimen/dp_220"
+            android:layout_gravity="end"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_swipe_change_priority"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintTop"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_220"
         android:layout_width="match_parent"
         android:paddingVertical="@dimen/dp_16"
         android:paddingStart="@dimen/dp_16"
@@ -215,5 +252,7 @@
             app:layout_constraintBottom_toBottomOf="@id/textViewWarningPercent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.zerobranch.layout.SwipeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

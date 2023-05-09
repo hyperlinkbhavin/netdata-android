@@ -221,7 +221,7 @@
             android:layout_height="wrap_content"
             android:layout_width="@dimen/dp_0"
             android:layout_marginTop="@dimen/dp_30"
-            android:layout_marginHorizontal="@dimen/dp_20"
+            android:layout_marginHorizontal="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/textViewPriorityText">
@@ -243,6 +243,20 @@
                     app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
                     app:layout_constraintTop_toTopOf="@id/constraintLowPriority"/>
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonLabelLowPriority"
+                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp_0"
+                    style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:text="@string/label_low_priority"
+                    android:button="@drawable/dw_radio_button_selector"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:paddingStart="@dimen/dp_4"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                    app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewLowPriority"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelLowPriority"
@@ -292,10 +306,24 @@
                     android:id="@+id/imageViewMediumPriority"
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:src="@drawable/ic_low_priority"
+                    android:src="@drawable/ic_medium_priority"
                     app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
                     app:layout_constraintTop_toTopOf="@id/constraintMediumPriority"/>
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonLabelMediumPriority"
+                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp_0"
+                    style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:text="@string/label_medium_priority"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:button="@drawable/dw_radio_button_selector"
+                    android:paddingStart="@dimen/dp_4"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                    app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewMediumPriority"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelMediumPriority"
@@ -345,10 +373,24 @@
                 android:id="@+id/imageViewHighPriority"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:src="@drawable/ic_low_priority"
+                android:src="@drawable/ic_high_priority"
                 app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                 app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toTopOf="@id/constraintHighPriority"/>
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonLabelHighPriority"
+                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/dp_0"
+                    style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:text="@string/label_high_priority"
+                    android:button="@drawable/dw_radio_button_selector"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:paddingStart="@dimen/dp_4"
+                    android:visibility="invisible"
+                    app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                    app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewHighPriority"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewLabelHighPriority"
@@ -387,92 +429,120 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewLabelNodes"
-            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
-            android:text="@string/label_nodes"
-            android:layout_marginTop="@dimen/dp_25"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonChangeNotificationPriority"
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/dp_0"
+            android:text="@string/btn_change_notification_priority"
+            android:textColor="@color/colorWhite"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
+            android:textSize="@dimen/sp_18"
+            android:layout_marginTop="@dimen/dp_50"
+            android:background="@drawable/dw_corner_twelve_bg"
+            android:backgroundTint="@color/colorPrimary"
+            android:paddingVertical="@dimen/dp_16"
+            android:minHeight="@dimen/dp_0"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/constraintPriority"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintCurrentNodes"
+            android:id="@+id/constraintNodes"
             android:layout_height="wrap_content"
             android:layout_width="@dimen/dp_0"
-            android:layout_marginTop="@dimen/dp_10"
+            android:layout_marginTop="@dimen/dp_25"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewLabelNodes">
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/constraintPriority">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textViewLabelCurrentNodes"
-                style="@style/AppTheme.AppTextView.MediumBlack14"
-                android:text="Current selection of nodes"
-                app:layout_constraintStart_toStartOf="@id/constraintCurrentNodes"
-                app:layout_constraintTop_toTopOf="@id/constraintCurrentNodes"
-                app:layout_constraintBottom_toBottomOf="@id/constraintCurrentNodes"/>
+                android:id="@+id/textViewLabelNodes"
+                style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+                android:text="@string/label_nodes"
+                app:layout_constraintStart_toStartOf="@id/constraintNodes"
+                app:layout_constraintTop_toTopOf="@id/constraintNodes"/>
 
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radioButtonCurrentNodes"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintCurrentNodes"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:checked="true"
-                android:padding="@dimen/dp_6"
-                android:layout_marginEnd="@dimen/dp_10"
-                android:button="@drawable/dw_radio_button_selector"
-                app:layout_constraintEnd_toEndOf="@id/constraintCurrentNodes"
-                app:layout_constraintTop_toTopOf="@id/textViewLabelCurrentNodes"
-                app:layout_constraintBottom_toBottomOf="@id/textViewLabelCurrentNodes"/>
+                android:layout_width="@dimen/dp_0"
+                android:layout_marginTop="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@id/constraintNodes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelNodes">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewLabelCurrentNodes"
+                    style="@style/AppTheme.AppTextView.MediumBlack14"
+                    android:text="Current selection of nodes"
+                    app:layout_constraintStart_toStartOf="@id/constraintCurrentNodes"
+                    app:layout_constraintTop_toTopOf="@id/constraintCurrentNodes"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintCurrentNodes"/>
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonCurrentNodes"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checked="true"
+                    android:padding="@dimen/dp_6"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:button="@drawable/dw_radio_button_selector"
+                    app:layout_constraintEnd_toEndOf="@id/constraintCurrentNodes"
+                    app:layout_constraintTop_toTopOf="@id/textViewLabelCurrentNodes"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewLabelCurrentNodes"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/viewCurrentNodes"
+                android:layout_height="@dimen/dp_1"
+                android:layout_width="match_parent"
+                style="@style/ChangeBackgroundBlack35ToWhite"
+                android:alpha="0.4"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintTop_toBottomOf="@id/constraintCurrentNodes"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintAllNodes"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                android:layout_marginTop="@dimen/dp_10"
+                app:layout_constraintStart_toStartOf="@id/constraintNodes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/viewCurrentNodes">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewLabelAllNodes"
+                    style="@style/AppTheme.AppTextView.MediumBlack14"
+                    android:text="All nodes in space"
+                    app:layout_constraintStart_toStartOf="@id/constraintAllNodes"
+                    app:layout_constraintTop_toTopOf="@id/constraintAllNodes"/>
+
+                <androidx.appcompat.widget.AppCompatRadioButton
+                    android:id="@+id/radioButtonAllNodes"
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:checked="false"
+                    android:padding="@dimen/dp_6"
+                    android:layout_marginEnd="@dimen/dp_10"
+                    android:button="@drawable/dw_radio_button_selector"
+                    app:layout_constraintEnd_toEndOf="@id/constraintAllNodes"
+                    app:layout_constraintTop_toTopOf="@id/textViewLabelAllNodes"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewLabelAllNodes"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <View
+                android:id="@+id/viewAllNodes"
+                android:layout_height="@dimen/dp_1"
+                android:layout_width="match_parent"
+                style="@style/ChangeBackgroundBlack35ToWhite"
+                android:alpha="0.4"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintTop_toBottomOf="@id/constraintAllNodes"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/viewCurrentNodes"
-            android:layout_height="@dimen/dp_1"
-            android:layout_width="match_parent"
-            style="@style/ChangeBackgroundBlack35ToWhite"
-            android:alpha="0.4"
-            android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintTop_toBottomOf="@id/constraintCurrentNodes"/>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintAllNodes"
-            android:layout_height="wrap_content"
-            android:layout_width="@dimen/dp_0"
-            android:layout_marginTop="@dimen/dp_10"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/viewCurrentNodes">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textViewLabelAllNodes"
-                style="@style/AppTheme.AppTextView.MediumBlack14"
-                android:text="All nodes in space"
-                app:layout_constraintStart_toStartOf="@id/constraintAllNodes"
-                app:layout_constraintTop_toTopOf="@id/constraintAllNodes"/>
-
-            <androidx.appcompat.widget.AppCompatRadioButton
-                android:id="@+id/radioButtonAllNodes"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:checked="false"
-                android:padding="@dimen/dp_6"
-                android:layout_marginEnd="@dimen/dp_10"
-                android:button="@drawable/dw_radio_button_selector"
-                app:layout_constraintEnd_toEndOf="@id/constraintAllNodes"
-                app:layout_constraintTop_toTopOf="@id/textViewLabelAllNodes"
-                app:layout_constraintBottom_toBottomOf="@id/textViewLabelAllNodes"/>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <View
-            android:id="@+id/viewAllNodes"
-            android:layout_height="@dimen/dp_1"
-            android:layout_width="match_parent"
-            style="@style/ChangeBackgroundBlack35ToWhite"
-            android:alpha="0.4"
-            android:layout_marginTop="@dimen/dp_8"
-            app:layout_constraintTop_toBottomOf="@id/constraintAllNodes"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

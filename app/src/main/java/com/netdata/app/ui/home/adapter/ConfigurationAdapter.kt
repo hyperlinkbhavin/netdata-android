@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.data.pojo.request.ChooseSpaceList
+import com.netdata.app.data.pojo.request.ConfigurationList
 import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.RowItemChooseSpaceBinding
 import com.netdata.app.databinding.RowItemConfigurationBinding
@@ -15,9 +16,9 @@ import com.netdata.app.utils.gone
 import com.netdata.app.utils.invisible
 import com.netdata.app.utils.visible
 
-class ConfigurationAdapter(val callBack: (View, Int, ChooseSpaceList) -> Unit) : RecyclerView.Adapter<ConfigurationAdapter.ViewHolder>() {
+class ConfigurationAdapter(val callBack: (View, Int, ConfigurationList) -> Unit) : RecyclerView.Adapter<ConfigurationAdapter.ViewHolder>() {
 
-    var list = ArrayList<ChooseSpaceList>()
+    var list = ArrayList<ConfigurationList>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -51,8 +52,9 @@ class ConfigurationAdapter(val callBack: (View, Int, ChooseSpaceList) -> Unit) :
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: ChooseSpaceList) = with(binding) {
-
+        fun bind(item: ConfigurationList) = with(binding) {
+            textViewTitle.text = item.title
+            textViewDescription.text = item.description
         }
 
     }

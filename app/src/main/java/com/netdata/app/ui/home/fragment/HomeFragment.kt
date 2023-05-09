@@ -4,13 +4,18 @@ import android.annotation.SuppressLint
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.netdata.app.R
 import com.netdata.app.data.pojo.HomeDataList
+import com.netdata.app.data.pojo.enumclass.AlertStatus
+import com.netdata.app.data.pojo.request.FilterList
 import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.HomeFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
@@ -18,11 +23,15 @@ import com.netdata.app.ui.auth.IsolatedFullActivity
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.adapter.AllWarRoomsAdapter
 import com.netdata.app.ui.home.adapter.HomeAdapter
+import com.netdata.app.ui.home.adapter.HomeFilterAdapter
 import com.netdata.app.ui.home.adapter.SortByAdapter
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.Constant
+import com.netdata.app.utils.gone
+import com.netdata.app.utils.invisible
 import com.netdata.app.utils.visible
+
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
@@ -36,8 +45,70 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private val homeAdapter by lazy {
         HomeAdapter(){ view, position, item ->
             when(view.id){
+                R.id.constraintTop -> {
+                    navigator.loadActivity(IsolatedFullActivity::class.java, HomeDetailsFragment::class.java).start()
+                }
+
                 R.id.imageViewPriority -> {
                     bottomSheetPriority()
+                }
+
+                R.id.leftViewSwipe -> {
+                    leftSwipeManage(position)
+                }
+
+                R.id.rightViewSwipe -> {
+                    showMessage("Change Priority Clicked")
+                }
+            }
+        }
+    }
+
+    private val nodeFilterAdapter by lazy {
+        HomeFilterAdapter(){ view, position, item ->
+            when(view.id){
+                R.id.checkBoxFilter -> {
+                    filterCount()
+                }
+            }
+        }
+    }
+
+    private val alertStatusFilterAdapter by lazy {
+        HomeFilterAdapter(){ view, position, item ->
+            when(view.id){
+                R.id.checkBoxFilter -> {
+                    filterCount()
+                }
+            }
+        }
+    }
+
+    private val notificationPriorityFilterAdapter by lazy {
+        HomeFilterAdapter(){ view, position, item ->
+            when(view.id){
+                R.id.checkBoxFilter -> {
+                    filterCount()
+                }
+            }
+        }
+    }
+
+    private val classFilterAdapter by lazy {
+        HomeFilterAdapter(){ view, position, item ->
+            when(view.id){
+                R.id.checkBoxFilter -> {
+                    filterCount()
+                }
+            }
+        }
+    }
+
+    private val typeAndComponentFilterAdapter by lazy {
+        HomeFilterAdapter(){ view, position, item ->
+            when(view.id){
+                R.id.checkBoxFilter -> {
+                    filterCount()
                 }
             }
         }
@@ -65,6 +136,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         binding.buttonAll.isSelected = isAllButtonSelected
         binding.buttonUnread.isSelected = !isAllButtonSelected
+
+        drawerFilter()
     }
 
     private fun toolbar() = with(binding) {
@@ -97,7 +170,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.buttonAll.isSelected = isAllButtonSelected
             binding.buttonUnread.isSelected = !isAllButtonSelected
 
-            val data = homeList.filter { it.isRead }
+            val data = homeList.filter { !it.isRead }
             homeAdapter.list.clear()
             homeAdapter.list.addAll(data)
 
@@ -120,7 +193,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         includeToolbar.imageViewFilter.setOnClickListener {
-
+            binding.drawerLayout.openDrawer(GravityCompat.END)
         }
 
         includeToolbar.imageViewNotification.setOnClickListener {
@@ -137,6 +210,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         constraintSortBy.setOnClickListener {
             bottomSheetSortBy()
+        }
+
+        textViewLabelClose.setOnClickListener {
+            drawerLayout.closeDrawer(GravityCompat.END)
         }
     }
 
@@ -170,6 +247,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         homeAdapter.notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun leftSwipeManage(position: Int){
+        if(isAllButtonSelected){
+            homeAdapter.list[position].isRead = !homeAdapter.list[position].isRead
+            homeAdapter.notifyDataSetChanged()
+        } else {
+            homeAdapter.list.removeAt(position)
+            homeAdapter.notifyDataSetChanged()
+        }
+    }
+
     private fun bottomSheetPriority() {
 
         val dialog = BottomSheetDialog(requireContext())
@@ -177,10 +265,43 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val view = layoutInflater.inflate(R.layout.bottom_sheet_notification_priority, null)
 
         val textViewLabelEditPrioritySettings = view.findViewById<AppCompatTextView>(R.id.textViewLabelEditPrioritySettings)
+        val buttonChangeNotificationPriority = view.findViewById<AppCompatButton>(R.id.buttonChangeNotificationPriority)
+
+        val textViewLabelLowPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelLowPriority)
+        val textViewLabelMediumPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelMediumPriority)
+        val textViewLabelHighPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelHighPriority)
+
+        val radioButtonLabelLowPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelLowPriority)
+        val radioButtonLabelMediumPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelMediumPriority)
+        val radioButtonLabelHighPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelHighPriority)
+
+        val constraintNodes = view.findViewById<ConstraintLayout>(R.id.constraintNodes)
         val constraintCurrentNodes = view.findViewById<ConstraintLayout>(R.id.constraintCurrentNodes)
         val constraintAllNodes = view.findViewById<ConstraintLayout>(R.id.constraintAllNodes)
+
+        val constraintLowPriority = view.findViewById<ConstraintLayout>(R.id.constraintLowPriority)
+        val constraintMediumPriority = view.findViewById<ConstraintLayout>(R.id.constraintMediumPriority)
+        val constraintHighPriority = view.findViewById<ConstraintLayout>(R.id.constraintHighPriority)
+
         val radioButtonCurrentNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonCurrentNodes)
         val radioButtonAllNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonAllNodes)
+
+        val imageViewBigPriority = view.findViewById<AppCompatImageView>(R.id.imageViewBigPriority)
+        val textViewPriorityName = view.findViewById<AppCompatTextView>(R.id.textViewPriorityName)
+
+        radioButtonLabelHighPriority.isChecked = true
+
+        buttonChangeNotificationPriority.setOnClickListener {
+            buttonChangeNotificationPriority.gone()
+            constraintNodes.visible()
+            radioButtonLabelLowPriority.visible()
+            radioButtonLabelMediumPriority.visible()
+            radioButtonLabelHighPriority.visible()
+
+            textViewLabelLowPriority.invisible()
+            textViewLabelMediumPriority.invisible()
+            textViewLabelHighPriority.invisible()
+        }
 
         textViewLabelEditPrioritySettings.setOnClickListener {
             navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java).start()
@@ -205,6 +326,33 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         radioButtonAllNodes.setOnClickListener {
             radioButtonCurrentNodes.isChecked = false
             radioButtonAllNodes.isChecked = true
+        }
+
+        radioButtonLabelLowPriority.setOnClickListener {
+            radioButtonLabelLowPriority.isChecked = true
+            radioButtonLabelMediumPriority.isChecked = false
+            radioButtonLabelHighPriority.isChecked = false
+
+            imageViewBigPriority.setImageResource(R.drawable.ic_low_priority)
+            textViewPriorityName.text = getString(R.string.label_low_priority)
+        }
+
+        radioButtonLabelMediumPriority.setOnClickListener {
+            radioButtonLabelLowPriority.isChecked = false
+            radioButtonLabelMediumPriority.isChecked = true
+            radioButtonLabelHighPriority.isChecked = false
+
+            imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
+            textViewPriorityName.text = getString(R.string.label_medium_priority)
+        }
+
+        radioButtonLabelHighPriority.setOnClickListener {
+            radioButtonLabelLowPriority.isChecked = false
+            radioButtonLabelMediumPriority.isChecked = false
+            radioButtonLabelHighPriority.isChecked = true
+
+            imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
+            textViewPriorityName.text = getString(R.string.label_high_priority)
         }
 
         dialog.setCancelable(false)
@@ -361,5 +509,54 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         dialog.show()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun drawerFilter() = with(binding){
+        recyclerViewNode.adapter = nodeFilterAdapter
+        recyclerViewAlertStatus.adapter = alertStatusFilterAdapter
+        recyclerViewNotificationPriority.adapter = notificationPriorityFilterAdapter
+        recyclerViewClass.adapter = classFilterAdapter
+        recyclerViewTypeAndComponent.adapter = typeAndComponentFilterAdapter
+
+        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1-2", "2"))
+        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1", "1"))
+        nodeFilterAdapter.list.add(FilterList("debian-2gb", "1"))
+        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1-23442", "1"))
+        nodeFilterAdapter.list.add(FilterList("debian-2gb-n", "1"))
+        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1", ""))
+        nodeFilterAdapter.notifyDataSetChanged()
+
+        alertStatusFilterAdapter.list.add(FilterList(AlertStatus.CRITICAL.type, "4"))
+        alertStatusFilterAdapter.list.add(FilterList(AlertStatus.WARNING.type, "3"))
+        alertStatusFilterAdapter.list.add(FilterList(AlertStatus.CLEAR.type, ""))
+        alertStatusFilterAdapter.notifyDataSetChanged()
+
+        notificationPriorityFilterAdapter.list.add(FilterList("High", "3", icon = R.drawable.ic_high_priority, isIcon = true))
+        notificationPriorityFilterAdapter.list.add(FilterList("Medium", "2", icon = R.drawable.ic_medium_priority, isIcon = true))
+        notificationPriorityFilterAdapter.list.add(FilterList("Low", "", icon = R.drawable.ic_low_priority, isIcon = true))
+        notificationPriorityFilterAdapter.notifyDataSetChanged()
+
+        classFilterAdapter.list.add(FilterList("Errors", "4"))
+        classFilterAdapter.list.add(FilterList("Latency", "3"))
+        classFilterAdapter.list.add(FilterList("Utilization", ""))
+        classFilterAdapter.list.add(FilterList("Workload", ""))
+        classFilterAdapter.notifyDataSetChanged()
+
+        typeAndComponentFilterAdapter.list.add(FilterList("System", "1"))
+        typeAndComponentFilterAdapter.list.add(FilterList("Other", "1"))
+        typeAndComponentFilterAdapter.notifyDataSetChanged()
+    }
+
+    private fun filterCount(){
+        val nodeCount = nodeFilterAdapter.list.filter { it.isSelected }
+        val alertStatusCount = alertStatusFilterAdapter.list.filter { it.isSelected }
+        val notificationPriorityCount = notificationPriorityFilterAdapter.list.filter { it.isSelected }
+        val classCount = classFilterAdapter.list.filter { it.isSelected }
+        val typAndComponentCount = typeAndComponentFilterAdapter.list.filter { it.isSelected }
+
+        val totalCount = nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
+
+        binding.buttonApplyFilter.text = "Apply ($totalCount) Filters"
     }
 }

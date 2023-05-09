@@ -66,4 +66,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/constraintTop"/>
 
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewInfoRound"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/ChangeTintColor"
+        android:src="@drawable/ic_info_round"
+        android:layout_marginStart="@dimen/dp_4"
+        app:layout_constraintStart_toEndOf="@id/textViewLabelMoreWarningDetails"
+        app:layout_constraintTop_toTopOf="@id/textViewLabelMoreWarningDetails"
+        app:layout_constraintBottom_toBottomOf="@id/textViewLabelMoreWarningDetails"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

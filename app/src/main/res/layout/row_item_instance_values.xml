@@ -22,6 +22,7 @@
             tools:text="parentB/rpi2b-1"
             android:ellipsize="end"
             android:maxLines="1"
+            android:layout_marginTop="@dimen/dp_5"
             android:layout_marginEnd="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
             app:layout_constraintEnd_toStartOf="@id/textViewWarningPercent"

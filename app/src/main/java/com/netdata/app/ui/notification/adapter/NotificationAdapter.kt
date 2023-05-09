@@ -1,21 +1,14 @@
 package com.netdata.app.ui.notification.adapter
 
 import android.annotation.SuppressLint
-import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.R
 import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.NotificationsList
-import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.RowItemNotificationBinding
-import com.netdata.app.databinding.RowItemSelectWarRoomsBinding
-import com.netdata.app.utils.gone
-import com.netdata.app.utils.invisible
-import com.netdata.app.utils.visible
 
 class NotificationAdapter(val callBack: (View, Int, NotificationsList) -> Unit) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 

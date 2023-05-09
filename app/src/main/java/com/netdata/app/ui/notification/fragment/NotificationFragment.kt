@@ -11,8 +11,6 @@ import com.netdata.app.R
 import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.NotificationsList
 import com.netdata.app.data.pojo.request.WarRoomsList
-import com.netdata.app.databinding.AuthFragmentWelcomeBinding
-import com.netdata.app.databinding.ChooseSpaceFragmentBinding
 import com.netdata.app.databinding.NotificationFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment

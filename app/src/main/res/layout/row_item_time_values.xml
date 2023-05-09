@@ -83,7 +83,7 @@
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewLabelRaisedOn"
                 style="@style/AppTheme.AppTextView.RegularBlack14"
-                android:text="Raised on:"
+                android:text="@string/label_raised_on"
                 android:alpha="0.9"
                 android:layout_marginStart="@dimen/dp_10"
                 app:layout_constraintTop_toTopOf="@id/constraintRaisedOn"

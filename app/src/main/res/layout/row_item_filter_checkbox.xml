@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:button="@drawable/dw_checkbox_selector"
+        android:padding="@dimen/dp_5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -18,7 +19,7 @@
         android:id="@+id/textViewFilterName"
         style="@style/AppTheme.AppTextView.RegularBlack35ToGrey8F14"
         tools:text="Text"
-        android:layout_marginStart="@dimen/dp_8"
+        android:layout_marginStart="@dimen/dp_3"
         app:layout_constraintStart_toEndOf="@id/checkBoxFilter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

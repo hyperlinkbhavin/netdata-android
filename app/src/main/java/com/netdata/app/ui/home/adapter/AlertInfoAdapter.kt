@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.netdata.app.data.pojo.request.AlertInfoList
 import com.netdata.app.data.pojo.request.ChooseSpaceList
 import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.RowItemAlertInfoBinding
@@ -15,9 +16,9 @@ import com.netdata.app.utils.gone
 import com.netdata.app.utils.invisible
 import com.netdata.app.utils.visible
 
-class AlertInfoAdapter(val callBack: (View, Int, ChooseSpaceList) -> Unit) : RecyclerView.Adapter<AlertInfoAdapter.ViewHolder>() {
+class AlertInfoAdapter(val callBack: (View, Int, AlertInfoList) -> Unit) : RecyclerView.Adapter<AlertInfoAdapter.ViewHolder>() {
 
-    var list = ArrayList<ChooseSpaceList>()
+    var list = ArrayList<AlertInfoList>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -51,8 +52,10 @@ class AlertInfoAdapter(val callBack: (View, Int, ChooseSpaceList) -> Unit) : Rec
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: ChooseSpaceList) = with(binding) {
-
+        fun bind(item: AlertInfoList) = with(binding) {
+            imageViewAlertInfo.setImageResource(item.icon)
+            textViewAlertInfoName.text = item.name
+            textViewAlertInfoValue.text=  item.value
         }
 
     }
