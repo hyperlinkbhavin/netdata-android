@@ -1,6 +1,7 @@
 package com.netdata.app.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -39,6 +40,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var sortByTimeItemPosition = -1
     private var sortByNotificationPriorityItemPosition = -1
     private var sortByCriticalityItemPosition = -1
+
+    private var totalFilterCount = 0
 
     private var homeList = ArrayList<HomeDataList>()
 
@@ -140,16 +143,24 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         drawerFilter()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)){
+            showMessage("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}")
+            appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, false)
+        }
+
+        if(appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNotEmpty()){
+            binding.includeToolbar.textViewSpace.text = appPreferences.getString(Constant.APP_PREF_SPACE_NAME)
+        }
+    }
+
     private fun toolbar() = with(binding) {
         includeToolbar.apply {
             textViewSpace.visible()
             imageViewSetting.visible()
             imageViewFilter.visible()
             imageViewNotification.visible()
-
-            if(appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNotEmpty()){
-                textViewSpace.text = appPreferences.getString(Constant.APP_PREF_SPACE_NAME)
-            }
         }
     }
 
@@ -215,6 +226,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         textViewLabelClose.setOnClickListener {
             drawerLayout.closeDrawer(GravityCompat.END)
         }
+
+        buttonApplyFilter.setOnClickListener {
+            binding.apply {
+                if(totalFilterCount != 0){
+                    includeToolbar.textViewFilterCount.visible()
+                    includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
+                } else {
+                    includeToolbar.textViewFilterCount.gone()
+                }
+                drawerLayout.closeDrawer(GravityCompat.END)
+            }
+        }
     }
 
     private fun setAdapter() = with(binding){
@@ -232,6 +255,44 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 "Type and Component",
                 true
             ))
+
+        homeList.add(HomeDataList(
+            "inbound",
+            "24 second ago",
+            "gke-gke",
+            "disk-space",
+            "warRooms1 warRooms2",
+            "Type and Component",
+        ))
+
+        homeList.add(HomeDataList(
+            "inbound",
+            "24 second ago",
+            "gke-gke",
+            "disk-space",
+            "warRooms1 warRooms2",
+            "Type and Component",
+            true
+        ))
+
+        homeList.add(HomeDataList(
+            "inbound",
+            "24 second ago",
+            "gke-gke",
+            "disk-space",
+            "warRooms1 warRooms2",
+            "Type and Component",
+        ))
+
+        homeList.add(HomeDataList(
+            "inbound",
+            "24 second ago",
+            "gke-gke",
+            "disk-space",
+            "warRooms1 warRooms2",
+            "Type and Component",
+            true
+        ))
 
         homeList.add(HomeDataList(
             "inbound",
@@ -279,9 +340,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val constraintCurrentNodes = view.findViewById<ConstraintLayout>(R.id.constraintCurrentNodes)
         val constraintAllNodes = view.findViewById<ConstraintLayout>(R.id.constraintAllNodes)
 
-        val constraintLowPriority = view.findViewById<ConstraintLayout>(R.id.constraintLowPriority)
+        /*val constraintLowPriority = view.findViewById<ConstraintLayout>(R.id.constraintLowPriority)
         val constraintMediumPriority = view.findViewById<ConstraintLayout>(R.id.constraintMediumPriority)
-        val constraintHighPriority = view.findViewById<ConstraintLayout>(R.id.constraintHighPriority)
+        val constraintHighPriority = view.findViewById<ConstraintLayout>(R.id.constraintHighPriority)*/
 
         val radioButtonCurrentNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonCurrentNodes)
         val radioButtonAllNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonAllNodes)
@@ -555,8 +616,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val classCount = classFilterAdapter.list.filter { it.isSelected }
         val typAndComponentCount = typeAndComponentFilterAdapter.list.filter { it.isSelected }
 
-        val totalCount = nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
+        totalFilterCount = nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
 
-        binding.buttonApplyFilter.text = "Apply ($totalCount) Filters"
+        if(totalFilterCount != 0){
+            binding.buttonApplyFilter.text = "Apply ($totalFilterCount) Filters"
+        } else {
+            binding.buttonApplyFilter.text = "Apply Filters"
+        }
+
+
     }
 }

@@ -16,6 +16,7 @@ import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.adapter.AllWarRoomsAdapter
 import com.netdata.app.ui.notification.adapter.NotificationAdapter
+import com.netdata.app.utils.Constant
 
 class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
 
@@ -23,7 +24,19 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
 
     private val notificationsAdapter by lazy {
         NotificationAdapter() { view, position, item ->
-
+            when(view.id){
+                R.id.constraintTop -> {
+                    if(position == 0){
+                        appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "Space 1")
+                    } else if(position == 1) {
+                        appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "Space 3")
+                    } else {
+                        appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "Space 2")
+                    }
+                    appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, true)
+                    navigator.goBack()
+                }
+            }
         }
     }
 

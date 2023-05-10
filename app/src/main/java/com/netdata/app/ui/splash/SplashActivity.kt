@@ -1,12 +1,16 @@
 package com.netdata.app.ui.splash
 
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import com.netdata.app.core.AppPreferences
+import com.netdata.app.data.pojo.enumclass.ThemeMode
 import com.netdata.app.databinding.SplashActivityBinding
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.ui.auth.AuthActivity
@@ -14,9 +18,13 @@ import com.netdata.app.ui.auth.IsolatedFullActivity
 import com.netdata.app.ui.base.BaseActivity
 import com.netdata.app.ui.home.HomeActivity
 import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
+import com.netdata.app.utils.AppUtils
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.util.Date
 import javax.inject.Inject
 
 class SplashActivity : BaseActivity() {
@@ -41,6 +49,14 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Day.name) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
         Handler(Looper.getMainLooper()).postDelayed({
@@ -51,8 +67,8 @@ class SplashActivity : BaseActivity() {
 
             splashActivityBinding.apply {
                 imageViewNetdata.animate().apply {
-                    scaleY(1.0F).duration = 2000
-                    scaleX(1.0F).duration = 2000
+                    scaleY(1.0F).duration = 1500
+                    scaleX(1.0F).duration = 1500
                 }
             }
         }, 1500)
@@ -62,17 +78,25 @@ class SplashActivity : BaseActivity() {
 
         }, 1500)*/
 
+        val sdf = SimpleDateFormat("dd/M/yyyy hh:mm:ss.SSS")
+        val currentDate = sdf.format(Date())
+
         Handler(Looper.getMainLooper()).postDelayed({
-            if(appPreferences.getBoolean(Constant.APP_PREF_IS_LOGIN)){
-                if(!appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNullOrEmpty()){
-                    loadActivity(HomeActivity::class.java).byFinishingCurrent().start()
+            if (!AppUtils.isOpenRecently()) {
+                if (appPreferences.getBoolean(Constant.APP_PREF_IS_LOGIN)) {
+                    if (!appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNullOrEmpty()) {
+                        loadActivity(HomeActivity::class.java).byFinishingCurrent().start()
+                    } else {
+                        loadActivity(
+                            IsolatedFullActivity::class.java,
+                            ChooseSpaceFragment::class.java
+                        ).byFinishingCurrent().start()
+                    }
                 } else {
-                    loadActivity(IsolatedFullActivity::class.java, ChooseSpaceFragment::class.java).byFinishingCurrent().start()
+                    loadActivity(AuthActivity::class.java).byFinishingCurrent().start()
                 }
-            } else {
-                loadActivity(AuthActivity::class.java).byFinishingCurrent().start()
             }
-        }, 3500)
+        }, 3000)
     }
 
 }

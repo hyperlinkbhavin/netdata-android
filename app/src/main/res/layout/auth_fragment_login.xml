@@ -84,6 +84,7 @@
                 style="@style/AppCompatEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
                 android:paddingBottom="@dimen/dp_20"/>
 
         </com.google.android.material.textfield.TextInputLayout>

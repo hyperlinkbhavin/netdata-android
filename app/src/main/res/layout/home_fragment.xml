@@ -17,16 +17,18 @@
         android:id="@+id/includeToolbar"
         layout="@layout/include_toolbar_main" />
 
-    <androidx.core.widget.NestedScrollView
+    <!--<androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_0"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/includeToolbar">
+        app:layout_constraintTop_toBottomOf="@id/includeToolbar">-->
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="@dimen/dp_0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/includeToolbar">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guidelineStart"
@@ -145,7 +147,7 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewHome"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/dp_0"
                 android:layout_width="@dimen/dp_0"
                 tools:listitem="@layout/row_item_home"
                 tools:itemCount="3"
@@ -154,10 +156,11 @@
                 android:layout_marginTop="@dimen/dp_8"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-                app:layout_constraintTop_toBottomOf="@id/buttonAll"/>
+                app:layout_constraintTop_toBottomOf="@id/buttonAll"
+                app:layout_constraintBottom_toBottomOf="parent"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.core.widget.NestedScrollView>
+<!--    </androidx.core.widget.NestedScrollView>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
 
 <!--  Drawer Filter  -->
@@ -207,9 +210,8 @@
 
                 <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_0"
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                    xmlns:tools="http://schemas.android.com/tools"
                     android:fillViewport="true"
+                    android:layout_marginTop="@dimen/dp_10"
                     app:layout_constraintTop_toBottomOf="@id/editTextSearchHere"
                     app:layout_constraintBottom_toBottomOf="parent">
 

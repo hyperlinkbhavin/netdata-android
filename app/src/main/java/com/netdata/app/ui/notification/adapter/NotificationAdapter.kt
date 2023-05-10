@@ -39,7 +39,9 @@ class NotificationAdapter(val callBack: (View, Int, NotificationsList) -> Unit) 
 
         init {
             binding.apply {
-
+                constraintTop.setOnClickListener {
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                }
             }
         }
 

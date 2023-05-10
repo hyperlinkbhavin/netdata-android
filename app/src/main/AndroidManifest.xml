@@ -15,16 +15,16 @@
         android:supportsRtl="true"
         android:name=".di.App"
         android:theme="@style/AppTheme">
-        <activity android:exported="true" android:name=".ui.splash.SplashActivity">
+        <activity android:exported="true" android:screenOrientation="portrait" android:name=".ui.splash.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:exported="false" android:name=".ui.home.HomeActivity"/>
-        <activity android:exported="false" android:name=".ui.auth.AuthActivity"/>
-        <activity android:exported="false" android:name=".ui.auth.IsolatedFullActivity"/>
+        <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.home.HomeActivity"/>
+        <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.auth.AuthActivity"/>
+        <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.auth.IsolatedFullActivity"/>
     </application>
 
 </manifest>

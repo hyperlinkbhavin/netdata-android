@@ -104,4 +104,5 @@
     <string name="label_raised_on">Raised on:</string>
     <string name="dummy_war_room_1_war_room_2_war_room_3_war_room_4">War Room 1 • War Room 2 • War Room 3 • War Room 4</string>
     <string name="btn_change_notification_priority">Change notification priority</string>
+    <string name="btn_sign_in_with_email_address">Sign In With Email Address</string>
 </resources>

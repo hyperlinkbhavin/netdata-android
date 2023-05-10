@@ -13,8 +13,10 @@ import com.netdata.app.databinding.AuthFragmentWelcomeBinding
 import com.netdata.app.databinding.ChooseSpaceFragmentBinding
 import com.netdata.app.databinding.SettingsFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
+import com.netdata.app.ui.auth.AuthActivity
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.settings.adapter.SettingsAdapter
+import com.netdata.app.utils.Constant
 
 class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
 
@@ -133,6 +135,9 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         }
 
         buttonDelete.setOnClickListener {
+            appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
+            appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
+            navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
             /*val bundle = Bundle()
             bundle.putBoolean(Constants.BUNDLE_IS_DELETE_ACCOUNT, true)
             appPreferences.putBoolean(Constants.APP_PREFERENCES_IS_LOGIN, false)
@@ -140,6 +145,7 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
                 .byFinishingAll()
                 .start()*/
 //            callDeleteAccount()
+            customDialog.dismiss()
         }
         customDialog.setView(view)
         customDialog.setCanceledOnTouchOutside(true)
@@ -161,6 +167,9 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         }
 
         buttonSignOut.setOnClickListener {
+            appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
+            appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
+            navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
             /*val bundle = Bundle()
             bundle.putBoolean(Constants.BUNDLE_IS_DELETE_ACCOUNT, true)
             appPreferences.putBoolean(Constants.APP_PREFERENCES_IS_LOGIN, false)
@@ -168,6 +177,7 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
                 .byFinishingAll()
                 .start()*/
 //            callDeleteAccount()
+            customDialog.dismiss()
         }
         customDialog.setView(view)
         customDialog.setCanceledOnTouchOutside(true)

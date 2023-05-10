@@ -49,7 +49,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonSignInWithEmailAddress"
         style="@style/AppCompatButtonGreen"
-        android:text="@string/btn_sign_in_with_qr_code"
+        android:text="@string/btn_sign_in_with_email_address"
         android:layout_marginBottom="@dimen/dp_24"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"

@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
@@ -18,6 +19,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.netdata.app.R
 import com.netdata.app.core.AppPreferences
 import com.netdata.app.core.Session
+import com.netdata.app.data.pojo.enumclass.ThemeMode
 import com.netdata.app.di.HasComponent
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.di.component.FragmentComponent
@@ -26,6 +28,7 @@ import com.netdata.app.exception.ApplicationException
 import com.netdata.app.exception.AuthenticationException
 import com.netdata.app.exception.ServerException
 import com.netdata.app.ui.manager.Navigator
+import com.netdata.app.utils.Constant
 import com.netdata.app.utils.Validator
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -83,8 +86,6 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
             Configuration.UI_MODE_NIGHT_YES -> window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorBlack2B)
             Configuration.UI_MODE_NIGHT_NO -> window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorWhiteF2)
         }
-
-
 
         bindData()
     }

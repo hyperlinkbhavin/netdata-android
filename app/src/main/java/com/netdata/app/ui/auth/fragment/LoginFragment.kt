@@ -47,9 +47,22 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
 
     private fun manageClick() = with(binding){
         buttonSignIn.setOnClickListener {
-            appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-            navigator.load(ChooseSpaceFragment::class.java).replace(false)
+            if(validator()){
+                appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+                navigator.load(ChooseSpaceFragment::class.java).replace(false)
+            }
         }
+    }
+
+    private fun validator(): Boolean = try {
+        validator.submit(binding.editTextEmail)
+            .checkEmpty().errorMessage("Please enter email address")
+            .checkValidEmail().errorMessage("Please enter valid email")
+            .check()
+        true
+    } catch (e: ApplicationException) {
+        showMessage(e)
+        false
     }
 
 }
