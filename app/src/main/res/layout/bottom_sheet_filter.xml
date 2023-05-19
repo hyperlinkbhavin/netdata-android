@@ -89,8 +89,10 @@
                         android:id="@+id/imageViewNodeDown"
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
+                        style="@style/ChangeTintColorBlack35ToGreyCF"
                         android:src="@drawable/ic_down"
-                        android:layout_marginEnd="@dimen/dp_5"
+                        android:padding="@dimen/dp_5"
+                        android:rotation="0"
                         app:layout_constraintEnd_toEndOf="@id/constraintNode"
                         app:layout_constraintTop_toTopOf="@id/textViewLabelNode"
                         app:layout_constraintBottom_toBottomOf="@id/textViewLabelNode"/>

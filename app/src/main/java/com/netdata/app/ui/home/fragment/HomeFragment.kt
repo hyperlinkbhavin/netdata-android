@@ -238,6 +238,56 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 drawerLayout.closeDrawer(GravityCompat.END)
             }
         }
+
+        imageViewNodeDown.setOnClickListener {
+            if(imageViewNodeDown.rotation == 0.0F){
+                imageViewNodeDown.rotation = 180.0F
+                recyclerViewNode.gone()
+            } else {
+                imageViewNodeDown.rotation = 0.0F
+                recyclerViewNode.visible()
+            }
+        }
+
+        imageViewAlertStatusDown.setOnClickListener {
+            if(imageViewAlertStatusDown.rotation == 0.0F){
+                imageViewAlertStatusDown.rotation = 180.0F
+                recyclerViewAlertStatus.gone()
+            } else {
+                imageViewAlertStatusDown.rotation = 0.0F
+                recyclerViewAlertStatus.visible()
+            }
+        }
+
+        imageViewNotificationPriorityDown.setOnClickListener {
+            if(imageViewNotificationPriorityDown.rotation == 0.0F){
+                imageViewNotificationPriorityDown.rotation = 180.0F
+                recyclerViewNotificationPriority.gone()
+            } else {
+                imageViewNotificationPriorityDown.rotation = 0.0F
+                recyclerViewNotificationPriority.visible()
+            }
+        }
+
+        imageViewClassDown.setOnClickListener {
+            if(imageViewClassDown.rotation == 0.0F){
+                imageViewClassDown.rotation = 180.0F
+                recyclerViewClass.gone()
+            } else {
+                imageViewClassDown.rotation = 0.0F
+                recyclerViewClass.visible()
+            }
+        }
+
+        imageViewTypeAndComponentDown.setOnClickListener {
+            if(imageViewTypeAndComponentDown.rotation == 0.0F){
+                imageViewTypeAndComponentDown.rotation = 180.0F
+                recyclerViewTypeAndComponent.gone()
+            } else {
+                imageViewTypeAndComponentDown.rotation = 0.0F
+                recyclerViewTypeAndComponent.visible()
+            }
+        }
     }
 
     private fun setAdapter() = with(binding){
