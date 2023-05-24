@@ -59,7 +59,6 @@
                 android:layout_marginStart="@dimen/dp_16"
                 app:layout_constraintStart_toStartOf="@id/constraintDisableNotifications"
                 app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
-                app:layout_constraintBottom_toBottomOf="@id/constraintDisableNotifications"
                 />
 
             <androidx.appcompat.widget.SwitchCompat
@@ -72,7 +71,6 @@
                 android:padding="@dimen/dp_6"
                 app:layout_constraintEnd_toEndOf="@id/constraintDisableNotifications"
                 app:layout_constraintTop_toTopOf="@id/constraintDisableNotifications"
-                app:layout_constraintBottom_toBottomOf="@id/constraintDisableNotifications"
                />
 
             <RadioGroup

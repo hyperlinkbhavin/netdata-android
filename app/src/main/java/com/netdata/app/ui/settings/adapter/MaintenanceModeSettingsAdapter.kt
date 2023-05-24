@@ -1,6 +1,8 @@
 package com.netdata.app.ui.settings.adapter
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +12,8 @@ import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.RowItemMaintenanceModeSettingsBinding
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
 
@@ -46,6 +50,9 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
                     callBack.invoke(constraintDisableNotifications, adapterPosition, list[adapterPosition])
                     notifyDataSetChanged()
                 }
+                textViewUntilDate.setOnClickListener {
+                    datePicker()
+                }
 
             }
         }
@@ -64,7 +71,38 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
             }
             textViewDisableAllNotification.text = item.name
         }
+        fun datePicker()=with(binding){
+            val mCalendar = Calendar.getInstance()
+            val datePickerDialog = DatePickerDialog(
+                textViewDisableAllNotification.context,
+                { _, year, month, date ->
+                    val date = date.toString()+"/"+month.toString()+"/"+year.toString().drop(2)
+                    timePicker(date)
+                },
+                mCalendar.get(Calendar.YEAR),
+                mCalendar.get(Calendar.MONTH),
+                mCalendar.get(Calendar.DATE)
+            )
+            datePickerDialog.datePicker.minDate = mCalendar.time.time
+            datePickerDialog.show()
+        }
 
+        fun timePicker(date: String) =with(binding){
+            val mcurrentTime = Calendar.getInstance()
+            val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
+            val minute = mcurrentTime[Calendar.MINUTE]
+            val mTimePicker: TimePickerDialog
+            mTimePicker = TimePickerDialog( textViewDisableAllNotification.context,
+                { timePicker, selectedHour, selectedMinute ->
+                    textViewUntilDate.setText(date+", "+selectedHour.toString()+":"+selectedMinute.toString() )
+                },
+                hour,
+                minute,
+                false) //Yes 24 hour time
+
+            mTimePicker.setTitle("Select Time")
+            mTimePicker.show()
+        }
     }
 
 }

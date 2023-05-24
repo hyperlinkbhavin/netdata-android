@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.FunkyMuse.MediaPicker:audiopicker:1.1.0@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6f6deef3e3fb2b2262fc9acc2d8a6412/transformed/jetified-audiopicker-1.1.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6f6deef3e3fb2b2262fc9acc2d8a6412/transformed/jetified-audiopicker-1.1.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6f6deef3e3fb2b2262fc9acc2d8a6412/transformed/jetified-audiopicker-1.1.0/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.FunkyMuse.MediaPicker/audiopicker/1.1.0/df3fe5e5ee754857a620ec514cb213a0945179c3/audiopicker-1.1.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

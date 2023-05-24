@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ExternalStorageConfigurationManager" enabled="true" />
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK" />
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="app/src/main/res/drawable/ic_seekbar.xml" value="0.209" />
+        <entry key="app/src/main/res/drawable/ic_seekbar_thum.xml" value="0.19" />
+        <entry key="app/src/main/res/drawable/shape_progress_background.xml" value="0.189" />
+        <entry key="app/src/main/res/drawable/shape_thum.xml" value="0.189" />
+        <entry key="app/src/main/res/layout/auth_fragment_qr_code_login.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/bottom_sheet_notification_priority.xml" value="0.35539714867617106" />
+        <entry key="app/src/main/res/layout/home_activity.xml" value="0.35625" />
+        <entry key="app/src/main/res/layout/home_fragment.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/maintenance_mode_settings_fragment.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/row_item_home.xml" value="0.18177083333333333" />
+        <entry key="app/src/main/res/layout/row_item_maintenance_mode_settings.xml" value="0.18177083333333333" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/out" />
+  </component>
 </project>
