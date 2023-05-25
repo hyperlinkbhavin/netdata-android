@@ -61,7 +61,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
 
                 R.id.rightViewSwipe -> {
-                    showMessage("Change Priority Clicked")
+                    bottomSheetPriority()
                 }
             }
         }
