@@ -60,8 +60,8 @@ class HomeAdapter(val callBack: (View, Int, HomeDataList) -> Unit) : RecyclerVie
                             selectedPos = absoluteAdapterPosition
                             notifyItemChanged(previousPos)
                         }
-                        Log.e("selected", selectedPos.toString())
-                        Log.e("Preselected", previousPos.toString())
+                        /*Log.e("selected", selectedPos.toString())
+                        Log.e("Preselected", previousPos.toString())*/
                     }
 
                     override fun onClose() {
@@ -76,6 +76,10 @@ class HomeAdapter(val callBack: (View, Int, HomeDataList) -> Unit) : RecyclerVie
                 }
 
                 rightViewSwipe.setOnClickListener {
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                }
+
+                textViewWarRoomsListCount.setOnClickListener {
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }

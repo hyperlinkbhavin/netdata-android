@@ -26,6 +26,6 @@ class TermsAndConditionsFragment: BaseFragment<TermsAndConditionsFragmentBinding
         includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
         includeToolbar.textViewToolbarTitle.text = getString(R.string.title_terms_and_privacy_policy)
 
-        binding.webViewTermsAndConditions.loadUrl("https://www.google.com/intl/en_IN/policies/terms/archive/20070416/")
+//        binding.webViewTermsAndConditions.loadUrl("https://www.google.com/intl/en_IN/policies/terms/archive/20070416/")
     }
 }

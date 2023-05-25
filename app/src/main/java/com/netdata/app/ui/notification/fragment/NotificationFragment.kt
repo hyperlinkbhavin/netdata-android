@@ -5,6 +5,7 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.netdata.app.R
@@ -35,6 +36,10 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                     }
                     appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, true)
                     navigator.goBack()
+                }
+
+                R.id.constraintNotificationRight -> {
+                    removeData(position)
                 }
             }
         }
@@ -103,6 +108,12 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                 Priority.LOW_PRIORITY
             )
         )
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun removeData(position: Int){
+        notificationsAdapter.list.removeAt(position)
+        notificationsAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")

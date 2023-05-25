@@ -139,9 +139,25 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="War Room 1 • War Room 2 • War Room 3 • War Rom 4 "
             android:layout_marginStart="@dimen/dp_6"
+            android:ellipsize="end"
+            android:maxLines="1"
             app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsList"
             app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsList"
             app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsList"
+            app:layout_constraintEnd_toStartOf="@id/textViewWarRoomsListCount"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewWarRoomsListCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+1"
+            android:textSize="@dimen/sp_12"
+            android:textColor="@color/colorPrimary"
+            android:fontFamily="@font/font_ibm_plex_sans_bold"
+            android:padding="@dimen/dp_5"
+            app:layout_constraintStart_toEndOf="@id/textViewWarRoomsList"
+            app:layout_constraintTop_toTopOf="@id/textViewWarRoomsList"
+            app:layout_constraintBottom_toBottomOf="@id/textViewWarRoomsList"
             app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
 
         <androidx.appcompat.widget.AppCompatImageView

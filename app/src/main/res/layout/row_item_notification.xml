@@ -1,100 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingVertical="@dimen/dp_8"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:paddingVertical="@dimen/dp_8">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintTop"
-        android:layout_height="wrap_content"
+    <com.chauthai.swipereveallayout.SwipeRevealLayout
+        android:id="@+id/swipeRevealLayout"
         android:layout_width="match_parent"
-        android:padding="@dimen/dp_16"
-        style="@style/ChangeBackgroundTintWhiteToBlack1C"
-        android:background="@drawable/dw_corner_four_bg"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        app:dragEdge="right"
+        app:mode="same_level">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewSpaceName"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            style="@style/ChangeBackgroundTintGreenToGrey53"
-            android:background="@drawable/dw_corner_thirty_bg"
-            android:drawableStart="@drawable/ic_space_notification"
-            android:drawablePadding="@dimen/dp_5"
-            tools:text="Space 1"
-            android:textColor="@color/colorWhite"
-            android:fontFamily="@font/font_ibm_plex_sans_bold"
-            android:textSize="@dimen/sp_12"
-            android:paddingVertical="@dimen/dp_4"
-            android:paddingHorizontal="@dimen/dp_10"
-            app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toTopOf="@id/constraintTop"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="@dimen/dp_100"
+            android:layout_height="@dimen/dp_120"
+            android:id="@+id/constraintNotificationRight"
+            android:background="@drawable/drawable_corner_notification">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewSpaceWarning"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:src="@drawable/ic_space_warning"
-            android:layout_marginTop="@dimen/dp_14"
-            app:layout_constraintStart_toStartOf="@id/textViewSpaceName"
-            app:layout_constraintTop_toBottomOf="@id/textViewSpaceName"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_delete_notiication"
+                app:layout_constraintBottom_toTopOf="@+id/textViewDelete"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewSpaceWarningPercent"
-            style="@style/AppTheme.AppTextView.BoldBlack16"
-            android:layout_marginStart="@dimen/dp_8"
-            android:text="54.3% •"
-            app:layout_constraintStart_toEndOf="@id/imageViewSpaceWarning"
-            app:layout_constraintTop_toTopOf="@id/imageViewSpaceWarning"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewSpaceWarning"
-            app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningText"/>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewDelete"
+                style="@style/AppTheme.AppTextView.MediumBlack16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_3"
+                android:text="@string/label_delete"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageViewDelete" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewSpaceWarningText"
-            android:layout_width="@dimen/dp_0"
-            style="@style/AppTheme.AppTextView.RegularBlack16"
-            android:layout_marginStart="@dimen/dp_4"
-            android:text="@string/label_inbound_packets_dropped_ratio"
-            app:layout_constraintStart_toEndOf="@id/textViewSpaceWarningPercent"
-            app:layout_constraintTop_toTopOf="@id/imageViewSpaceWarning"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewSpaceWarning"
-            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewCalendar"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            style="@style/ChangeTintColor"
-            android:src="@drawable/ic_calendar"
-            android:layout_marginTop="@dimen/dp_20"
-            app:layout_constraintStart_toStartOf="@id/imageViewSpaceWarning"
-            app:layout_constraintTop_toBottomOf="@id/imageViewSpaceWarning"/>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintTop"
+            style="@style/ChangeBackgroundTintWhiteToBlack1C"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            android:background="@drawable/dw_corner_four_bg"
+            android:padding="@dimen/dp_16"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textViewNotificationDateTime"
-            android:layout_width="@dimen/dp_0"
-            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
-            android:text="24 seconds ago · 04/04/2022 - 15:44:23"
-            android:layout_marginHorizontal="@dimen/dp_6"
-            android:maxLines="1"
-            android:ellipsize="end"
-            app:layout_constraintStart_toEndOf="@id/imageViewCalendar"
-            app:layout_constraintTop_toTopOf="@id/imageViewCalendar"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewCalendar"
-            app:layout_constraintEnd_toStartOf="@id/imageViewNotificationPriority"
-            />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewSpaceName"
+                style="@style/ChangeBackgroundTintGreenToGrey53"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/dw_corner_thirty_bg"
+                android:drawableStart="@drawable/ic_space_notification"
+                android:drawablePadding="@dimen/dp_5"
+                android:fontFamily="@font/font_ibm_plex_sans_bold"
+                android:paddingHorizontal="@dimen/dp_10"
+                android:paddingVertical="@dimen/dp_4"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/sp_12"
+                app:layout_constraintStart_toStartOf="@id/constraintTop"
+                app:layout_constraintTop_toTopOf="@id/constraintTop"
+                tools:text="Space 1" />
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageViewNotificationPriority"
-            android:layout_height="@dimen/dp_18"
-            android:layout_width="@dimen/dp_14"
-            android:src="@drawable/ic_high_priority"
-            app:layout_constraintEnd_toEndOf="@id/constraintTop"
-            app:layout_constraintTop_toTopOf="@id/textViewNotificationDateTime"
-            app:layout_constraintBottom_toBottomOf="@id/textViewNotificationDateTime"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewSpaceWarning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_14"
+                android:src="@drawable/ic_space_warning"
+                app:layout_constraintStart_toStartOf="@id/textViewSpaceName"
+                app:layout_constraintTop_toBottomOf="@id/textViewSpaceName" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewSpaceWarningPercent"
+                style="@style/AppTheme.AppTextView.BoldBlack16"
+                android:layout_marginStart="@dimen/dp_8"
+                android:text="54.3% •"
+                app:layout_constraintBottom_toBottomOf="@id/imageViewSpaceWarning"
+                app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningText"
+                app:layout_constraintStart_toEndOf="@id/imageViewSpaceWarning"
+                app:layout_constraintTop_toTopOf="@id/imageViewSpaceWarning" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewSpaceWarningText"
+                style="@style/AppTheme.AppTextView.RegularBlack16"
+                android:layout_width="@dimen/dp_0"
+                android:layout_marginStart="@dimen/dp_4"
+                android:text="@string/label_inbound_packets_dropped_ratio"
+                app:layout_constraintBottom_toBottomOf="@id/imageViewSpaceWarning"
+                app:layout_constraintEnd_toEndOf="@id/constraintTop"
+                app:layout_constraintStart_toEndOf="@id/textViewSpaceWarningPercent"
+                app:layout_constraintTop_toTopOf="@id/imageViewSpaceWarning" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewCalendar"
+                style="@style/ChangeTintColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_20"
+                android:src="@drawable/ic_calendar"
+                app:layout_constraintStart_toStartOf="@id/imageViewSpaceWarning"
+                app:layout_constraintTop_toBottomOf="@id/imageViewSpaceWarning" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/textViewNotificationDateTime"
+                style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+                android:layout_width="@dimen/dp_0"
+                android:layout_marginHorizontal="@dimen/dp_6"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="24 seconds ago · 04/04/2022 - 15:44:23"
+                app:layout_constraintBottom_toBottomOf="@id/imageViewCalendar"
+                app:layout_constraintEnd_toStartOf="@id/imageViewNotificationPriority"
+                app:layout_constraintStart_toEndOf="@id/imageViewCalendar"
+                app:layout_constraintTop_toTopOf="@id/imageViewCalendar" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewNotificationPriority"
+                android:layout_width="@dimen/dp_14"
+                android:layout_height="@dimen/dp_18"
+                android:src="@drawable/ic_high_priority"
+                app:layout_constraintBottom_toBottomOf="@id/textViewNotificationDateTime"
+                app:layout_constraintEnd_toEndOf="@id/constraintTop"
+                app:layout_constraintTop_toTopOf="@id/textViewNotificationDateTime" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.chauthai.swipereveallayout.SwipeRevealLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

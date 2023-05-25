@@ -2,7 +2,6 @@
   <library name="Gradle: com.google.dagger:dagger-android:2.41@aar">
     <CLASSES>
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/ba6e8b2f0224951ba18441216eee589c/transformed/jetified-dagger-android-2.41/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ba6e8b2f0224951ba18441216eee589c/transformed/jetified-dagger-android-2.41/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/ba6e8b2f0224951ba18441216eee589c/transformed/jetified-dagger-android-2.41/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>

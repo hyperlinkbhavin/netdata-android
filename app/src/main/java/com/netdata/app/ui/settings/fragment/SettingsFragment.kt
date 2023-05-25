@@ -123,7 +123,7 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
     private fun deleteAccount(){
         customDialog =
             AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
-                .setMessage(getString(R.string.btn_delete)).create()
+                .setMessage("").create()
         val view = layoutInflater.inflate(R.layout.dialog_delete_account, null)
         val buttonDelete =
             view.findViewById<AppCompatButton>(R.id.buttonDelete)
@@ -155,7 +155,7 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
     private fun signOut(){
         customDialog =
             AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
-                .setMessage(getString(R.string.btn_sign_out)).create()
+                .setMessage("").create()
         val view = layoutInflater.inflate(R.layout.dialog_sign_out, null)
         val buttonSignOut =
             view.findViewById<AppCompatButton>(R.id.buttonSignOut)

@@ -16,16 +16,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.netdata.app.R
 import com.netdata.app.data.pojo.HomeDataList
 import com.netdata.app.data.pojo.enumclass.AlertStatus
+import com.netdata.app.data.pojo.request.ExistisWarRoomsList
 import com.netdata.app.data.pojo.request.FilterList
+import com.netdata.app.data.pojo.request.FilterSelectedList
 import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.HomeFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.auth.IsolatedFullActivity
 import com.netdata.app.ui.base.BaseFragment
-import com.netdata.app.ui.home.adapter.AllWarRoomsAdapter
-import com.netdata.app.ui.home.adapter.HomeAdapter
-import com.netdata.app.ui.home.adapter.HomeFilterAdapter
-import com.netdata.app.ui.home.adapter.SortByAdapter
+import com.netdata.app.ui.home.adapter.*
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.Constant
@@ -62,6 +61,20 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
                 R.id.rightViewSwipe -> {
                     bottomSheetPriority()
+                }
+
+                R.id.textViewWarRoomsListCount -> {
+                    bottomSheetExistsInWarRooms()
+                }
+            }
+        }
+    }
+
+    private val filterSelectedAdapter by lazy {
+        FilterSelectedAdapter(){ view, position, item ->
+            when(view.id){
+                R.id.imageViewClose -> {
+                    removeFilterSelected(position)
                 }
             }
         }
@@ -161,6 +174,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             imageViewSetting.visible()
             imageViewFilter.visible()
             imageViewNotification.visible()
+
+            textViewNotificationCount.visible()
+            textViewNotificationCount.text = "3"
         }
     }
 
@@ -232,8 +248,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 if(totalFilterCount != 0){
                     includeToolbar.textViewFilterCount.visible()
                     includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
+                    constraintFilterSelected.visible()
+                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:High"))
+                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:Medium"))
+                    filterSelectedAdapter.notifyDataSetChanged()
+
                 } else {
                     includeToolbar.textViewFilterCount.gone()
+                    constraintFilterSelected.gone()
                 }
                 drawerLayout.closeDrawer(GravityCompat.END)
             }
@@ -290,8 +312,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun removeFilterSelected(position: Int){
+        filterSelectedAdapter.list.removeAt(position)
+        if(filterSelectedAdapter.list.size == 0){
+            binding.constraintFilterSelected.gone()
+        }
+
+        filterSelectedAdapter.notifyDataSetChanged()
+    }
+
     private fun setAdapter() = with(binding){
         recyclerViewHome.adapter = homeAdapter
+        recyclerViewFilterSelected.adapter = filterSelectedAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -301,7 +334,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 "24 second ago",
                 "gke-gke",
                 "disk-space",
-                "warRooms1 warRooms2",
+                "War Room 1•War Room 2•War Room 3•War Room 4",
                 "Type and Component",
                 true
             ))
@@ -311,7 +344,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             "24 second ago",
             "gke-gke",
             "disk-space",
-            "warRooms1 warRooms2",
+            "War Room 1•War Room 2•War Room 3•War Room 4",
             "Type and Component",
         ))
 
@@ -320,26 +353,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             "24 second ago",
             "gke-gke",
             "disk-space",
-            "warRooms1 warRooms2",
-            "Type and Component",
-            true
-        ))
-
-        homeList.add(HomeDataList(
-            "inbound",
-            "24 second ago",
-            "gke-gke",
-            "disk-space",
-            "warRooms1 warRooms2",
-            "Type and Component",
-        ))
-
-        homeList.add(HomeDataList(
-            "inbound",
-            "24 second ago",
-            "gke-gke",
-            "disk-space",
-            "warRooms1 warRooms2",
+            "War Room 1•War Room 2•War Room 3•War Room 4",
             "Type and Component",
             true
         ))
@@ -349,7 +363,26 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             "24 second ago",
             "gke-gke",
             "disk-space",
-            "warRooms1 warRooms2",
+            "War Room 1•War Room 2•War Room 3•War Room 4",
+            "Type and Component",
+        ))
+
+        homeList.add(HomeDataList(
+            "inbound",
+            "24 second ago",
+            "gke-gke",
+            "disk-space",
+            "War Room 1•War Room 2•War Room 3•War Room 4",
+            "Type and Component",
+            true
+        ))
+
+        homeList.add(HomeDataList(
+            "inbound",
+            "24 second ago",
+            "gke-gke",
+            "disk-space",
+            "War Room 1•War Room 2•War Room 3•War Room 4",
             "Type and Component",
         ))
 
@@ -400,9 +433,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val imageViewBigPriority = view.findViewById<AppCompatImageView>(R.id.imageViewBigPriority)
         val textViewPriorityName = view.findViewById<AppCompatTextView>(R.id.textViewPriorityName)
 
+        val imageViewPriority = view.findViewById<AppCompatImageView>(R.id.imageViewPriority)
+        val textViewPriority = view.findViewById<AppCompatTextView>(R.id.textViewPriority)
+
         radioButtonLabelHighPriority.isChecked = true
 
         buttonChangeNotificationPriority.setOnClickListener {
+            imageViewPriority.visible()
+            textViewPriority.visible()
+
             buttonChangeNotificationPriority.gone()
             constraintNodes.visible()
             radioButtonLabelLowPriority.visible()
@@ -517,6 +556,52 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         allWarRoomsAdapter.notifyDataSetChanged()
 
         textViewLabelClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setCancelable(false)
+        dialog.setContentView(view)
+        dialog.setCanceledOnTouchOutside(true)
+
+        dialog.setOnKeyListener { dialog, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                dialog.dismiss()
+            }
+            true
+        }
+
+        dialog.show()
+    }
+
+    private fun bottomSheetExistsInWarRooms() {
+
+        val dialog = BottomSheetDialog(requireContext())
+
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_existis_war_rooms_list, null)
+
+        val existisWarRoomsAdapter by lazy {
+            ExistisWarRoomsAdapter() { view, position, item ->
+                when(view.id){
+                    R.id.constraintMain -> {
+                        warRoomsItemPosition = position
+                        binding.textViewLabelAllWarRooms.text = item.name
+                        dialog.dismiss()
+                    }
+                }
+            }
+        }
+
+        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 1", R.drawable.ic_medium_priority))
+        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 2", R.drawable.ic_high_priority))
+        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 3", R.drawable.ic_medium_priority))
+        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 4", R.drawable.ic_low_priority))
+        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 5", R.drawable.ic_low_priority))
+
+        val recyclerViewNotificationExists = view.findViewById<RecyclerView>(R.id.recyclerViewNotificationExists)
+        val imageViewWarRoomsBack = view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsBack)
+        recyclerViewNotificationExists.adapter = existisWarRoomsAdapter
+
+        imageViewWarRoomsBack.setOnClickListener {
             dialog.dismiss()
         }
 

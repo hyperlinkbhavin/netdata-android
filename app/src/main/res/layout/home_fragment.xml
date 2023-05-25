@@ -7,8 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ic_back_ground">
@@ -83,6 +82,37 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintFilterSelected"
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/dp_0"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/constraintAllWarRooms">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewLabelFilterSelected"
+                    style="@style/AppTheme.AppTextView.BoldBlack12"
+                    android:text="Filters Selected (2)"
+                    android:alpha="0.7"
+                    android:layout_marginTop="@dimen/dp_10"
+                    app:layout_constraintStart_toStartOf="@id/constraintFilterSelected"
+                    app:layout_constraintTop_toTopOf="@id/constraintFilterSelected"/>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewFilterSelected"
+                    android:layout_width="369dp"
+                    android:layout_height="49dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintEnd_toEndOf="@id/constraintFilterSelected"
+                    app:layout_constraintStart_toStartOf="@id/constraintFilterSelected"
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabelFilterSelected"
+                    tools:listitem="@layout/row_item_filter_selected" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/editTextSearchServices"
                 android:layout_height="wrap_content"
@@ -94,7 +124,7 @@
                 android:layout_marginTop="@dimen/dp_16"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintEnd_toStartOf="@id/constraintSortBy"
-                app:layout_constraintTop_toBottomOf="@id/constraintAllWarRooms"/>
+                app:layout_constraintTop_toBottomOf="@id/constraintFilterSelected"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintSortBy"
@@ -166,7 +196,7 @@
 <!--  Drawer Filter  -->
     <LinearLayout
         android:id="@+id/navigation_layout"
-        android:layout_width="@dimen/dp_400"
+        android:layout_width="@dimen/dp_370"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@drawable/ic_back_ground"
@@ -218,7 +248,7 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/dp_120">
+                        android:paddingBottom="@dimen/dp_100">
 
                         <androidx.constraintlayout.widget.Guideline
                             android:id="@+id/guidelineStartInner"
@@ -496,7 +526,6 @@
                     android:elevation="@dimen/dp_10"
                     android:translationZ="@dimen/dp_10"
                     style="@style/ChangeBackgroundWhiteToBlack2B"
-                    android:layout_marginBottom="@dimen/dp_20"
                     app:layout_constraintBottom_toBottomOf="parent">
 
                     <androidx.appcompat.widget.AppCompatButton

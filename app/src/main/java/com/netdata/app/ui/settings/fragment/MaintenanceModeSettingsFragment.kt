@@ -54,7 +54,6 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     @SuppressLint("NotifyDataSetChanged")
     private fun manageClick() = with(binding){
         switchDisableAllNotifications.setOnClickListener {
-            Log.e("all", switchDisableAllNotifications.isChecked.toString())
             for(item in maintenanceModeSettingsAdapter.list){
                 item.isSelected = switchDisableAllNotifications.isChecked
             }
@@ -87,7 +86,13 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
     private fun getCheckData(){
         val data = maintenanceModeSettingsAdapter.list.find { !it.isSelected }
-        binding.switchDisableAllNotifications.isChecked = data?.name.isNullOrEmpty()
+        if(data?.name.isNullOrEmpty()){
+            binding.switchDisableAllNotifications.isChecked = true
+            binding.radioGroupAllNotifications.visible()
+        } else {
+            binding.switchDisableAllNotifications.isChecked = false
+            binding.radioGroupAllNotifications.gone()
+        }
     }
     fun datePicker()=with(binding){
         val mCalendar = Calendar.getInstance()

@@ -1,18 +1,24 @@
 package com.netdata.app.ui.notification.adapter
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.netdata.app.R
 import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.NotificationsList
 import com.netdata.app.databinding.RowItemNotificationBinding
+import com.zerobranch.layout.SwipeLayout
 
 class NotificationAdapter(val callBack: (View, Int, NotificationsList) -> Unit) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
 
     var list = ArrayList<NotificationsList>()
+    var selectedPos = -1
+    var previousPos = -1
+    private val binderHelper: ViewBinderHelper = ViewBinderHelper()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -26,6 +32,11 @@ class NotificationAdapter(val callBack: (View, Int, NotificationsList) -> Unit) 
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(list[position])
+        with(holder){
+            binderHelper.setOpenOnlyOne(true)
+            binderHelper.bind(binding.swipeRevealLayout, position.toString())
+            binding.swipeRevealLayout.close(true)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -42,11 +53,16 @@ class NotificationAdapter(val callBack: (View, Int, NotificationsList) -> Unit) 
                 constraintTop.setOnClickListener {
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
+
+                constraintNotificationRight.setOnClickListener {
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                }
             }
         }
 
         @SuppressLint("SetTextI18n")
         fun bind(item: NotificationsList) = with(binding) {
+
             textViewSpaceName.text = item.spaceName
             textViewSpaceWarningPercent.text = item.priorityPercent
             textViewNotificationDateTime.text = item.dateTime

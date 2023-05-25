@@ -1,8 +1,18 @@
 package com.netdata.app.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.graphics.Color
+import android.graphics.Typeface
+import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.netdata.app.R
 import com.netdata.app.data.pojo.request.ChooseSpaceList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
@@ -41,6 +51,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         toolbar()
         manageClick()
         setAdapter()
+        spannableString()
     }
 
     private fun toolbar() = with(binding){
@@ -64,8 +75,34 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     private fun addData(){
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 1","1"))
-        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 3","3"))
-        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 2",""))
+        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 2","3"))
+        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 3",""))
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 4",""))
+    }
+
+    private fun spannableString() {
+        val spanString =
+            SpannableString(getString(R.string.label_you_have_a_total_of_3_notifications_in_your_spaces))
+        val termsAndCondition: ClickableSpan = object : ClickableSpan() {
+            override fun onClick(textView: View) {
+
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                super.updateDrawState(ds)
+                ds.isUnderlineText = false
+            }
+        }
+
+        spanString.setSpan(termsAndCondition, 20, 22, 0)
+        spanString.setSpan(ForegroundColorSpan(Color.parseColor("#00AB44")), 20, 22, 0)
+        spanString.setSpan(StyleSpan(Typeface.BOLD), 20, 22, 0)
+
+        binding.textViewChooseSpaceText.movementMethod =
+            LinkMovementMethod.getInstance()
+        binding.textViewChooseSpaceText.setText(
+            spanString,
+            TextView.BufferType.SPANNABLE
+        )
     }
 }
