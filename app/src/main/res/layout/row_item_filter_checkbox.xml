@@ -43,9 +43,9 @@
         tools:text="3"
         android:textSize="@dimen/sp_12"
         android:textColor="@color/colorWhite"
-        android:paddingHorizontal="@dimen/dp_8"
+        android:paddingHorizontal="@dimen/dp_10"
         android:paddingVertical="@dimen/dp_2"
-        android:background="@drawable/dw_corner_thirty_bg"
+        android:background="@drawable/dw_corner_twelve_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>

@@ -246,7 +246,7 @@
                     app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
                     app:layout_constraintTop_toTopOf="@id/constraintLowPriority"/>
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <!--<androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/radioButtonLabelLowPriority"
                     android:layout_height="wrap_content"
                     android:layout_width="@dimen/dp_0"
@@ -258,7 +258,7 @@
                     android:visibility="invisible"
                     app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewLowPriority"/>
+                    app:layout_constraintTop_toBottomOf="@id/imageViewLowPriority"/>-->
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelLowPriority"
@@ -313,7 +313,7 @@
                     app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
                     app:layout_constraintTop_toTopOf="@id/constraintMediumPriority"/>
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <!--<androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/radioButtonLabelMediumPriority"
                     android:layout_height="wrap_content"
                     android:layout_width="@dimen/dp_0"
@@ -325,7 +325,7 @@
                     android:visibility="invisible"
                     app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewMediumPriority"/>
+                    app:layout_constraintTop_toBottomOf="@id/imageViewMediumPriority"/>-->
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelMediumPriority"
@@ -380,7 +380,7 @@
                 app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toTopOf="@id/constraintHighPriority"/>
 
-                <androidx.appcompat.widget.AppCompatRadioButton
+                <!--<androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/radioButtonLabelHighPriority"
                     android:layout_height="wrap_content"
                     android:layout_width="@dimen/dp_0"
@@ -392,7 +392,7 @@
                     android:visibility="invisible"
                     app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewHighPriority"/>
+                    app:layout_constraintTop_toBottomOf="@id/imageViewHighPriority"/>-->
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewLabelHighPriority"

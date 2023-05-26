@@ -75,8 +75,8 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     private fun addData(){
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 1","1"))
-        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 2","3"))
-        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 3",""))
+        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 3","3"))
+        chooseSpaceAdapter.list.add(ChooseSpaceList("Space 2",""))
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 4",""))
     }
 

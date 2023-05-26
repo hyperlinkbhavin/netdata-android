@@ -330,60 +330,60 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     @SuppressLint("NotifyDataSetChanged")
     private fun addData() {
         homeList.add(HomeDataList(
-                "inbound",
-                "24 second ago",
-                "gke-gke",
-                "disk-space",
+                "inbound packets dropped ratio",
+                "24 seconds ago · 04/04/2022 - 15:44:23",
+                "gke-staging-streamnative-202103050938-3a4480ce",
+                "disk_space._boot_efi",
                 "War Room 1•War Room 2•War Room 3•War Room 4",
-                "Type and Component",
+                "Type & Component : System • Network",
                 true
             ))
 
         homeList.add(HomeDataList(
-            "inbound",
-            "24 second ago",
-            "gke-gke",
-            "disk-space",
+            "inbound packets dropped ratio",
+            "24 seconds ago · 04/04/2022 - 15:44:23",
+            "gke-staging-streamnative-202103050938-3a4480ce",
+            "disk_space._boot_efi",
             "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type and Component",
+            "Type & Component : System • Network",
         ))
 
         homeList.add(HomeDataList(
-            "inbound",
-            "24 second ago",
-            "gke-gke",
-            "disk-space",
+            "inbound packets dropped ratio",
+            "24 seconds ago · 04/04/2022 - 15:44:23",
+            "gke-staging-streamnative-202103050938-3a4480ce",
+            "disk_space._boot_efi",
             "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type and Component",
+            "Type & Component : System • Network",
             true
         ))
 
         homeList.add(HomeDataList(
-            "inbound",
-            "24 second ago",
-            "gke-gke",
-            "disk-space",
+            "inbound packets dropped ratio",
+            "24 seconds ago · 04/04/2022 - 15:44:23",
+            "gke-staging-streamnative-202103050938-3a4480ce",
+            "disk_space._boot_efi",
             "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type and Component",
+            "Type & Component : System • Network",
         ))
 
         homeList.add(HomeDataList(
-            "inbound",
-            "24 second ago",
-            "gke-gke",
-            "disk-space",
+            "inbound packets dropped ratio",
+            "24 seconds ago · 04/04/2022 - 15:44:23",
+            "gke-staging-streamnative-202103050938-3a4480ce",
+            "disk_space._boot_efi",
             "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type and Component",
+            "Type & Component : System • Network",
             true
         ))
 
         homeList.add(HomeDataList(
-            "inbound",
-            "24 second ago",
-            "gke-gke",
-            "disk-space",
+            "inbound packets dropped ratio",
+            "24 seconds ago · 04/04/2022 - 15:44:23",
+            "gke-staging-streamnative-202103050938-3a4480ce",
+            "disk_space._boot_efi",
             "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type and Component",
+            "Type & Component : System • Network",
         ))
 
         homeAdapter.list.addAll(homeList)
@@ -415,17 +415,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val textViewLabelMediumPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelMediumPriority)
         val textViewLabelHighPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelHighPriority)
 
-        val radioButtonLabelLowPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelLowPriority)
+        /*val radioButtonLabelLowPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelLowPriority)
         val radioButtonLabelMediumPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelMediumPriority)
-        val radioButtonLabelHighPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelHighPriority)
+        val radioButtonLabelHighPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelHighPriority)*/
 
         val constraintNodes = view.findViewById<ConstraintLayout>(R.id.constraintNodes)
         val constraintCurrentNodes = view.findViewById<ConstraintLayout>(R.id.constraintCurrentNodes)
         val constraintAllNodes = view.findViewById<ConstraintLayout>(R.id.constraintAllNodes)
 
-        /*val constraintLowPriority = view.findViewById<ConstraintLayout>(R.id.constraintLowPriority)
+        val constraintLowPriority = view.findViewById<ConstraintLayout>(R.id.constraintLowPriority)
         val constraintMediumPriority = view.findViewById<ConstraintLayout>(R.id.constraintMediumPriority)
-        val constraintHighPriority = view.findViewById<ConstraintLayout>(R.id.constraintHighPriority)*/
+        val constraintHighPriority = view.findViewById<ConstraintLayout>(R.id.constraintHighPriority)
 
         val radioButtonCurrentNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonCurrentNodes)
         val radioButtonAllNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonAllNodes)
@@ -433,10 +433,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val imageViewBigPriority = view.findViewById<AppCompatImageView>(R.id.imageViewBigPriority)
         val textViewPriorityName = view.findViewById<AppCompatTextView>(R.id.textViewPriorityName)
 
+        val imageViewLowPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewLowPriorityStatusDot)
+        val imageViewMediumPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewMediumPriorityStatusDot)
+        val imageViewHighPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewHighPriorityStatusDot)
+
         val imageViewPriority = view.findViewById<AppCompatImageView>(R.id.imageViewPriority)
         val textViewPriority = view.findViewById<AppCompatTextView>(R.id.textViewPriority)
 
-        radioButtonLabelHighPriority.isChecked = true
+//        radioButtonLabelHighPriority.isChecked = true
 
         buttonChangeNotificationPriority.setOnClickListener {
             imageViewPriority.visible()
@@ -444,13 +448,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
             buttonChangeNotificationPriority.gone()
             constraintNodes.visible()
-            radioButtonLabelLowPriority.visible()
-            radioButtonLabelMediumPriority.visible()
-            radioButtonLabelHighPriority.visible()
 
-            textViewLabelLowPriority.invisible()
+            imageViewHighPriorityStatusDot.visible()
+            /*radioButtonLabelLowPriority.visible()
+            radioButtonLabelMediumPriority.visible()
+            radioButtonLabelHighPriority.visible()*/
+
+            /*textViewLabelLowPriority.invisible()
             textViewLabelMediumPriority.invisible()
-            textViewLabelHighPriority.invisible()
+            textViewLabelHighPriority.invisible()*/
         }
 
         textViewLabelEditPrioritySettings.setOnClickListener {
@@ -478,7 +484,34 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             radioButtonAllNodes.isChecked = true
         }
 
-        radioButtonLabelLowPriority.setOnClickListener {
+        constraintLowPriority.setOnClickListener {
+            imageViewLowPriorityStatusDot.visible()
+            imageViewMediumPriorityStatusDot.invisible()
+            imageViewHighPriorityStatusDot.invisible()
+
+            imageViewBigPriority.setImageResource(R.drawable.ic_low_priority)
+            textViewPriorityName.text = getString(R.string.label_low_priority)
+        }
+
+        constraintMediumPriority.setOnClickListener {
+            imageViewLowPriorityStatusDot.invisible()
+            imageViewMediumPriorityStatusDot.visible()
+            imageViewHighPriorityStatusDot.invisible()
+
+            imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
+            textViewPriorityName.text = getString(R.string.label_medium_priority)
+        }
+
+        constraintHighPriority.setOnClickListener {
+            imageViewLowPriorityStatusDot.invisible()
+            imageViewMediumPriorityStatusDot.invisible()
+            imageViewHighPriorityStatusDot.visible()
+
+            imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
+            textViewPriorityName.text = getString(R.string.label_high_priority)
+        }
+
+        /*radioButtonLabelLowPriority.setOnClickListener {
             radioButtonLabelLowPriority.isChecked = true
             radioButtonLabelMediumPriority.isChecked = false
             radioButtonLabelHighPriority.isChecked = false
@@ -503,7 +536,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
             imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
             textViewPriorityName.text = getString(R.string.label_high_priority)
-        }
+        }*/
 
         dialog.setCancelable(false)
         dialog.setContentView(view)

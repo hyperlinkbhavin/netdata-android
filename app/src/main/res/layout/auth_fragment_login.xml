@@ -75,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_50"
             android:hint="@string/hint_enter_email_address"
+            android:textColorHint="@color/color_text_hint_selector"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/textViewLabelLoginText">
@@ -82,6 +83,7 @@
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/editTextEmail"
                 style="@style/AppCompatEditText"
+                android:textColor="@color/color_text_hint_selector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"

@@ -94,6 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             style="@style/ChangeTintColor"
+            android:alpha="0.7"
             android:src="@drawable/ic_notification_priority_gke"
             android:layout_marginTop="@dimen/dp_16"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
@@ -105,6 +106,7 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
             android:layout_marginStart="@dimen/dp_6"
+            android:alpha="0.7"
             app:layout_constraintStart_toEndOf="@id/imageViewGKE"
             app:layout_constraintTop_toTopOf="@id/imageViewGKE"
             app:layout_constraintBottom_toBottomOf="@id/imageViewGKE"
@@ -117,6 +119,7 @@
             style="@style/ChangeTintColor"
             android:src="@drawable/ic_disk_space"
             android:layout_marginTop="@dimen/dp_8"
+            android:alpha="0.7"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
             app:layout_constraintTop_toBottomOf="@id/imageViewGKE"/>
 
@@ -126,6 +129,7 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="disk_space._boot_efi"
             android:layout_marginStart="@dimen/dp_6"
+            android:alpha="0.7"
             app:layout_constraintStart_toEndOf="@id/imageViewDiskSpace"
             app:layout_constraintTop_toTopOf="@id/imageViewDiskSpace"
             app:layout_constraintBottom_toBottomOf="@id/imageViewDiskSpace"

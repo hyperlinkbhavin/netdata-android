@@ -99,8 +99,20 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             { _, year, month, date ->
-                val date = date.toString()+"/"+month.toString()+"/"+year.toString().drop(2)
-                timePicker(date)
+                val dates = if(date < 10){
+                    "0${date}"
+                } else {
+                    (date).toString()
+                }
+
+                var months = ""
+                months = if(month < 9){
+                    "0${month+1}"
+                } else {
+                    (month+1).toString()
+                }
+                val date2 = dates+"/"+months+"/"+year.toString().drop(2)
+                timePicker(date2)
             },
             mCalendar.get(Calendar.YEAR),
             mCalendar.get(Calendar.MONTH),
@@ -110,6 +122,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         datePickerDialog.show()
     }
 
+    @SuppressLint("SetTextI18n")
     fun timePicker(date: String) =with(binding){
         val mcurrentTime = Calendar.getInstance()
         val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
@@ -117,7 +130,13 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         val mTimePicker: TimePickerDialog
         mTimePicker = TimePickerDialog( requireContext(),
             { timePicker, selectedHour, selectedMinute ->
-                textViewUntilDate.setText(date+", "+selectedHour.toString()+":"+selectedMinute.toString() )
+                val minutes = if(selectedMinute < 10){
+                    "0$selectedMinute"
+                } else {
+                    "$selectedMinute"
+                }
+
+                textViewUntilDate.text = "$date, $selectedHour:$minutes"
             },
             hour,
             minute,
