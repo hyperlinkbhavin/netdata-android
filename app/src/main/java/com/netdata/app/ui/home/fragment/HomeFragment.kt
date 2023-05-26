@@ -44,6 +44,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private var homeList = ArrayList<HomeDataList>()
 
+    private var isCurrentNodes = true
+
     private val homeAdapter by lazy {
         HomeAdapter(){ view, position, item ->
             when(view.id){
@@ -437,14 +439,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val imageViewMediumPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewMediumPriorityStatusDot)
         val imageViewHighPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewHighPriorityStatusDot)
 
-        val imageViewPriority = view.findViewById<AppCompatImageView>(R.id.imageViewPriority)
-        val textViewPriority = view.findViewById<AppCompatTextView>(R.id.textViewPriority)
+        /*val imageViewPriority = view.findViewById<AppCompatImageView>(R.id.imageViewPriority)
+        val textViewPriority = view.findViewById<AppCompatTextView>(R.id.textViewPriority)*/
 
 //        radioButtonLabelHighPriority.isChecked = true
 
+        radioButtonCurrentNodes.isChecked = isCurrentNodes
+        radioButtonAllNodes.isChecked = !isCurrentNodes
+
         buttonChangeNotificationPriority.setOnClickListener {
-            imageViewPriority.visible()
-            textViewPriority.visible()
+            /*imageViewPriority.visible()
+            textViewPriority.visible()*/
 
             buttonChangeNotificationPriority.gone()
             constraintNodes.visible()
@@ -467,11 +472,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         constraintCurrentNodes.setOnClickListener {
             radioButtonCurrentNodes.isChecked = true
             radioButtonAllNodes.isChecked = false
+            isCurrentNodes = true
+            dialog.dismiss()
         }
 
         constraintAllNodes.setOnClickListener {
             radioButtonCurrentNodes.isChecked = false
             radioButtonAllNodes.isChecked = true
+            isCurrentNodes = false
+            dialog.dismiss()
         }
 
         radioButtonCurrentNodes.setOnClickListener {

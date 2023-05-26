@@ -52,6 +52,10 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
                 navigator.load(ChooseSpaceFragment::class.java).replace(false)
             }
         }
+
+        imageViewClose.setOnClickListener {
+            navigator.goBack()
+        }
     }
 
     private fun validator(): Boolean = try {

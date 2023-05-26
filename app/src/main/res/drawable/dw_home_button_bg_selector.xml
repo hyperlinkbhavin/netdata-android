@@ -8,7 +8,7 @@
     </item>
 
     <item>
-        <layer-list>
+        <!--<layer-list>
             <item android:top="2dp">
                 <shape>
                     <corners android:radius="16dp" />
@@ -23,10 +23,10 @@
                         android:right="10dp" android:top="10dp" />
                 </shape>
             </item>
-        </layer-list>
-        <!--<shape>
+        </layer-list>-->
+        <shape>
             <corners android:radius="@dimen/dp_16" />
             <solid android:color="@color/colorWhite" />
-        </shape>-->
+        </shape>
     </item>
 </selector>

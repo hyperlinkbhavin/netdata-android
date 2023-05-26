@@ -153,7 +153,6 @@
                 android:layout_width="wrap_content"
                 android:src="@drawable/ic_high_priority"
                 android:layout_marginTop="@dimen/dp_8"
-                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
                 app:layout_constraintTop_toBottomOf="@id/imageViewWarRoomsList"/>
 
@@ -163,7 +162,6 @@
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
                 android:text="High  Priority"
                 android:layout_marginStart="@dimen/dp_6"
-                android:visibility="gone"
                 app:layout_constraintStart_toEndOf="@id/imageViewPriority"
                 app:layout_constraintTop_toTopOf="@id/imageViewPriority"
                 app:layout_constraintBottom_toBottomOf="@id/imageViewPriority"

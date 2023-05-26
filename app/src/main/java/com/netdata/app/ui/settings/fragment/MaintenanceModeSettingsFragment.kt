@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat
+import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import com.netdata.app.R
 import com.netdata.app.data.pojo.request.WarRoomsList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
@@ -64,8 +65,15 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             }
             maintenanceModeSettingsAdapter.notifyDataSetChanged()
         }
+
         textViewUntilDate.setOnClickListener {
             datePicker()
+        }
+
+        radioButtonForever.setOnCheckedChangeListener { buttonView, isChecked ->
+            if(isChecked){
+                textViewUntilDate.text = "DD/MM/YY, HH:MM"
+            }
         }
     }
 
@@ -137,6 +145,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 }
 
                 textViewUntilDate.text = "$date, $selectedHour:$minutes"
+                radioButtonUntil.isChecked = true
             },
             hour,
             minute,

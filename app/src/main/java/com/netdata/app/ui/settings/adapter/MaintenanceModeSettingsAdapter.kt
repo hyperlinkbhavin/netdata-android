@@ -45,13 +45,19 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
         init {
             binding.apply {
                 switchDisableAllNotifications.setOnClickListener {
-                    Log.e("click", list[adapterPosition].isSelected.toString())
-                    list[adapterPosition].isSelected = !list[adapterPosition].isSelected
-                    callBack.invoke(constraintDisableNotifications, adapterPosition, list[adapterPosition])
+                    Log.e("click", list[absoluteAdapterPosition].isSelected.toString())
+                    list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    callBack.invoke(constraintDisableNotifications, absoluteAdapterPosition, list[absoluteAdapterPosition])
                     notifyDataSetChanged()
                 }
                 textViewUntilDate.setOnClickListener {
                     datePicker()
+                }
+
+                radioButtonForever.setOnCheckedChangeListener { buttonView, isChecked ->
+                    if(isChecked){
+                        textViewUntilDate.text = "DD/MM/YY, HH:MM"
+                    }
                 }
 
             }
@@ -95,6 +101,7 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
             mTimePicker = TimePickerDialog( textViewDisableAllNotification.context,
                 { timePicker, selectedHour, selectedMinute ->
                     textViewUntilDate.setText(date+", "+selectedHour.toString()+":"+selectedMinute.toString() )
+                    radioButtonUntil.isChecked = true
                 },
                 hour,
                 minute,
