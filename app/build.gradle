@@ -100,4 +100,7 @@ dependencies {
 
     //Range seekbar
     implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
+
+    // QR Code Scanner
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
 }

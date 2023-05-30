@@ -459,6 +459,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         buttonChangeNotificationPriority.setOnClickListener {
             buttonChangeNotificationPriority.gone()
             constraintNodes.visible()
+            seekBar.visible()
         }
 
         textViewLabelEditPrioritySettings.setOnClickListener {

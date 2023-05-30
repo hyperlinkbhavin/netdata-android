@@ -361,6 +361,7 @@
                 app:rsb_gravity="center"
                 app:rsb_max="90"
                 app:rsb_mode="single"
+                android:visibility="invisible"
                 app:rsb_progress_color="@android:color/transparent"
                 app:rsb_progress_default_color="@android:color/transparent"
                 app:rsb_thumb_drawable="@drawable/ic_priority_select_dot"
