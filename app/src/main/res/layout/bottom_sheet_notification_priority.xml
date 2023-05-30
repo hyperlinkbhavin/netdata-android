@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@drawable/dw_dialog_bg"
     android:fillViewport="true">
 
@@ -15,12 +15,12 @@
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineStart"
             style="@style/StyleStartGuideline"
-            app:layout_constraintGuide_begin="@dimen/dp_16"/>
+            app:layout_constraintGuide_begin="@dimen/dp_16" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guidelineEnd"
             style="@style/StyleEndGuideline"
-            app:layout_constraintGuide_end="@dimen/dp_16"/>
+            app:layout_constraintGuide_end="@dimen/dp_16" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelNotificationPriority"
@@ -28,7 +28,7 @@
             android:layout_marginTop="@dimen/dp_16"
             android:text="@string/label_notification_priority_small"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelEditPrioritySettings"
@@ -36,147 +36,147 @@
             android:text="@string/label_edit_priority_settings"
             android:textColor="@color/colorPrimary"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toTopOf="@id/textViewLabelNotificationPriority"/>
+            app:layout_constraintTop_toTopOf="@id/textViewLabelNotificationPriority" />
 
         <View
             android:id="@+id/viewNotificationPriority"
-            android:layout_height="@dimen/dp_1"
-            android:layout_width="match_parent"
             style="@style/ChangeBackgroundBlack35ToWhite"
-            android:alpha="0.4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
             android:layout_marginTop="@dimen/dp_16"
-            app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationPriority"/>
+            android:alpha="0.4"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationPriority" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintTop"
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/dp_16"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_16"
+            android:layout_marginTop="@dimen/dp_16"
             app:layout_constraintTop_toBottomOf="@id/viewNotificationPriority">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewNotificationWarning"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/ic_space_warning"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toTopOf="@id/constraintTop"/>
+                app:layout_constraintTop_toTopOf="@id/constraintTop" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewSpaceWarningPercent"
                 style="@style/AppTheme.AppTextView.BoldBlack14"
                 android:layout_marginStart="@dimen/dp_8"
                 android:text="54.3% •"
-                app:layout_constraintStart_toEndOf="@id/imageViewNotificationWarning"
-                app:layout_constraintTop_toTopOf="@id/imageViewNotificationWarning"
                 app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationWarning"
-                app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningText"/>
+                app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningText"
+                app:layout_constraintStart_toEndOf="@id/imageViewNotificationWarning"
+                app:layout_constraintTop_toTopOf="@id/imageViewNotificationWarning" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewSpaceWarningText"
-                android:layout_width="@dimen/dp_0"
                 style="@style/AppTheme.AppTextView.RegularBlack14"
+                android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_4"
                 android:text="@string/label_inbound_packets_dropped_ratio"
-                app:layout_constraintStart_toEndOf="@id/textViewSpaceWarningPercent"
-                app:layout_constraintTop_toTopOf="@id/imageViewNotificationWarning"
                 app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationWarning"
-                app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+                app:layout_constraintEnd_toEndOf="@id/constraintTop"
+                app:layout_constraintStart_toEndOf="@id/textViewSpaceWarningPercent"
+                app:layout_constraintTop_toTopOf="@id/imageViewNotificationWarning" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewGKE"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 style="@style/ChangeTintColor"
-                android:src="@drawable/ic_notification_priority_gke"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_16"
+                android:src="@drawable/ic_notification_priority_gke"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewNotificationWarning"/>
+                app:layout_constraintTop_toBottomOf="@id/imageViewNotificationWarning" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewGKE"
-                android:layout_width="@dimen/dp_0"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
-                android:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
+                android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                app:layout_constraintStart_toEndOf="@id/imageViewGKE"
-                app:layout_constraintTop_toTopOf="@id/imageViewGKE"
+                android:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
                 app:layout_constraintBottom_toBottomOf="@id/imageViewGKE"
-                app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+                app:layout_constraintEnd_toEndOf="@id/constraintTop"
+                app:layout_constraintStart_toEndOf="@id/imageViewGKE"
+                app:layout_constraintTop_toTopOf="@id/imageViewGKE" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewDiskSpace"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 style="@style/ChangeTintColor"
-                android:src="@drawable/ic_disk_space"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
+                android:src="@drawable/ic_disk_space"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewGKE"/>
+                app:layout_constraintTop_toBottomOf="@id/imageViewGKE" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewDiskSpace"
-                android:layout_width="@dimen/dp_0"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
-                android:text="disk_space._boot_efi"
+                android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                app:layout_constraintStart_toEndOf="@id/imageViewDiskSpace"
-                app:layout_constraintTop_toTopOf="@id/imageViewDiskSpace"
+                android:text="disk_space._boot_efi"
                 app:layout_constraintBottom_toBottomOf="@id/imageViewDiskSpace"
-                app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+                app:layout_constraintEnd_toEndOf="@id/constraintTop"
+                app:layout_constraintStart_toEndOf="@id/imageViewDiskSpace"
+                app:layout_constraintTop_toTopOf="@id/imageViewDiskSpace" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewWarRoomsList"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
                 style="@style/ChangeTintColor"
-                android:src="@drawable/ic_war_rooms_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
+                android:src="@drawable/ic_war_rooms_list"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewDiskSpace"/>
+                app:layout_constraintTop_toBottomOf="@id/imageViewDiskSpace" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewWarRoomsList"
-                android:layout_width="@dimen/dp_0"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
-                android:text="War Room 1 • War Room 2 • War Room 3 • War Rom 4 "
+                android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsList"
-                app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsList"
+                android:text="War Room 1 • War Room 2 • War Room 3 • War Rom 4 "
                 app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsList"
-                app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+                app:layout_constraintEnd_toEndOf="@id/constraintTop"
+                app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsList"
+                app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsList" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewPriority"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
-                android:src="@drawable/ic_high_priority"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_8"
+                android:src="@drawable/ic_high_priority"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewWarRoomsList"/>
+                app:layout_constraintTop_toBottomOf="@id/imageViewWarRoomsList" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewPriority"
-                android:layout_width="@dimen/dp_0"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
-                android:text="High  Priority"
+                android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                app:layout_constraintStart_toEndOf="@id/imageViewPriority"
-                app:layout_constraintTop_toTopOf="@id/imageViewPriority"
+                android:text="High  Priority"
                 app:layout_constraintBottom_toBottomOf="@id/imageViewPriority"
-                app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+                app:layout_constraintEnd_toEndOf="@id/constraintTop"
+                app:layout_constraintStart_toEndOf="@id/imageViewPriority"
+                app:layout_constraintTop_toTopOf="@id/imageViewPriority" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:id="@+id/viewConstraintTop"
-            android:layout_height="@dimen/dp_1"
-            android:layout_width="match_parent"
             style="@style/ChangeBackgroundBlack35ToWhite"
-            android:alpha="0.4"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_1"
             android:layout_marginTop="@dimen/dp_16"
-            app:layout_constraintTop_toBottomOf="@id/constraintTop"/>
+            android:alpha="0.4"
+            app:layout_constraintTop_toBottomOf="@id/constraintTop" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelNotificationPriority2"
@@ -184,276 +184,216 @@
             android:layout_marginTop="@dimen/dp_16"
             android:text="@string/label_notification_priority_small"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintTop_toBottomOf="@id/viewConstraintTop"/>
+            app:layout_constraintTop_toBottomOf="@id/viewConstraintTop" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewBigPriority"
-            android:layout_height="@dimen/dp_32"
             android:layout_width="@dimen/dp_24"
-            android:src="@drawable/ic_high_priority"
+            android:layout_height="@dimen/dp_32"
             android:layout_marginTop="@dimen/dp_20"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            android:src="@drawable/ic_high_priority"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationPriority2"/>
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationPriority2" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewPriorityName"
             style="@style/AppTheme.AppTextView.SemiBoldBlack16"
-            android:text="High Priority"
             android:layout_marginTop="@dimen/dp_20"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            android:text="High Priority"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toBottomOf="@id/imageViewBigPriority"/>
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/imageViewBigPriority" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewPriorityText"
-            android:layout_width="@dimen/dp_0"
             style="@style/AppTheme.AppTextView.RegularBlack12"
+            android:layout_width="@dimen/dp_0"
+            android:layout_marginTop="@dimen/dp_16"
             android:text="@string/label_the_notification_priority_can_be_set_based_on_user_npreferences_to_allow_for_customised_handling_of_nnotifications"
             android:textAlignment="center"
-            android:layout_marginTop="@dimen/dp_16"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toBottomOf="@id/textViewPriorityName"/>
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/textViewPriorityName" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintPriority"
-            android:layout_height="wrap_content"
             android:layout_width="@dimen/dp_0"
-            android:layout_marginTop="@dimen/dp_30"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_10"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            android:layout_marginTop="@dimen/dp_30"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintTop_toBottomOf="@id/textViewPriorityText">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintLowPriority"
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dp_0"
-                app:layout_constraintStart_toStartOf="@id/constraintPriority"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/constraintPriority"
                 app:layout_constraintEnd_toStartOf="@id/constraintMediumPriority"
-                app:layout_constraintTop_toTopOf="@id/constraintPriority"
-                app:layout_constraintBottom_toBottomOf="@id/constraintPriority">
+                app:layout_constraintStart_toStartOf="@id/constraintPriority"
+                app:layout_constraintTop_toTopOf="@id/constraintPriority">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageViewLowPriority"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:src="@drawable/ic_low_priority"
-                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
-                    app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
-                    app:layout_constraintTop_toTopOf="@id/constraintLowPriority"/>
-
-                <!--<androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/radioButtonLabelLowPriority"
                     android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
-                    style="@style/AppTheme.AppTextView.RegularBlack12"
-                    android:text="@string/label_low_priority"
-                    android:button="@drawable/dw_radio_button_selector"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:paddingStart="@dimen/dp_4"
-                    android:visibility="invisible"
-                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                    android:src="@drawable/ic_low_priority"
                     app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewLowPriority"/>-->
+                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                    app:layout_constraintTop_toTopOf="@id/constraintLowPriority" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelLowPriority"
-                    android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
                     style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
                     android:text="@string/label_low_priority"
                     android:textAlignment="center"
-                    android:layout_marginTop="@dimen/dp_8"
-                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewLowPriority"/>
+                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewLowPriority" />
 
                 <View
                     android:id="@+id/viewLowPriority"
-                    android:layout_height="@dimen/dp_4"
                     android:layout_width="@dimen/dp_0"
+                    android:layout_height="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:background="@color/colorGreen68"
-                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintLowPriority"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabelLowPriority"/>
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageViewLowPriorityStatusDot"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/ic_priority_select_dot"
-                    android:visibility="invisible"
-                    app:layout_constraintStart_toStartOf="@id/viewLowPriority"
-                    app:layout_constraintEnd_toEndOf="@id/viewLowPriority"
-                    app:layout_constraintTop_toTopOf="@id/viewLowPriority"
-                    app:layout_constraintBottom_toBottomOf="@id/viewLowPriority"/>
+                    app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabelLowPriority" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintMediumPriority"
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dp_0"
-                app:layout_constraintStart_toEndOf="@id/constraintLowPriority"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@id/constraintPriority"
                 app:layout_constraintEnd_toStartOf="@id/constraintHighPriority"
-                app:layout_constraintTop_toTopOf="@id/constraintPriority"
-                app:layout_constraintBottom_toBottomOf="@id/constraintPriority">
+                app:layout_constraintStart_toEndOf="@id/constraintLowPriority"
+                app:layout_constraintTop_toTopOf="@id/constraintPriority">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imageViewMediumPriority"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:src="@drawable/ic_medium_priority"
-                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
-                    app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
-                    app:layout_constraintTop_toTopOf="@id/constraintMediumPriority"/>
-
-                <!--<androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/radioButtonLabelMediumPriority"
                     android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
-                    style="@style/AppTheme.AppTextView.RegularBlack12"
-                    android:text="@string/label_medium_priority"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:button="@drawable/dw_radio_button_selector"
-                    android:paddingStart="@dimen/dp_4"
-                    android:visibility="invisible"
-                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                    android:src="@drawable/ic_medium_priority"
                     app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewMediumPriority"/>-->
+                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                    app:layout_constraintTop_toTopOf="@id/constraintMediumPriority" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelMediumPriority"
-                    android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
                     style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
                     android:text="@string/label_medium_priority"
                     android:textAlignment="center"
-                    android:layout_marginTop="@dimen/dp_8"
-                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewMediumPriority"/>
+                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewMediumPriority" />
 
                 <View
                     android:id="@+id/viewMediumPriority"
-                    android:layout_height="@dimen/dp_4"
                     android:layout_width="@dimen/dp_0"
+                    android:layout_height="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_8"
                     android:background="@color/colorYellowFF"
-                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                     app:layout_constraintEnd_toEndOf="@id/constraintMediumPriority"
-                    app:layout_constraintTop_toBottomOf="@id/textViewLabelMediumPriority"/>
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imageViewMediumPriorityStatusDot"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:src="@drawable/ic_priority_select_dot"
-                    android:visibility="invisible"
-                    app:layout_constraintStart_toStartOf="@id/viewMediumPriority"
-                    app:layout_constraintEnd_toEndOf="@id/viewMediumPriority"
-                    app:layout_constraintTop_toTopOf="@id/viewMediumPriority"
-                    app:layout_constraintBottom_toBottomOf="@id/viewMediumPriority"/>
+                    app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabelMediumPriority" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintHighPriority"
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dp_0"
-                app:layout_constraintStart_toEndOf="@id/constraintMediumPriority"
-                app:layout_constraintTop_toTopOf="@id/constraintPriority"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@id/constraintPriority"
-                app:layout_constraintEnd_toEndOf="@id/constraintPriority">
+                app:layout_constraintEnd_toEndOf="@id/constraintPriority"
+                app:layout_constraintStart_toEndOf="@id/constraintMediumPriority"
+                app:layout_constraintTop_toTopOf="@id/constraintPriority">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imageViewHighPriority"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/ic_high_priority"
-                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
-                app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
-                app:layout_constraintTop_toTopOf="@id/constraintHighPriority"/>
-
-                <!--<androidx.appcompat.widget.AppCompatRadioButton
-                    android:id="@+id/radioButtonLabelHighPriority"
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/imageViewHighPriority"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
-                    style="@style/AppTheme.AppTextView.RegularBlack12"
-                    android:text="@string/label_high_priority"
-                    android:button="@drawable/dw_radio_button_selector"
-                    android:layout_marginTop="@dimen/dp_8"
-                    android:paddingStart="@dimen/dp_4"
-                    android:visibility="invisible"
-                    app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                    android:src="@drawable/ic_high_priority"
                     app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
-                    app:layout_constraintTop_toBottomOf="@id/imageViewHighPriority"/>-->
+                    app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                    app:layout_constraintTop_toTopOf="@id/constraintHighPriority" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textViewLabelHighPriority"
-                android:layout_height="wrap_content"
-                android:layout_width="@dimen/dp_0"
-                style="@style/AppTheme.AppTextView.RegularBlack12"
-                android:text="@string/label_high_priority"
-                android:textAlignment="center"
-                android:layout_marginTop="@dimen/dp_8"
-                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
-                app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
-                app:layout_constraintTop_toBottomOf="@id/imageViewHighPriority"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewLabelHighPriority"
+                    style="@style/AppTheme.AppTextView.RegularBlack12"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:text="@string/label_high_priority"
+                    android:textAlignment="center"
+                    app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
+                    app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                    app:layout_constraintTop_toBottomOf="@id/imageViewHighPriority" />
 
-            <View
-                android:id="@+id/viewHighPriority"
-                android:layout_height="@dimen/dp_4"
-                android:layout_width="@dimen/dp_0"
-                android:layout_marginTop="@dimen/dp_8"
-                android:background="@color/colorRedED"
-                app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
-                app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
-                app:layout_constraintTop_toBottomOf="@id/textViewLabelHighPriority"/>
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/imageViewHighPriorityStatusDot"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:src="@drawable/ic_priority_select_dot"
-                android:visibility="invisible"
-                app:layout_constraintStart_toStartOf="@id/viewHighPriority"
-                app:layout_constraintEnd_toEndOf="@id/viewHighPriority"
-                app:layout_constraintTop_toTopOf="@id/viewHighPriority"
-                app:layout_constraintBottom_toBottomOf="@id/viewHighPriority"/>
+                <View
+                    android:id="@+id/viewHighPriority"
+                    android:layout_width="@dimen/dp_0"
+                    android:layout_height="@dimen/dp_4"
+                    android:layout_marginTop="@dimen/dp_8"
+                    android:background="@color/colorRedED"
+                    app:layout_constraintEnd_toEndOf="@id/constraintHighPriority"
+                    app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
+                    app:layout_constraintTop_toBottomOf="@id/textViewLabelHighPriority" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.jaygoo.widget.RangeSeekBar
+                android:id="@+id/seekbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_47"
+                app:layout_constraintTop_toTopOf="parent"
+                app:rsb_gravity="center"
+                app:rsb_max="90"
+                app:rsb_mode="single"
+                app:rsb_progress_color="@android:color/transparent"
+                app:rsb_progress_default_color="@android:color/transparent"
+                app:rsb_thumb_drawable="@drawable/ic_priority_select_dot"
+                app:rsb_thumb_height="@dimen/dp_12"
+                app:rsb_thumb_width="@dimen/dp_12" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonChangeNotificationPriority"
-            android:layout_height="wrap_content"
             android:layout_width="@dimen/dp_0"
-            android:text="@string/btn_change_notification_priority"
-            android:textColor="@color/colorWhite"
-            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
-            android:textSize="@dimen/sp_18"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_50"
             android:background="@drawable/dw_corner_twelve_bg"
             android:backgroundTint="@color/colorPrimary"
-            android:paddingVertical="@dimen/dp_16"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
             android:minHeight="@dimen/dp_0"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            android:paddingVertical="@dimen/dp_16"
+            android:text="@string/btn_change_notification_priority"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_18"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintTop_toBottomOf="@id/constraintPriority"/>
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/constraintPriority" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintNodes"
-            android:layout_height="wrap_content"
             android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_25"
             android:visibility="gone"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintTop_toBottomOf="@id/constraintPriority">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -461,55 +401,55 @@
                 style="@style/AppTheme.AppTextView.SemiBoldBlack14"
                 android:text="@string/label_nodes"
                 app:layout_constraintStart_toStartOf="@id/constraintNodes"
-                app:layout_constraintTop_toTopOf="@id/constraintNodes"/>
+                app:layout_constraintTop_toTopOf="@id/constraintNodes" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintCurrentNodes"
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
-                app:layout_constraintStart_toStartOf="@id/constraintNodes"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/constraintNodes"
                 app:layout_constraintTop_toBottomOf="@id/textViewLabelNodes">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelCurrentNodes"
                     style="@style/AppTheme.AppTextView.MediumBlack14"
                     android:text="Current selection of nodes"
+                    app:layout_constraintBottom_toBottomOf="@id/constraintCurrentNodes"
                     app:layout_constraintStart_toStartOf="@id/constraintCurrentNodes"
-                    app:layout_constraintTop_toTopOf="@id/constraintCurrentNodes"
-                    app:layout_constraintBottom_toBottomOf="@id/constraintCurrentNodes"/>
+                    app:layout_constraintTop_toTopOf="@id/constraintCurrentNodes" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/radioButtonCurrentNodes"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:checked="true"
-                    android:padding="@dimen/dp_6"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dp_10"
                     android:button="@drawable/dw_radio_button_selector"
+                    android:checked="true"
+                    android:padding="@dimen/dp_6"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewLabelCurrentNodes"
                     app:layout_constraintEnd_toEndOf="@id/constraintCurrentNodes"
-                    app:layout_constraintTop_toTopOf="@id/textViewLabelCurrentNodes"
-                    app:layout_constraintBottom_toBottomOf="@id/textViewLabelCurrentNodes"/>
+                    app:layout_constraintTop_toTopOf="@id/textViewLabelCurrentNodes" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:id="@+id/viewCurrentNodes"
-                android:layout_height="@dimen/dp_1"
-                android:layout_width="match_parent"
                 style="@style/ChangeBackgroundBlack35ToWhite"
-                android:alpha="0.4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
                 android:layout_marginTop="@dimen/dp_8"
-                app:layout_constraintTop_toBottomOf="@id/constraintCurrentNodes"/>
+                android:alpha="0.4"
+                app:layout_constraintTop_toBottomOf="@id/constraintCurrentNodes" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/constraintAllNodes"
-                android:layout_height="wrap_content"
                 android:layout_width="@dimen/dp_0"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_10"
-                app:layout_constraintStart_toStartOf="@id/constraintNodes"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/constraintNodes"
                 app:layout_constraintTop_toBottomOf="@id/viewCurrentNodes">
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -517,32 +457,32 @@
                     style="@style/AppTheme.AppTextView.MediumBlack14"
                     android:text="All nodes in space"
                     app:layout_constraintStart_toStartOf="@id/constraintAllNodes"
-                    app:layout_constraintTop_toTopOf="@id/constraintAllNodes"/>
+                    app:layout_constraintTop_toTopOf="@id/constraintAllNodes" />
 
                 <androidx.appcompat.widget.AppCompatRadioButton
                     android:id="@+id/radioButtonAllNodes"
-                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:checked="false"
-                    android:padding="@dimen/dp_6"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dp_10"
                     android:button="@drawable/dw_radio_button_selector"
+                    android:checked="false"
+                    android:padding="@dimen/dp_6"
+                    app:layout_constraintBottom_toBottomOf="@id/textViewLabelAllNodes"
                     app:layout_constraintEnd_toEndOf="@id/constraintAllNodes"
-                    app:layout_constraintTop_toTopOf="@id/textViewLabelAllNodes"
-                    app:layout_constraintBottom_toBottomOf="@id/textViewLabelAllNodes"/>
+                    app:layout_constraintTop_toTopOf="@id/textViewLabelAllNodes" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:id="@+id/viewAllNodes"
-                android:layout_height="@dimen/dp_1"
-                android:layout_width="match_parent"
                 style="@style/ChangeBackgroundBlack35ToWhite"
-                android:alpha="0.4"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
                 android:layout_marginTop="@dimen/dp_8"
-                app:layout_constraintTop_toBottomOf="@id/constraintAllNodes"/>
+                android:alpha="0.4"
+                app:layout_constraintTop_toBottomOf="@id/constraintAllNodes" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

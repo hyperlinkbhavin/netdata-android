@@ -98,4 +98,6 @@ dependencies {
     // CameraX View class
     implementation "androidx.camera:camera-view:1.0.0-alpha27"
 
+    //Range seekbar
+    implementation 'com.github.Jay-Goo:RangeSeekBar:v3.0.0'
 }

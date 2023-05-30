@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.jaygoo.widget.OnRangeChangedListener
+import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
 import com.netdata.app.data.pojo.HomeDataList
 import com.netdata.app.data.pojo.enumclass.AlertStatus
@@ -47,10 +49,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var isCurrentNodes = true
 
     private val homeAdapter by lazy {
-        HomeAdapter(){ view, position, item ->
-            when(view.id){
+        HomeAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.constraintTop -> {
-                    navigator.loadActivity(IsolatedFullActivity::class.java, HomeDetailsFragment::class.java).start()
+                    navigator.loadActivity(
+                        IsolatedFullActivity::class.java,
+                        HomeDetailsFragment::class.java
+                    ).start()
                 }
 
                 R.id.imageViewPriority -> {
@@ -73,8 +78,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val filterSelectedAdapter by lazy {
-        FilterSelectedAdapter(){ view, position, item ->
-            when(view.id){
+        FilterSelectedAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.imageViewClose -> {
                     removeFilterSelected(position)
                 }
@@ -83,8 +88,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val nodeFilterAdapter by lazy {
-        HomeFilterAdapter(){ view, position, item ->
-            when(view.id){
+        HomeFilterAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
                 }
@@ -93,8 +98,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val alertStatusFilterAdapter by lazy {
-        HomeFilterAdapter(){ view, position, item ->
-            when(view.id){
+        HomeFilterAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
                 }
@@ -103,8 +108,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val notificationPriorityFilterAdapter by lazy {
-        HomeFilterAdapter(){ view, position, item ->
-            when(view.id){
+        HomeFilterAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
                 }
@@ -113,8 +118,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val classFilterAdapter by lazy {
-        HomeFilterAdapter(){ view, position, item ->
-            when(view.id){
+        HomeFilterAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
                 }
@@ -123,8 +128,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val typeAndComponentFilterAdapter by lazy {
-        HomeFilterAdapter(){ view, position, item ->
-            when(view.id){
+        HomeFilterAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
                 }
@@ -160,13 +165,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     override fun onResume() {
         super.onResume()
-        if(appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)){
+        if (appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)) {
             showMessage("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}")
             appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, false)
         }
 
-        if(appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNotEmpty()){
-            binding.includeToolbar.textViewSpace.text = appPreferences.getString(Constant.APP_PREF_SPACE_NAME)
+        if (appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNotEmpty()) {
+            binding.includeToolbar.textViewSpace.text =
+                appPreferences.getString(Constant.APP_PREF_SPACE_NAME)
         }
     }
 
@@ -207,7 +213,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         textViewLabelMarkAllAsRead.setOnClickListener {
-            for(item in homeList){
+            for (item in homeList) {
                 item.isRead = true
             }
 
@@ -218,7 +224,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         includeToolbar.imageViewSetting.setOnClickListener {
-            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java).start()
+            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java)
+                .start()
         }
 
         includeToolbar.imageViewFilter.setOnClickListener {
@@ -226,11 +233,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         includeToolbar.imageViewNotification.setOnClickListener {
-            navigator.loadActivity(IsolatedFullActivity::class.java, NotificationFragment::class.java).start()
+            navigator.loadActivity(
+                IsolatedFullActivity::class.java,
+                NotificationFragment::class.java
+            ).start()
         }
 
         includeToolbar.textViewSpace.setOnClickListener {
-            navigator.loadActivity(IsolatedFullActivity::class.java, ChooseSpaceFragment::class.java).start()
+            navigator.loadActivity(
+                IsolatedFullActivity::class.java,
+                ChooseSpaceFragment::class.java
+            ).start()
         }
 
         constraintAllWarRooms.setOnClickListener {
@@ -247,7 +260,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         buttonApplyFilter.setOnClickListener {
             binding.apply {
-                if(totalFilterCount != 0){
+                if (totalFilterCount != 0) {
                     includeToolbar.textViewFilterCount.visible()
                     includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
                     constraintFilterSelected.visible()
@@ -264,7 +277,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         imageViewNodeDown.setOnClickListener {
-            if(imageViewNodeDown.rotation == 0.0F){
+            if (imageViewNodeDown.rotation == 0.0F) {
                 imageViewNodeDown.rotation = 180.0F
                 recyclerViewNode.gone()
             } else {
@@ -274,7 +287,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         imageViewAlertStatusDown.setOnClickListener {
-            if(imageViewAlertStatusDown.rotation == 0.0F){
+            if (imageViewAlertStatusDown.rotation == 0.0F) {
                 imageViewAlertStatusDown.rotation = 180.0F
                 recyclerViewAlertStatus.gone()
             } else {
@@ -284,7 +297,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         imageViewNotificationPriorityDown.setOnClickListener {
-            if(imageViewNotificationPriorityDown.rotation == 0.0F){
+            if (imageViewNotificationPriorityDown.rotation == 0.0F) {
                 imageViewNotificationPriorityDown.rotation = 180.0F
                 recyclerViewNotificationPriority.gone()
             } else {
@@ -294,7 +307,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         imageViewClassDown.setOnClickListener {
-            if(imageViewClassDown.rotation == 0.0F){
+            if (imageViewClassDown.rotation == 0.0F) {
                 imageViewClassDown.rotation = 180.0F
                 recyclerViewClass.gone()
             } else {
@@ -304,7 +317,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         imageViewTypeAndComponentDown.setOnClickListener {
-            if(imageViewTypeAndComponentDown.rotation == 0.0F){
+            if (imageViewTypeAndComponentDown.rotation == 0.0F) {
                 imageViewTypeAndComponentDown.rotation = 180.0F
                 recyclerViewTypeAndComponent.gone()
             } else {
@@ -315,23 +328,24 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun removeFilterSelected(position: Int){
+    private fun removeFilterSelected(position: Int) {
         filterSelectedAdapter.list.removeAt(position)
-        if(filterSelectedAdapter.list.size == 0){
+        if (filterSelectedAdapter.list.size == 0) {
             binding.constraintFilterSelected.gone()
         }
 
         filterSelectedAdapter.notifyDataSetChanged()
     }
 
-    private fun setAdapter() = with(binding){
+    private fun setAdapter() = with(binding) {
         recyclerViewHome.adapter = homeAdapter
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun addData() {
-        homeList.add(HomeDataList(
+        homeList.add(
+            HomeDataList(
                 "inbound packets dropped ratio",
                 "24 seconds ago · 04/04/2022 - 15:44:23",
                 "gke-staging-streamnative-202103050938-3a4480ce",
@@ -339,54 +353,65 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 "War Room 1•War Room 2•War Room 3•War Room 4",
                 "Type & Component : System • Network",
                 true
-            ))
+            )
+        )
 
-        homeList.add(HomeDataList(
-            "inbound packets dropped ratio",
-            "24 seconds ago · 04/04/2022 - 15:44:23",
-            "gke-staging-streamnative-202103050938-3a4480ce",
-            "disk_space._boot_efi",
-            "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type & Component : System • Network",
-        ))
+        homeList.add(
+            HomeDataList(
+                "inbound packets dropped ratio",
+                "24 seconds ago · 04/04/2022 - 15:44:23",
+                "gke-staging-streamnative-202103050938-3a4480ce",
+                "disk_space._boot_efi",
+                "War Room 1•War Room 2•War Room 3•War Room 4",
+                "Type & Component : System • Network",
+            )
+        )
 
-        homeList.add(HomeDataList(
-            "inbound packets dropped ratio",
-            "24 seconds ago · 04/04/2022 - 15:44:23",
-            "gke-staging-streamnative-202103050938-3a4480ce",
-            "disk_space._boot_efi",
-            "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type & Component : System • Network",
-            true
-        ))
+        homeList.add(
+            HomeDataList(
+                "inbound packets dropped ratio",
+                "24 seconds ago · 04/04/2022 - 15:44:23",
+                "gke-staging-streamnative-202103050938-3a4480ce",
+                "disk_space._boot_efi",
+                "War Room 1•War Room 2•War Room 3•War Room 4",
+                "Type & Component : System • Network",
+                true
+            )
+        )
 
-        homeList.add(HomeDataList(
-            "inbound packets dropped ratio",
-            "24 seconds ago · 04/04/2022 - 15:44:23",
-            "gke-staging-streamnative-202103050938-3a4480ce",
-            "disk_space._boot_efi",
-            "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type & Component : System • Network",
-        ))
+        homeList.add(
+            HomeDataList(
+                "inbound packets dropped ratio",
+                "24 seconds ago · 04/04/2022 - 15:44:23",
+                "gke-staging-streamnative-202103050938-3a4480ce",
+                "disk_space._boot_efi",
+                "War Room 1•War Room 2•War Room 3•War Room 4",
+                "Type & Component : System • Network",
+            )
+        )
 
-        homeList.add(HomeDataList(
-            "inbound packets dropped ratio",
-            "24 seconds ago · 04/04/2022 - 15:44:23",
-            "gke-staging-streamnative-202103050938-3a4480ce",
-            "disk_space._boot_efi",
-            "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type & Component : System • Network",
-            true
-        ))
+        homeList.add(
+            HomeDataList(
+                "inbound packets dropped ratio",
+                "24 seconds ago · 04/04/2022 - 15:44:23",
+                "gke-staging-streamnative-202103050938-3a4480ce",
+                "disk_space._boot_efi",
+                "War Room 1•War Room 2•War Room 3•War Room 4",
+                "Type & Component : System • Network",
+                true
+            )
+        )
 
-        homeList.add(HomeDataList(
-            "inbound packets dropped ratio",
-            "24 seconds ago · 04/04/2022 - 15:44:23",
-            "gke-staging-streamnative-202103050938-3a4480ce",
-            "disk_space._boot_efi",
-            "War Room 1•War Room 2•War Room 3•War Room 4",
-            "Type & Component : System • Network",
-        ))
+        homeList.add(
+            HomeDataList(
+                "inbound packets dropped ratio",
+                "24 seconds ago · 04/04/2022 - 15:44:23",
+                "gke-staging-streamnative-202103050938-3a4480ce",
+                "disk_space._boot_efi",
+                "War Room 1•War Room 2•War Room 3•War Room 4",
+                "Type & Component : System • Network",
+            )
+        )
 
         homeAdapter.list.addAll(homeList)
 
@@ -394,8 +419,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun leftSwipeManage(position: Int){
-        if(isAllButtonSelected){
+    private fun leftSwipeManage(position: Int) {
+        if (isAllButtonSelected) {
             homeAdapter.list[position].isRead = !homeAdapter.list[position].isRead
             homeAdapter.notifyDataSetChanged()
         } else {
@@ -405,67 +430,40 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun bottomSheetPriority() {
-
         val dialog = BottomSheetDialog(requireContext())
 
         val view = layoutInflater.inflate(R.layout.bottom_sheet_notification_priority, null)
 
-        val textViewLabelEditPrioritySettings = view.findViewById<AppCompatTextView>(R.id.textViewLabelEditPrioritySettings)
-        val buttonChangeNotificationPriority = view.findViewById<AppCompatButton>(R.id.buttonChangeNotificationPriority)
-
-        val textViewLabelLowPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelLowPriority)
-        val textViewLabelMediumPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelMediumPriority)
-        val textViewLabelHighPriority = view.findViewById<AppCompatTextView>(R.id.textViewLabelHighPriority)
-
-        /*val radioButtonLabelLowPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelLowPriority)
-        val radioButtonLabelMediumPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelMediumPriority)
-        val radioButtonLabelHighPriority = view.findViewById<AppCompatRadioButton>(R.id.radioButtonLabelHighPriority)*/
+        val textViewLabelEditPrioritySettings =
+            view.findViewById<AppCompatTextView>(R.id.textViewLabelEditPrioritySettings)
+        val buttonChangeNotificationPriority =
+            view.findViewById<AppCompatButton>(R.id.buttonChangeNotificationPriority)
 
         val constraintNodes = view.findViewById<ConstraintLayout>(R.id.constraintNodes)
-        val constraintCurrentNodes = view.findViewById<ConstraintLayout>(R.id.constraintCurrentNodes)
+        val constraintCurrentNodes =
+            view.findViewById<ConstraintLayout>(R.id.constraintCurrentNodes)
         val constraintAllNodes = view.findViewById<ConstraintLayout>(R.id.constraintAllNodes)
 
-        val constraintLowPriority = view.findViewById<ConstraintLayout>(R.id.constraintLowPriority)
-        val constraintMediumPriority = view.findViewById<ConstraintLayout>(R.id.constraintMediumPriority)
-        val constraintHighPriority = view.findViewById<ConstraintLayout>(R.id.constraintHighPriority)
-
-        val radioButtonCurrentNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonCurrentNodes)
+        val radioButtonCurrentNodes =
+            view.findViewById<AppCompatRadioButton>(R.id.radioButtonCurrentNodes)
         val radioButtonAllNodes = view.findViewById<AppCompatRadioButton>(R.id.radioButtonAllNodes)
 
         val imageViewBigPriority = view.findViewById<AppCompatImageView>(R.id.imageViewBigPriority)
         val textViewPriorityName = view.findViewById<AppCompatTextView>(R.id.textViewPriorityName)
 
-        val imageViewLowPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewLowPriorityStatusDot)
-        val imageViewMediumPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewMediumPriorityStatusDot)
-        val imageViewHighPriorityStatusDot = view.findViewById<AppCompatImageView>(R.id.imageViewHighPriorityStatusDot)
-
-        /*val imageViewPriority = view.findViewById<AppCompatImageView>(R.id.imageViewPriority)
-        val textViewPriority = view.findViewById<AppCompatTextView>(R.id.textViewPriority)*/
-
-//        radioButtonLabelHighPriority.isChecked = true
+        val seekBar = view.findViewById<RangeSeekBar>(R.id.seekbar)
 
         radioButtonCurrentNodes.isChecked = isCurrentNodes
         radioButtonAllNodes.isChecked = !isCurrentNodes
 
         buttonChangeNotificationPriority.setOnClickListener {
-            /*imageViewPriority.visible()
-            textViewPriority.visible()*/
-
             buttonChangeNotificationPriority.gone()
             constraintNodes.visible()
-
-            imageViewHighPriorityStatusDot.visible()
-            /*radioButtonLabelLowPriority.visible()
-            radioButtonLabelMediumPriority.visible()
-            radioButtonLabelHighPriority.visible()*/
-
-            /*textViewLabelLowPriority.invisible()
-            textViewLabelMediumPriority.invisible()
-            textViewLabelHighPriority.invisible()*/
         }
 
         textViewLabelEditPrioritySettings.setOnClickListener {
-            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java).start()
+            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java)
+                .start()
             dialog.dismiss()
         }
 
@@ -493,59 +491,36 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             radioButtonAllNodes.isChecked = true
         }
 
-        constraintLowPriority.setOnClickListener {
-            imageViewLowPriorityStatusDot.visible()
-            imageViewMediumPriorityStatusDot.invisible()
-            imageViewHighPriorityStatusDot.invisible()
+        seekBar.setProgress(90f)
+        seekBar.setOnRangeChangedListener(object : OnRangeChangedListener {
+            override fun onRangeChanged(
+                view: RangeSeekBar?,
+                leftValue: Float,
+                rightValue: Float,
+                isFromUser: Boolean
+            ) {
+                when (leftValue.toInt()) {
+                    in 0..30 -> {
+                        imageViewBigPriority.setImageResource(R.drawable.ic_low_priority)
+                        textViewPriorityName.text = getString(R.string.label_low_priority)
+                    }
+                    in 31..60 -> {
+                        imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
+                        textViewPriorityName.text = getString(R.string.label_medium_priority)
+                    }
+                    else -> {
+                        imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
+                        textViewPriorityName.text = getString(R.string.label_high_priority)
+                    }
+                }
+            }
 
-            imageViewBigPriority.setImageResource(R.drawable.ic_low_priority)
-            textViewPriorityName.text = getString(R.string.label_low_priority)
-        }
+            override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {}
 
-        constraintMediumPriority.setOnClickListener {
-            imageViewLowPriorityStatusDot.invisible()
-            imageViewMediumPriorityStatusDot.visible()
-            imageViewHighPriorityStatusDot.invisible()
+            override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
 
-            imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
-            textViewPriorityName.text = getString(R.string.label_medium_priority)
-        }
-
-        constraintHighPriority.setOnClickListener {
-            imageViewLowPriorityStatusDot.invisible()
-            imageViewMediumPriorityStatusDot.invisible()
-            imageViewHighPriorityStatusDot.visible()
-
-            imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
-            textViewPriorityName.text = getString(R.string.label_high_priority)
-        }
-
-        /*radioButtonLabelLowPriority.setOnClickListener {
-            radioButtonLabelLowPriority.isChecked = true
-            radioButtonLabelMediumPriority.isChecked = false
-            radioButtonLabelHighPriority.isChecked = false
-
-            imageViewBigPriority.setImageResource(R.drawable.ic_low_priority)
-            textViewPriorityName.text = getString(R.string.label_low_priority)
-        }
-
-        radioButtonLabelMediumPriority.setOnClickListener {
-            radioButtonLabelLowPriority.isChecked = false
-            radioButtonLabelMediumPriority.isChecked = true
-            radioButtonLabelHighPriority.isChecked = false
-
-            imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
-            textViewPriorityName.text = getString(R.string.label_medium_priority)
-        }
-
-        radioButtonLabelHighPriority.setOnClickListener {
-            radioButtonLabelLowPriority.isChecked = false
-            radioButtonLabelMediumPriority.isChecked = false
-            radioButtonLabelHighPriority.isChecked = true
-
-            imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
-            textViewPriorityName.text = getString(R.string.label_high_priority)
-        }*/
+            }
+        })
 
         dialog.setCancelable(false)
         dialog.setContentView(view)
@@ -570,7 +545,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val allWarRoomsAdapter by lazy {
             AllWarRoomsAdapter() { view, position, item ->
-                when(view.id){
+                when (view.id) {
                     R.id.constraintMain -> {
                         warRoomsItemPosition = position
                         binding.textViewLabelAllWarRooms.text = item.name
@@ -587,11 +562,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 4"))
         allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 5"))
 
-        val recyclerViewSelectWarRooms = view.findViewById<RecyclerView>(R.id.recyclerViewSelectWarRooms)
+        val recyclerViewSelectWarRooms =
+            view.findViewById<RecyclerView>(R.id.recyclerViewSelectWarRooms)
         val textViewLabelClose = view.findViewById<AppCompatTextView>(R.id.textViewLabelClose)
         recyclerViewSelectWarRooms.adapter = allWarRoomsAdapter
 
-        if(warRoomsItemPosition != -1){
+        if (warRoomsItemPosition != -1) {
             allWarRoomsAdapter.selectionPosition = warRoomsItemPosition
         }
 
@@ -623,7 +599,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val existisWarRoomsAdapter by lazy {
             ExistisWarRoomsAdapter() { view, position, item ->
-                when(view.id){
+                when (view.id) {
                     R.id.constraintMain -> {
                         warRoomsItemPosition = position
                         binding.textViewLabelAllWarRooms.text = item.name
@@ -633,14 +609,41 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             }
         }
 
-        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 1", R.drawable.ic_medium_priority))
-        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 2", R.drawable.ic_high_priority))
-        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 3", R.drawable.ic_medium_priority))
-        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 4", R.drawable.ic_low_priority))
-        existisWarRoomsAdapter.list.add(ExistisWarRoomsList("War Rooms 5", R.drawable.ic_low_priority))
+        existisWarRoomsAdapter.list.add(
+            ExistisWarRoomsList(
+                "War Rooms 1",
+                R.drawable.ic_medium_priority
+            )
+        )
+        existisWarRoomsAdapter.list.add(
+            ExistisWarRoomsList(
+                "War Rooms 2",
+                R.drawable.ic_high_priority
+            )
+        )
+        existisWarRoomsAdapter.list.add(
+            ExistisWarRoomsList(
+                "War Rooms 3",
+                R.drawable.ic_medium_priority
+            )
+        )
+        existisWarRoomsAdapter.list.add(
+            ExistisWarRoomsList(
+                "War Rooms 4",
+                R.drawable.ic_low_priority
+            )
+        )
+        existisWarRoomsAdapter.list.add(
+            ExistisWarRoomsList(
+                "War Rooms 5",
+                R.drawable.ic_low_priority
+            )
+        )
 
-        val recyclerViewNotificationExists = view.findViewById<RecyclerView>(R.id.recyclerViewNotificationExists)
-        val imageViewWarRoomsBack = view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsBack)
+        val recyclerViewNotificationExists =
+            view.findViewById<RecyclerView>(R.id.recyclerViewNotificationExists)
+        val imageViewWarRoomsBack =
+            view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsBack)
         recyclerViewNotificationExists.adapter = existisWarRoomsAdapter
 
         imageViewWarRoomsBack.setOnClickListener {
@@ -670,7 +673,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val sortByTimeAdapter by lazy {
             SortByAdapter() { view, position, item ->
-                when(view.id){
+                when (view.id) {
                     R.id.constraintMain -> {
                         sortByTimeItemPosition = position
                     }
@@ -680,7 +683,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val sortByNotificationPriorityAdapter by lazy {
             SortByAdapter() { view, position, item ->
-                when(view.id){
+                when (view.id) {
                     R.id.constraintMain -> {
                         sortByNotificationPriorityItemPosition = position
                     }
@@ -690,7 +693,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val sortByCriticalityAdapter by lazy {
             SortByAdapter() { view, position, item ->
-                when(view.id){
+                when (view.id) {
                     R.id.constraintMain -> {
                         sortByCriticalityItemPosition = position
                     }
@@ -699,7 +702,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         val recyclerViewTime = view.findViewById<RecyclerView>(R.id.recyclerViewTime)
-        val recyclerViewNotificationPriority = view.findViewById<RecyclerView>(R.id.recyclerViewNotificationPriority)
+        val recyclerViewNotificationPriority =
+            view.findViewById<RecyclerView>(R.id.recyclerViewNotificationPriority)
         val recyclerViewCriticality = view.findViewById<RecyclerView>(R.id.recyclerViewCriticality)
         val textViewLabelClose = view.findViewById<AppCompatTextView>(R.id.textViewLabelClose)
         recyclerViewTime.adapter = sortByTimeAdapter
@@ -715,15 +719,16 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         sortByCriticalityAdapter.list.add(WarRoomsList("Critical to Clear"))
         sortByCriticalityAdapter.list.add(WarRoomsList("Clear to Critical"))
 
-        if(sortByTimeItemPosition != -1){
+        if (sortByTimeItemPosition != -1) {
             sortByTimeAdapter.selectionPosition = sortByTimeItemPosition
         }
 
-        if(sortByNotificationPriorityItemPosition != -1){
-            sortByNotificationPriorityAdapter.selectionPosition = sortByNotificationPriorityItemPosition
+        if (sortByNotificationPriorityItemPosition != -1) {
+            sortByNotificationPriorityAdapter.selectionPosition =
+                sortByNotificationPriorityItemPosition
         }
 
-        if(sortByCriticalityItemPosition != -1){
+        if (sortByCriticalityItemPosition != -1) {
             sortByCriticalityAdapter.selectionPosition = sortByCriticalityItemPosition
         }
 
@@ -750,7 +755,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun drawerFilter() = with(binding){
+    private fun drawerFilter() = with(binding) {
         recyclerViewNode.adapter = nodeFilterAdapter
         recyclerViewAlertStatus.adapter = alertStatusFilterAdapter
         recyclerViewNotificationPriority.adapter = notificationPriorityFilterAdapter
@@ -770,9 +775,30 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         alertStatusFilterAdapter.list.add(FilterList(AlertStatus.CLEAR.type, ""))
         alertStatusFilterAdapter.notifyDataSetChanged()
 
-        notificationPriorityFilterAdapter.list.add(FilterList("High", "3", icon = R.drawable.ic_high_priority, isIcon = true))
-        notificationPriorityFilterAdapter.list.add(FilterList("Medium", "2", icon = R.drawable.ic_medium_priority, isIcon = true))
-        notificationPriorityFilterAdapter.list.add(FilterList("Low", "", icon = R.drawable.ic_low_priority, isIcon = true))
+        notificationPriorityFilterAdapter.list.add(
+            FilterList(
+                "High",
+                "3",
+                icon = R.drawable.ic_high_priority,
+                isIcon = true
+            )
+        )
+        notificationPriorityFilterAdapter.list.add(
+            FilterList(
+                "Medium",
+                "2",
+                icon = R.drawable.ic_medium_priority,
+                isIcon = true
+            )
+        )
+        notificationPriorityFilterAdapter.list.add(
+            FilterList(
+                "Low",
+                "",
+                icon = R.drawable.ic_low_priority,
+                isIcon = true
+            )
+        )
         notificationPriorityFilterAdapter.notifyDataSetChanged()
 
         classFilterAdapter.list.add(FilterList("Errors", "4"))
@@ -786,16 +812,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         typeAndComponentFilterAdapter.notifyDataSetChanged()
     }
 
-    private fun filterCount(){
+    private fun filterCount() {
         val nodeCount = nodeFilterAdapter.list.filter { it.isSelected }
         val alertStatusCount = alertStatusFilterAdapter.list.filter { it.isSelected }
-        val notificationPriorityCount = notificationPriorityFilterAdapter.list.filter { it.isSelected }
+        val notificationPriorityCount =
+            notificationPriorityFilterAdapter.list.filter { it.isSelected }
         val classCount = classFilterAdapter.list.filter { it.isSelected }
         val typAndComponentCount = typeAndComponentFilterAdapter.list.filter { it.isSelected }
 
-        totalFilterCount = nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
+        totalFilterCount =
+            nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
 
-        if(totalFilterCount != 0){
+        if (totalFilterCount != 0) {
             binding.buttonApplyFilter.text = "Apply ($totalFilterCount) Filters"
         } else {
             binding.buttonApplyFilter.text = "Apply Filters"
