@@ -8,12 +8,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.netdata.app.R
+import com.netdata.app.data.pojo.enumclass.ThemeMode
 import com.netdata.app.data.pojo.request.SettingsList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
 import com.netdata.app.databinding.ChooseSpaceFragmentBinding
 import com.netdata.app.databinding.SettingsFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.auth.AuthActivity
+import com.netdata.app.ui.auth.IsolatedFullActivity
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.settings.adapter.SettingsAdapter
 import com.netdata.app.utils.Constant
@@ -47,7 +49,12 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
 
                         // Change Your Theme
                         4 -> {
-                            navigator.load(ChangeThemeFragment::class.java).replace(true)
+                            if(appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name){
+                                navigator.loadActivity(IsolatedFullActivity::class.java,ChangeThemeNightFragment::class.java).start()
+                            } else {
+                                navigator.loadActivity(IsolatedFullActivity::class.java,ChangeThemeDayFragment::class.java).start()
+                            }
+
                         }
 
                         // Delete Account

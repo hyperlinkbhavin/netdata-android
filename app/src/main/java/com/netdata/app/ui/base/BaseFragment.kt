@@ -83,8 +83,14 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
         val nightModeFlags = requireContext().resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK
         when (nightModeFlags) {
-            Configuration.UI_MODE_NIGHT_YES -> window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorBlack2B)
-            Configuration.UI_MODE_NIGHT_NO -> window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorWhiteF2)
+            Configuration.UI_MODE_NIGHT_YES -> {
+                appPreferences.putString(Constant.APP_PREF_DAY_NIGHT_MODE, ThemeMode.Night.name)
+                window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorBlack2B)
+            }
+            Configuration.UI_MODE_NIGHT_NO -> {
+                appPreferences.putString(Constant.APP_PREF_DAY_NIGHT_MODE, ThemeMode.Day.name)
+                window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorWhiteF2)
+            }
         }
 
         bindData()

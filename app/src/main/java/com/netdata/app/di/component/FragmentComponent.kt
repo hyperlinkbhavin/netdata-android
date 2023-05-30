@@ -29,5 +29,7 @@ interface FragmentComponent {
     fun inject(termsAndConditionsFragment: TermsAndConditionsFragment)
     fun inject(homeFragment: HomeFragment)
     fun inject(homeDetailsFragment: HomeDetailsFragment)
+    fun inject(changeThemeDayFragment: ChangeThemeDayFragment)
+    fun inject(changeThemeNightFragment: ChangeThemeNightFragment)
 
 }
