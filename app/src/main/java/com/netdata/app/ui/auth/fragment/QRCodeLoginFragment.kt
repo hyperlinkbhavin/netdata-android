@@ -56,6 +56,7 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
     }
 
     override fun bindData() {
+        codeScanner = CodeScanner(requireActivity(), binding.preViewQRCode)
         checkPermission()
         binding.imageViewClose.setOnClickListener {
             navigator.goBack()
@@ -95,10 +96,8 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
     }
 
     private fun startScan(){
-        val activity = requireActivity()
-        codeScanner = CodeScanner(activity, binding.preViewQRCode)
         codeScanner.decodeCallback = DecodeCallback {
-            activity.runOnUiThread {
+            requireActivity().runOnUiThread {
 //                Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
                 appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
                 navigator.load(ChooseSpaceFragment::class.java).replace(false)
