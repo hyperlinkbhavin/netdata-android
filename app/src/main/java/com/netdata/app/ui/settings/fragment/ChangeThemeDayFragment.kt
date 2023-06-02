@@ -1,16 +1,13 @@
 package com.netdata.app.ui.settings.fragment
 
-import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
-import com.netdata.app.R
 import com.netdata.app.data.pojo.enumclass.ThemeMode
 import com.netdata.app.databinding.ChangeThemeDayFragmentBinding
-import com.netdata.app.databinding.ChangeThemeFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.utils.Constant
@@ -30,7 +27,7 @@ class ChangeThemeDayFragment: BaseFragment<ChangeThemeDayFragmentBinding>() {
         val window: Window = requireActivity().window
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-        window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorWhiteF2)
+        window.statusBarColor = ContextCompat.getColor(requireActivity(), com.netdata.app.R.color.colorWhiteF2)
 
         toolbar()
         manageClick()
@@ -51,7 +48,7 @@ class ChangeThemeDayFragment: BaseFragment<ChangeThemeDayFragmentBinding>() {
 
     private fun toolbar() = with(binding){
         imageViewBack.setOnClickListener { navigator.goBack() }
-        textViewToolbarTitle.text = getString(R.string.title_change_theme)
+        textViewToolbarTitle.text = getString(com.netdata.app.R.string.title_change_theme)
     }
 
     private fun manageClick() = with(binding){
@@ -88,6 +85,7 @@ class ChangeThemeDayFragment: BaseFragment<ChangeThemeDayFragmentBinding>() {
         buttonDone.setOnClickListener {
             appPreferences.putString(Constant.APP_PREF_DAY_NIGHT_MODE, ThemeMode.Day.name)
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            requireActivity().recreate()
             /*if(radioButtonNightTheme.isChecked){
                 appPreferences.putString(Constant.APP_PREF_DAY_NIGHT_MODE, ThemeMode.Night.name)
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
