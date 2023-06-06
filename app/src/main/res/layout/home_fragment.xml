@@ -196,7 +196,7 @@
 <!--  Drawer Filter  -->
     <LinearLayout
         android:id="@+id/navigation_layout"
-        android:layout_width="@dimen/dp_370"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@drawable/ic_back_ground"
