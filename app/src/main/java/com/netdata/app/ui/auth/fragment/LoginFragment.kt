@@ -51,9 +51,9 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
     private fun manageClick() = with(binding){
         buttonSignIn.setOnClickListener {
             if(validator()){
-//                callMagicLink()
-                appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-                navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                callMagicLink()
+//                appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+//                navigator.load(ChooseSpaceFragment::class.java).replace(false)
             }
         }
 
