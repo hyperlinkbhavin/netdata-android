@@ -2,6 +2,7 @@ package com.netdata.app.ui.auth.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.netdata.app.data.pojo.User
+import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.data.pojo.request.LoginRequest
 import com.netdata.app.data.repository.UserRepository
 import com.netdata.app.ui.base.APILiveData
@@ -11,12 +12,12 @@ import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(private val userRepository: UserRepository) : BaseViewModel() {
 
-    val loginLiveData = APILiveData<User>()
+    val magicLinkLiveData = APILiveData<Any>()
 
-    fun login(request: LoginRequest) {
+    fun magicLink(apiRequest: APIRequest) {
         viewModelScope.launch {
-            val result = userRepository.login(request)
-            loginLiveData.value = result
+            val result = userRepository.magicLink(apiRequest)
+            magicLinkLiveData.value = result
         }
     }
 }

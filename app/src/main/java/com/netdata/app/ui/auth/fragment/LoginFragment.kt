@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.netdata.app.data.URLFactory
+import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.data.pojo.request.LoginRequest
 import com.netdata.app.databinding.AuthFragmentLoginBinding
 import com.netdata.app.ui.home.HomeActivity
@@ -15,11 +17,12 @@ import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.Validator
+import com.netdata.app.utils.getVal
 import javax.inject.Inject
 
 class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
 
-    private val viewModel by lazy {
+    private val loginViewModel by lazy {
         ViewModelProvider(this,
             viewModelFactory)[LoginViewModel::class.java]
     }
@@ -38,7 +41,7 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        observeMagicLink()
     }
 
     override fun bindData() {
@@ -48,6 +51,7 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
     private fun manageClick() = with(binding){
         buttonSignIn.setOnClickListener {
             if(validator()){
+//                callMagicLink()
                 appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
                 navigator.load(ChooseSpaceFragment::class.java).replace(false)
             }
@@ -67,6 +71,22 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
     } catch (e: ApplicationException) {
         showMessage(e)
         false
+    }
+
+    private fun callMagicLink(){
+        loginViewModel.magicLink(APIRequest(
+            email = binding.editTextEmail.getVal(),
+            redirectURI = URLFactory.Link.SIGN_IN_LINK,
+            registerURI = URLFactory.Link.SIGN_UP_LINK
+        ))
+    }
+
+    private fun observeMagicLink(){
+        loginViewModel.magicLinkLiveData.observe(this, { responseBody ->
+            Log.e("success", "success")
+        },{_ ->
+            true
+        })
     }
 
 }
