@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1023593891268",
+    "project_id": "netdata-5c7bd",
+    "storage_bucket": "netdata-5c7bd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1023593891268:android:b698315548c2fb57be9091",
+        "android_client_info": {
+          "package_name": "com.netdata.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1023593891268-gqne3pp3698g9serp19t6mk7722pi71p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyrVY_0rsx8yjHbkcOiA5fZOF31h6j5Ts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1023593891268-gqne3pp3698g9serp19t6mk7722pi71p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

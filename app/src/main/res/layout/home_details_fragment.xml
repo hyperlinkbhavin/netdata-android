@@ -257,6 +257,22 @@
                 app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
                 app:layout_constraintTop_toBottomOf="@id/textViewLabelBandwidth"/>
 
+            <!--<androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraintChart"
+                android:layout_height="@dimen/dp_300"
+                android:layout_width="@dimen/dp_0"
+                android:layout_marginTop="@dimen/dp_8"
+                app:layout_constraintStart_toStartOf="@id/guidelineStart"
+                app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+                app:layout_constraintTop_toBottomOf="@id/textViewLabelBandwidth">
+
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>-->
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewLabelLatestTimeValue"
                 style="@style/AppTheme.AppTextView.RegularBlack12"

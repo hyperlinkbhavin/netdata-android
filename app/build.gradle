@@ -1,8 +1,15 @@
 plugins {
-    id 'com.android.application'
+    /*id 'com.android.application'
     id 'kotlin-android'
     id 'kotlin-kapt'
-    id 'kotlin-parcelize'
+    id 'kotlin-parcelize'*/
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-kapt")
+    id("kotlin-android-extensions")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.gms.google-services")
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -61,6 +68,10 @@ dependencies {
     implementation 'com.google.dagger:dagger-android-support:2.41'
     kapt 'com.google.dagger:dagger-android-processor:2.41'
     kapt 'com.google.dagger:dagger-compiler:2.41'
+    implementation 'com.google.firebase:firebase-messaging-ktx:23.0.3'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx:18.3.5'
+    implementation 'com.google.firebase:firebase-analytics-ktx:21.2.0'
+    implementation 'com.google.firebase:firebase-auth-ktx:21.1.0'
 
     // Lifecycle Components
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.1'
@@ -103,4 +114,10 @@ dependencies {
 
     // QR Code Scanner
     implementation 'com.github.yuriy-budiyev:code-scanner:2.3.2'
+
+    // this is for push notification
+    implementation ("com.google.firebase:firebase-bom:32.1.0")
+
+    // MP Android Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v2.2.4'
 }

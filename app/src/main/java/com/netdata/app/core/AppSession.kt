@@ -2,11 +2,9 @@ package com.netdata.app.core
 
 import android.content.Context
 import android.provider.Settings
-
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.gson.Gson
 import com.netdata.app.data.pojo.User
-
-
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -45,7 +43,7 @@ constructor(private val appPreferences: AppPreferences,
         set(userId) = appPreferences.putString(Session.USER_ID, userId)
 
 
-    override/* open below comment after Firebase integration *///token = FirebaseInstanceId.getInstance().getToken();
+    /*override*//* open below comment after Firebase integration *//*//token = FirebaseInstanceId.getInstance().getToken();
     val deviceId: String
         get() {
             var token = ""
@@ -53,7 +51,31 @@ constructor(private val appPreferences: AppPreferences,
                 token = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
 
             return token
+        }*/
+
+    override var deviceId: String
+        /*get() = appPreferences.getString(Session.DEVICE_ID)*/
+        get() {
+            /*var token = ""
+            if (token.isEmpty())
+                token = Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
+            return token*/
+            return if (appPreferences.getString(Session.DEVICE_ID).isNullOrBlank().not())
+                appPreferences.getString(Session.DEVICE_ID)
+            else Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
         }
+        set(deviceId) = appPreferences.putString(Session.DEVICE_ID, deviceId)
+
+    override fun getFirebaseDeviceId(callback: (deviceID: String) -> Unit) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                deviceId = task.result
+                callback.invoke(task.result)
+            } else {
+                callback.invoke("")
+            }
+        }
+    }
 
     override//  return StringUtils.equalsIgnoreCase(appPreferences.getString(Common.LANGUAGE), "ar") ? LANGUAGE_ARABIC : LANGUAGE_ENGLISH;
     val language: String

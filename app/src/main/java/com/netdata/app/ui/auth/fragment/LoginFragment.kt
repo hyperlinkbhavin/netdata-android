@@ -23,8 +23,10 @@ import javax.inject.Inject
 class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
 
     private val loginViewModel by lazy {
-        ViewModelProvider(this,
-            viewModelFactory)[LoginViewModel::class.java]
+        ViewModelProvider(
+            this,
+            viewModelFactory
+        )[LoginViewModel::class.java]
     }
 
     override fun inject(fragmentComponent: FragmentComponent) {
@@ -48,12 +50,15 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
         manageClick()
     }
 
-    private fun manageClick() = with(binding){
+    private fun manageClick() = with(binding) {
         buttonSignIn.setOnClickListener {
-            if(validator()){
-                callMagicLink()
-//                appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-//                navigator.load(ChooseSpaceFragment::class.java).replace(false)
+            if (validator()) {
+                session.getFirebaseDeviceId { deviceId ->
+                    session.deviceId = deviceId
+//                    callMagicLink()
+                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                }
             }
         }
 
@@ -73,18 +78,20 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
         false
     }
 
-    private fun callMagicLink(){
-        loginViewModel.magicLink(APIRequest(
-            email = binding.editTextEmail.getVal(),
-            redirectURI = URLFactory.Link.SIGN_IN_LINK,
-            registerURI = URLFactory.Link.SIGN_UP_LINK
-        ))
+    private fun callMagicLink() {
+        loginViewModel.magicLink(
+            APIRequest(
+                email = binding.editTextEmail.getVal(),
+                redirectURI = URLFactory.Link.SIGN_IN_LINK,
+                registerURI = URLFactory.Link.SIGN_UP_LINK
+            )
+        )
     }
 
-    private fun observeMagicLink(){
+    private fun observeMagicLink() {
         loginViewModel.magicLinkLiveData.observe(this, { responseBody ->
             Log.e("success", "success")
-        },{_ ->
+        }, { _ ->
             true
         })
     }

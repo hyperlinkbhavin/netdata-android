@@ -4,6 +4,10 @@ import android.annotation.SuppressLint
 import android.text.Html
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import com.netdata.app.R
 import com.netdata.app.data.pojo.request.*
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
@@ -62,6 +66,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         toolbar()
         manageClick()
         setAdapter()
+//        setLineChartData()
     }
 
     private fun toolbar() = with(binding){
@@ -115,4 +120,33 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         instanceValuesAdapter.list.add(InstanceValuesList("rpi2b-1", "Warning", "43.2%", "Sat 10, November 2021 • 11:53:02"))
         instanceValuesAdapter.notifyDataSetChanged()
     }
+
+    /*private fun setLineChartData() = with(binding){
+        val xValue = ArrayList<String>()
+        xValue.add("1")
+        xValue.add("2")
+        xValue.add("3")
+        xValue.add("4")
+
+        val lineEntry = ArrayList<Entry>()
+
+        lineEntry.add(Entry(15F, 0))
+        lineEntry.add(Entry(30F, 1))
+        lineEntry.add(Entry(15F, 2))
+        lineEntry.add(Entry(25F, 3))
+
+        val lineDataSet = LineDataSet(lineEntry, "")
+
+        lineDataSet.color = ContextCompat.getColor(requireContext(), R.color.colorGreen68)
+        lineDataSet.circleRadius = 0F
+        lineDataSet.setDrawFilled(true)
+        lineDataSet.fillColor = ContextCompat.getColor(requireContext(), R.color.colorGreen68)
+        lineDataSet.fillAlpha = 50
+
+        val data = LineData(xValue, lineDataSet)
+        lineChart.data = data
+        lineChart.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorBlack1C))
+        lineChart.animateXY(1000,1000)
+
+    }*/
 }
