@@ -17,6 +17,7 @@ import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.Validator
+import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.getVal
 import javax.inject.Inject
 
@@ -27,6 +28,10 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
             this,
             viewModelFactory
         )[LoginViewModel::class.java]
+    }
+
+    private val apiViewModel by lazy {
+        ViewModelProvider(this)[ApiViewModel::class.java]
     }
 
     override fun inject(fragmentComponent: FragmentComponent) {
@@ -55,9 +60,9 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
             if (validator()) {
                 session.getFirebaseDeviceId { deviceId ->
                     session.deviceId = deviceId
-//                    callMagicLink()
-                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                    callMagicLink()
+                    /*appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+                    navigator.load(ChooseSpaceFragment::class.java).replace(false)*/
                 }
             }
         }
@@ -79,7 +84,7 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
     }
 
     private fun callMagicLink() {
-        loginViewModel.magicLink(
+        apiViewModel.callMagicLink(
             APIRequest(
                 email = binding.editTextEmail.getVal(),
                 redirectURI = URLFactory.Link.SIGN_IN_LINK,
@@ -89,11 +94,17 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
     }
 
     private fun observeMagicLink() {
-        loginViewModel.magicLinkLiveData.observe(this, { responseBody ->
+        /*loginViewModel.magicLinkLiveData.observe(this, { responseBody ->
             Log.e("success", "success")
         }, { _ ->
             true
-        })
+        })*/
+
+        apiViewModel.liveData.observe(this) {
+            if(it != null){
+                Log.e("data", it.toString())
+            }
+        }
     }
 
 }
