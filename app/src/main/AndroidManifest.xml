@@ -23,7 +23,22 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="u8647778.ct.sendgrid.net" />
             </intent-filter>
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="u8647778.ct.sendgrid.net" />
+                <data android:scheme="https" android:host="u8647778.ct.sendgrid.net" />
+            </intent-filter>
+
         </activity>
         <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.home.HomeActivity"/>
         <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.auth.AuthActivity"/>

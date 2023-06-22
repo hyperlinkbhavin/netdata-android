@@ -1,5 +1,6 @@
 package com.netdata.app.ui.splash
 
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -48,6 +49,14 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val data: Uri? = intent?.data
+
+        if(data != null){
+            val token = data.toString().substring(data.toString().lastIndexOf("upn=")+4)
+            Log.e("deeplink", data.toString())
+            Log.e("deeplink", data.toString().substring(data.toString().lastIndexOf("upn=")+4))
+        }
 
         if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
