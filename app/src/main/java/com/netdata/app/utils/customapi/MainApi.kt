@@ -9,4 +9,7 @@ interface MainApi {
     @POST("api/v2/auth/account/magic-link")
     fun loginData(@Body apiRequest: APIRequest):Call<Any>
 
+    @GET("ls/click")
+    fun fetchData(@Query("upn") dynamicLink: String): Call<Any>
+
 }

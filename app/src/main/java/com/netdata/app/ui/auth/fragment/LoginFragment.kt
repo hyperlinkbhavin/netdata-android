@@ -23,12 +23,12 @@ import javax.inject.Inject
 
 class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
 
-    private val loginViewModel by lazy {
+    /*private val loginViewModel by lazy {
         ViewModelProvider(
             this,
             viewModelFactory
         )[LoginViewModel::class.java]
-    }
+    }*/
 
     private val apiViewModel by lazy {
         ViewModelProvider(this)[ApiViewModel::class.java]

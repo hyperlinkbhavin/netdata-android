@@ -9,11 +9,21 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ApiViewModel: ViewModel() {
+
+    val baseUrl = "https://app.netdata.cloud/"
+
+    init {
+        NetworkClient.setBaseUrl(baseUrl)
+    }
+
     val liveData = MutableLiveData<Any>()
 
     fun callMagicLink(apiRequest: APIRequest)
     {
-        val callApi = RetrofitApi.getInst().apiService.loginData(apiRequest)
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.loginData(apiRequest)
         callApi.enqueue(object: Callback<Any>{
 
 

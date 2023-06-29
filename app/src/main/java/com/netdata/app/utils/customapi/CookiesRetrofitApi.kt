@@ -36,14 +36,41 @@ import java.net.CookieManager
     }
 }*/
 
-object NetworkClient {
+object CookiesNetworkClient {
     private var baseUrl: String = ""
 
     val httpLogger = HttpLoggingInterceptor()
 
     private val okHttpClient: OkHttpClient by lazy {
         httpLogger.level = HttpLoggingInterceptor.Level.BODY
+        val cookieHandler=CookieJarImpl()
         OkHttpClient.Builder()
+            .cookieJar(cookieHandler)
+            .addInterceptor(httpLogger)
+            .addInterceptor(Interceptor { chain ->
+                val request = chain.request()
+                cookieHandler.clearStoreCookies()
+                val response = chain.proceed(request)
+
+                if(response.code == 200){
+                    throw  CookiesHandlerError("Cookie Error", cookieHandler.storeCookies)
+                }
+
+                /*if (!response.isSuccessful) {
+                    // Get cookies from the failure response headers
+                    val cookies = response.headers.values("set-cookie")
+
+                    // Loop through the cookies if there are multiple
+                    Log.e("cooo", cookies.toString())
+                    for (cookie in cookies) {
+                        // Handle the cookie as needed
+                        // Example: Print the cookie value
+                        println(cookie)
+                    }
+                }*/
+
+                response
+            })
             .addInterceptor(httpLogger)
             .build()
     }
