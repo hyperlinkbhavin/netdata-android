@@ -100,7 +100,7 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
             true
         })*/
 
-        apiViewModel.liveData.observe(this) {
+        apiViewModel.magicLinkLiveData.observe(this) {
             if(it != null){
                 Log.e("data", it.toString())
             }

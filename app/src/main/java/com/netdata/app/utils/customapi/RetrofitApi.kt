@@ -2,6 +2,7 @@ package com.netdata.app.utils.customapi
 
 import android.util.Log
 import com.netdata.app.exception.CookiesHandlerError
+import com.netdata.app.utils.Constant
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -60,6 +61,23 @@ object NetworkClient {
     }
 
     fun <T> createService(serviceClass: Class<T>): T {
-        return retrofitBuilder.baseUrl(baseUrl).build().create(serviceClass)
+        return retrofitBuilder.baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create()).build().create(serviceClass)
     }
 }
+
+/*.addInterceptor(Interceptor { chain ->
+    val builder = chain.request().newBuilder()
+
+    if (Constant.COOKIE_SI.isNotEmpty() && Constant.COOKIE_SV.isNotEmpty()) {
+        builder.addHeader("cookie", "s_i=${Constant.COOKIE_SI};s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}")
+    }
+
+    val request = chain.request()
+    val response = chain.proceed(request)
+    Log.e("code", response.code.toString())
+
+    *//*val build = builder.build()
+    chain.proceed(build)*//*
+
+    response
+})*/

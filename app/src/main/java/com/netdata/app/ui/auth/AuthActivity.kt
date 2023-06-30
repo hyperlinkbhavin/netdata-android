@@ -1,13 +1,16 @@
 package com.netdata.app.ui.auth
 
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.view.View
+import androidx.core.os.bundleOf
 import com.netdata.app.R
 import com.netdata.app.databinding.AuthAcitivtyBinding
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.ui.auth.fragment.LoginFragment
 import com.netdata.app.ui.auth.fragment.WelcomeFragment
 import com.netdata.app.ui.base.BaseActivity
+import com.netdata.app.utils.Constant
 
 class AuthActivity : BaseActivity() {
 
@@ -47,7 +50,7 @@ class AuthActivity : BaseActivity() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        load(WelcomeFragment::class.java).replace(false)
+        load(WelcomeFragment::class.java).setBundle(bundleOf(Constant.BUNDLE_DEEPLINK to intent.getStringExtra(Constant.BUNDLE_DEEPLINK))).replace(false)
     }
 
 }

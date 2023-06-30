@@ -9,11 +9,14 @@ import android.view.View
 import android.view.WindowManager
 import android.webkit.CookieManager
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.netdata.app.core.AppPreferences
 import com.netdata.app.data.pojo.enumclass.ThemeMode
+import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.databinding.SplashActivityBinding
 import com.netdata.app.di.component.ActivityComponent
+import com.netdata.app.exception.CookiesHandlerError
 import com.netdata.app.ui.auth.AuthActivity
 import com.netdata.app.ui.auth.IsolatedFullActivity
 import com.netdata.app.ui.base.BaseActivity
@@ -56,18 +59,20 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeDynamicLink()
+//        observeDynamicLink()
+
+        Constant.COOKIE_SI = appPreferences.getString(Constant.APP_PREF_COOKIE_SI)
+        Constant.COOKIE_SV = appPreferences.getString(Constant.APP_PREF_COOKIE_SV)
 
         val data: Uri? = intent?.data
+        var url = ""
 
-        if(data != null){
-            /*Handler(Looper.getMainLooper()).postDelayed({
-                Log.e("cookieUrl", getCookiesFromUrl(data.toString()).toString())
-            },2000)*/
+        if (data != null) {
 //            val token = data.toString().substring(data.toString().lastIndexOf("upn=")+4)
-//            Log.e("deeplink", data.toString())
+            Log.e("deeplink", data.toString())
+            url = data.toString().split("=")[1]
 //            Log.e("deeplink", data.toString().substring(data.toString().lastIndexOf("upn=")+4))
-            callDynamicLink((data.toString().split("=")[1]))
+//            callDynamicLink((data.toString().split("=")[1]))
         }
 
         if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
@@ -114,7 +119,7 @@ class SplashActivity : BaseActivity() {
                         ).byFinishingCurrent().start()
                     }
                 } else {
-                    loadActivity(AuthActivity::class.java).byFinishingCurrent().start()
+                    loadActivity(AuthActivity::class.java).addBundle(bundleOf(Constant.BUNDLE_DEEPLINK to url)).byFinishingCurrent().start()
                 }
             }
         }, 3000)
@@ -165,17 +170,27 @@ class SplashActivity : BaseActivity() {
         return cookies
     }
 
-    private fun callDynamicLink(link: String){
+    /*private fun callDynamicLink(link: String) {
 //        Log.e("token", link)
         dynamicViewModel.callDynamicLink(link)
     }
 
-    private fun observeDynamicLink(){
+    private fun observeDynamicLink() {
         dynamicViewModel.liveData.observe(this) {
-            if(it != null){
-                Log.e("data", it.toString())
+            if (it is CookiesHandlerError) {
+                if (it.map.isNotEmpty()) {
+                    appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_i"]!!)
+                    appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_v_${it.map["s_i"]}"]!!)
+                    Constant.COOKIE_SI = it.map["s_i"]!!
+                    Constant.COOKIE_SV = it.map["s_v_${it.map["s_i"]}"]!!
+                    Log.e("cookie", Constant.COOKIE_SI)
+                } else {
+                    Log.e("else", "cookie")
+                }
+            } else {
+                Log.e("else", "else")
             }
         }
-    }
+    }*/
 
 }

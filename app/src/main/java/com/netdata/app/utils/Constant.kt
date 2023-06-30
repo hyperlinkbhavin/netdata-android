@@ -1,10 +1,18 @@
 package com.netdata.app.utils
 
 object Constant {
+    var COOKIE_SI = ""
+    var COOKIE_SV = ""
+
     const val APP_PREF_IS_LOGIN = "APP_PREF_IS_LOGIN"
     const val APP_PREF_SPACE_NAME = "APP_PREF_SPACE_NAME"
     const val APP_PREF_FROM_NOTIFICATION = "APP_PREF_FROM_NOTIFICATION"
     const val APP_PREF_DAY_NIGHT_MODE = "APP_PREF_DAY_NIGHT_MODE"
+    const val APP_PREF_COOKIE_SI = "APP_PREF_COOKIE_SI"
+    const val APP_PREF_COOKIE_SV = "APP_PREF_COOKIE_SV"
+
+
+    const val BUNDLE_DEEPLINK = "BUNDLE_DEEPLINK"
 
     const val PUSH_NOTIFICATION = "PUSH_NOTIFICATION"
     const val NOTIFICATION_ICON = "NOTIFICATION_ICON"

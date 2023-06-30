@@ -2,6 +2,7 @@ package com.netdata.app.utils.customapi
 
 import android.util.Log
 import com.netdata.app.exception.CookiesHandlerError
+import com.netdata.app.utils.customapi.NetworkClient.httpLogger
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -39,10 +40,10 @@ import java.net.CookieManager
 object CookiesNetworkClient {
     private var baseUrl: String = ""
 
-    val httpLogger = HttpLoggingInterceptor()
+//    val httpLogger = HttpLoggingInterceptor()
 
     private val okHttpClient: OkHttpClient by lazy {
-        httpLogger.level = HttpLoggingInterceptor.Level.BODY
+//        httpLogger.level = HttpLoggingInterceptor.Level.BODY
         val cookieHandler=CookieJarImpl()
         OkHttpClient.Builder()
             .cookieJar(cookieHandler)
@@ -51,6 +52,8 @@ object CookiesNetworkClient {
                 val request = chain.request()
                 cookieHandler.clearStoreCookies()
                 val response = chain.proceed(request)
+
+                Log.e("dynamic response code", response.toString())
 
                 if(response.code == 200){
                     throw  CookiesHandlerError("Cookie Error", cookieHandler.storeCookies)
@@ -71,7 +74,7 @@ object CookiesNetworkClient {
 
                 response
             })
-            .addInterceptor(httpLogger)
+//            .addInterceptor(httpLogger)
             .build()
     }
 
