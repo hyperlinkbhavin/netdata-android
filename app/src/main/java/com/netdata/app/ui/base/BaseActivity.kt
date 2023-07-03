@@ -20,6 +20,7 @@ import com.netdata.app.di.Injector
 import com.netdata.app.di.component.ActivityComponent
 import com.netdata.app.di.component.DaggerActivityComponent
 import com.netdata.app.ui.manager.*
+import com.netdata.app.utils.LoadingDialog
 import java.util.*
 import javax.inject.Inject
 
@@ -65,6 +66,23 @@ abstract class BaseActivity : AppCompatActivity(), HasComponent<ActivityComponen
         progressDialog!!.setCancelable(false)
         progressDialog!!.setCanceledOnTouchOutside(false)
 
+    }
+
+    private var mLoadingDialog: LoadingDialog? = null
+
+    fun showLoader() {
+        if (mLoadingDialog == null) {
+            mLoadingDialog = LoadingDialog(this)
+        }
+        mLoadingDialog?.show()
+    }
+
+    fun hideLoader() {
+        mLoadingDialog?.let {
+            if (it.isShowing) {
+                it.dismiss()
+            }
+        }
     }
 
 

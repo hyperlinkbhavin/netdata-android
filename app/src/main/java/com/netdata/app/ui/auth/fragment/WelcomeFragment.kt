@@ -7,10 +7,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.exception.CookiesHandlerError
 import com.netdata.app.ui.base.BaseFragment
+import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.customapi.DynamicViewModel
@@ -34,7 +36,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeDynamicLink()
-        observeGetSpaceList()
+        observeLinkDevice()
     }
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): AuthFragmentWelcomeBinding {
@@ -65,7 +67,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
     private fun recursiveGetSpaceList(){
         if(Constant.COOKIE_SV.isNotEmpty()){
             Log.e("call", Constant.COOKIE_SV)
-            callGetSpaceList()
+
         } else {
             if(recursiveCount < 5){
                 Log.e("rec", recursiveCount.toString())
@@ -79,20 +81,26 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
 
     private fun callDynamicLink(link: String) {
 //        Log.e("token", link)
+        showLoader()
         dynamicViewModel.callDynamicLink(link)
     }
 
     private fun observeDynamicLink() {
         dynamicViewModel.liveData.observe(this) {
+            hideLoader()
             if (it is CookiesHandlerError) {
                 if (it.map.isNotEmpty()) {
                     appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_i"]!!)
-                    appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_v_${it.map["s_i"]}"]!!)
+                    appPreferences.putString(Constant.APP_PREF_COOKIE_SV, it.map["s_v_${it.map["s_i"]}"]!!)
                     Constant.COOKIE_SI = it.map["s_i"]!!
                     Constant.COOKIE_SV = it.map["s_v_${it.map["s_i"]}"]!!
                     Log.e("cookie", Constant.COOKIE_SI)
-                    callGetSpaceList()
+                    session.getFirebaseDeviceId { deviceId ->
+                        session.deviceId = deviceId
+                        callLinkDevice()
+                    }
                 } else {
+                    showMessage("Session expire! Try again")
                     Log.e("else", "cookie")
                 }
             } else {
@@ -101,14 +109,24 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
         }
     }
 
-    private fun callGetSpaceList(){
-        Log.e("spacecall", "spacecall")
-        apiViewModel.callGetSpaceList()
+    private fun callLinkDevice(){
+        showLoader()
+        apiViewModel.callLinkDevice(APIRequest( token = session.deviceId))
     }
 
-    private fun observeGetSpaceList(){
-        apiViewModel.spaceListLiveData.observe(this){
-            Log.e("space", it.toString())
+    private fun observeLinkDevice(){
+        apiViewModel.linkDeviceLiveData.observe(this){
+            hideLoader()
+            if(!it.isError){
+                if(it.responseCode == 200){
+                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                } else {
+                    showMessage("Session expire! Try again")
+                }
+            } else {
+                Log.e("failure link", "fail")
+            }
+//            Log.e("link device", it.toString())
         }
     }
 }

@@ -11,4 +11,7 @@ data class APIRequest(
 
     @SerializedName("registerURI")
     var registerURI: String? = null,
+
+    @SerializedName("token")
+    var token: String? = null,
 )

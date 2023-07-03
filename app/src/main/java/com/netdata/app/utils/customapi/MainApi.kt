@@ -13,6 +13,12 @@ interface MainApi {
     @GET("ls/click")
     fun fetchData(@Query("upn") dynamicLink: String): Call<Any>
 
+    @POST("api/v1/auth/account/mobile-app-token")
+    fun linkDevice(@Header("Cookie") cookie: String, @Body apiRequest: APIRequest): Call<Any>
+
+    @DELETE("api/v1/auth/account/mobile-app-token")
+    fun unlinkDevice(@Header("Cookie") cookie: String): Call<Any>
+
     @GET("api/v3/spaces")
     fun getSpaceList(@Header("Cookie") cookie: String): Call<ArrayList<SpaceList>>
 

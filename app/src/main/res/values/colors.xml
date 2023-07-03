@@ -28,6 +28,7 @@
     <color name="colorRedF9">#F95251</color>
     <color name="colorLightRedFF">#FFEBEF</color>
     <color name="colorLightRedF5">#F59B9B</color>
+    <color name="colorLoaderBg">#0D000000</color>
 
 
 </resources>

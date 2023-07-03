@@ -110,6 +110,17 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
 
     }
 
+    fun showLoader() {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).showLoader()
+        }
+    }
+
+    fun hideLoader() {
+        if (activity is BaseActivity) {
+            (activity as BaseActivity).hideLoader()
+        }
+    }
 
     fun hideKeyBoard() {
         if (activity is BaseActivity) {

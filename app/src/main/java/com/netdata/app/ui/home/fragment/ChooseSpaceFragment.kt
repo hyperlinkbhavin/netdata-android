@@ -3,16 +3,19 @@ package com.netdata.app.ui.home.fragment
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
+import android.os.Bundle
 import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.lifecycle.ViewModelProvider
 import com.netdata.app.R
 import com.netdata.app.data.pojo.request.ChooseSpaceList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
@@ -24,9 +27,14 @@ import com.netdata.app.ui.home.HomeActivity
 import com.netdata.app.ui.home.adapter.ChooseSpaceAdapter
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.Constant
+import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.visible
 
 class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
+
+    private val apiViewModel by lazy {
+        ViewModelProvider(this)[ApiViewModel::class.java]
+    }
 
     private val chooseSpaceAdapter by lazy {
         ChooseSpaceAdapter(){ view, position, item ->
@@ -43,6 +51,11 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         fragmentComponent.inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        observeGetSpaceList()
+    }
+
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ChooseSpaceFragmentBinding {
         return ChooseSpaceFragmentBinding.inflate(inflater,container,attachToRoot)
     }
@@ -52,6 +65,11 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         manageClick()
         setAdapter()
         spannableString()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        callGetSpaceList()
     }
 
     private fun toolbar() = with(binding){
@@ -104,5 +122,16 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
             spanString,
             TextView.BufferType.SPANNABLE
         )
+    }
+
+    private fun callGetSpaceList(){
+        Log.e("spacecall", "spacecall")
+        apiViewModel.callGetSpaceList()
+    }
+
+    private fun observeGetSpaceList(){
+        apiViewModel.spaceListLiveData.observe(this){
+            Log.e("space", it.toString())
+        }
     }
 }

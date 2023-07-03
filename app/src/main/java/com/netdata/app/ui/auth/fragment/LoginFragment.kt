@@ -84,6 +84,7 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
     }
 
     private fun callMagicLink() {
+        showLoader()
         apiViewModel.callMagicLink(
             APIRequest(
                 email = binding.editTextEmail.getVal(),
@@ -101,8 +102,9 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
         })*/
 
         apiViewModel.magicLinkLiveData.observe(this) {
-            if(it != null){
-                Log.e("data", it.toString())
+            hideLoader()
+            if(!it.isError){
+
             }
         }
     }
