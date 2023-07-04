@@ -2,13 +2,16 @@ package com.netdata.app.ui.settings.fragment
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.lifecycle.ViewModelProvider
 import com.netdata.app.R
 import com.netdata.app.data.pojo.enumclass.ThemeMode
+import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.data.pojo.request.SettingsList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
 import com.netdata.app.databinding.ChooseSpaceFragmentBinding
@@ -19,28 +22,37 @@ import com.netdata.app.ui.auth.IsolatedFullActivity
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.settings.adapter.SettingsAdapter
 import com.netdata.app.utils.Constant
+import com.netdata.app.utils.customapi.ApiViewModel
 
-class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
+class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
+
+    private val apiViewModel by lazy {
+        ViewModelProvider(this)[ApiViewModel::class.java]
+    }
 
     lateinit var customDialog: AlertDialog
 
     private val settingsAdapter by lazy {
-        SettingsAdapter(){ view, position, item ->
-            when(view.id){
+        SettingsAdapter() { view, position, item ->
+            when (view.id) {
                 R.id.constraintMain -> {
-                    when(position){
+                    when (position) {
                         // Maintenance Mode Settings
                         0 -> {
-                            navigator.load(MaintenanceModeSettingsFragment::class.java).replace(true)
+                            navigator.load(MaintenanceModeSettingsFragment::class.java)
+                                .replace(true)
                         }
 
                         // Notification Priority Settings
                         1 -> {
-                            navigator.load(NotificationPrioritySettingsFragment::class.java).replace(true)
+                            navigator.load(NotificationPrioritySettingsFragment::class.java)
+                                .replace(true)
                         }
 
                         // Share App
-                        2 -> { shareApp() }
+                        2 -> {
+                            shareApp()
+                        }
 
                         // Terms and Privacy Policy
                         3 -> {
@@ -49,19 +61,29 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
 
                         // Change Your Theme
                         4 -> {
-                            if(appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name){
-                                navigator.loadActivity(IsolatedFullActivity::class.java,ChangeThemeNightFragment::class.java).start()
+                            if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
+                                navigator.loadActivity(
+                                    IsolatedFullActivity::class.java,
+                                    ChangeThemeNightFragment::class.java
+                                ).start()
                             } else {
-                                navigator.loadActivity(IsolatedFullActivity::class.java,ChangeThemeDayFragment::class.java).start()
+                                navigator.loadActivity(
+                                    IsolatedFullActivity::class.java,
+                                    ChangeThemeDayFragment::class.java
+                                ).start()
                             }
 
                         }
 
                         // Delete Account
-                        5 -> { deleteAccount() }
+                        5 -> {
+                            deleteAccount()
+                        }
 
                         // Sign out
-                        6 -> { signOut() }
+                        6 -> {
+                            signOut()
+                        }
                     }
                 }
             }
@@ -72,8 +94,17 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         fragmentComponent.inject(this)
     }
 
-    override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): SettingsFragmentBinding {
-        return SettingsFragmentBinding.inflate(inflater,container,attachToRoot)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        observeUnlinkDevice()
+    }
+
+    override fun createViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): SettingsFragmentBinding {
+        return SettingsFragmentBinding.inflate(inflater, container, attachToRoot)
     }
 
     override fun bindData() {
@@ -81,35 +112,80 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         setAdapter()
     }
 
-    private fun toolbar() = with(binding){
+    private fun toolbar() = with(binding) {
         includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
         includeToolbar.textViewToolbarTitle.text = getString(R.string.title_settings)
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun setAdapter() = with(binding){
+    private fun setAdapter() = with(binding) {
         recyclerViewSettings.adapter = settingsAdapter
 
         addData()
         settingsAdapter.notifyDataSetChanged()
     }
 
-    private fun addData() = with(binding){
+    private fun addData() = with(binding) {
         settingsAdapter.list.clear()
-        settingsAdapter.list.add(SettingsList(R.drawable.ic_settings_maintenance_mode, getString(R.string.title_maintenance_mode_settings), getString(
-                    R.string.label_maintenance_mode_settings_description)))
-        settingsAdapter.list.add(SettingsList(R.drawable.ic_settings_notification_priority, getString(R.string.title_notification_priority_settings), getString(
-            R.string.label_notification_priority_settings_description)))
-        settingsAdapter.list.add(SettingsList(R.drawable.ic_settings_share_app, getString(R.string.title_share_app), getString(
-            R.string.label_share_app_description)))
-        settingsAdapter.list.add(SettingsList(R.drawable.ic_settings_privacy_policy, getString(R.string.title_terms_and_privacy_policy), getString(
-            R.string.label_terms_and_privacy_policy_description)))
-        settingsAdapter.list.add(SettingsList(R.drawable.ic_settings_change_themes, getString(R.string.title_change_your_theme), getString(
-            R.string.label_change_your_theme_description)))
-        settingsAdapter.list.add(SettingsList(R.drawable.ic_settings_delete_account, getString(R.string.title_delete_account_settings), getString(
-            R.string.label_delete_account_description)))
-        settingsAdapter.list.add(SettingsList(R.drawable.ic_settings_signout, getString(R.string.title_sign_out), getString(
-            R.string.label_sign_out_description)))
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_maintenance_mode,
+                getString(R.string.title_maintenance_mode_settings),
+                getString(
+                    R.string.label_maintenance_mode_settings_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_notification_priority,
+                getString(R.string.title_notification_priority_settings),
+                getString(
+                    R.string.label_notification_priority_settings_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_share_app, getString(R.string.title_share_app), getString(
+                    R.string.label_share_app_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_privacy_policy,
+                getString(R.string.title_terms_and_privacy_policy),
+                getString(
+                    R.string.label_terms_and_privacy_policy_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_change_themes,
+                getString(R.string.title_change_your_theme),
+                getString(
+                    R.string.label_change_your_theme_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_delete_account,
+                getString(R.string.title_delete_account_settings),
+                getString(
+                    R.string.label_delete_account_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_signout, getString(R.string.title_sign_out), getString(
+                    R.string.label_sign_out_description
+                )
+            )
+        )
     }
 
     private fun shareApp() {
@@ -118,7 +194,8 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.type = "text/plain"
             shareIntent.putExtra(Intent.EXTRA_SUBJECT, "My application name")
-            val shareMessage = "${getString(R.string.app_name)} : \nhttps://play.google.com/store/apps/details?id=$appPackageName"
+            val shareMessage =
+                "${getString(R.string.app_name)} : \nhttps://play.google.com/store/apps/details?id=$appPackageName"
 
             shareIntent.putExtra(Intent.EXTRA_TEXT, shareMessage)
             startActivity(Intent.createChooser(shareIntent, "choose one"))
@@ -127,7 +204,7 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         }
     }
 
-    private fun deleteAccount(){
+    private fun deleteAccount() {
         customDialog =
             AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
                 .setMessage("").create()
@@ -159,7 +236,7 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         customDialog.show()
     }
 
-    private fun signOut(){
+    private fun signOut() {
         customDialog =
             AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
                 .setMessage("").create()
@@ -174,9 +251,7 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         }
 
         buttonSignOut.setOnClickListener {
-            appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
-            appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
-            navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
+            callUnlinkDevice()
             /*val bundle = Bundle()
             bundle.putBoolean(Constants.BUNDLE_IS_DELETE_ACCOUNT, true)
             appPreferences.putBoolean(Constants.APP_PREFERENCES_IS_LOGIN, false)
@@ -189,5 +264,21 @@ class SettingsFragment: BaseFragment<SettingsFragmentBinding>() {
         customDialog.setView(view)
         customDialog.setCanceledOnTouchOutside(true)
         customDialog.show()
+    }
+
+    private fun callUnlinkDevice() {
+        showLoader()
+        apiViewModel.callUnlinkDevice()
+    }
+
+    private fun observeUnlinkDevice() {
+        apiViewModel.unlinkDeviceLiveData.observe(this) {
+            hideLoader()
+            appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
+            appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
+            navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
+
+        }
+//            Log.e("link device", it.toString())
     }
 }

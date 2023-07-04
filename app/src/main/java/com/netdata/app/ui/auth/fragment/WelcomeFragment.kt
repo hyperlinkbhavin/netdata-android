@@ -16,8 +16,11 @@ import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.customapi.DynamicViewModel
+import com.netdata.app.utils.localdb.DatabaseHelper
 
 class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
+
+    lateinit var dbHelper: DatabaseHelper
 
     private var recursiveCount = 0
 
@@ -44,14 +47,31 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
     }
 
     override fun bindData() {
+        dbHelper = DatabaseHelper(requireContext())
         manageClick()
 
         val deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK)
 
-        if(deeplink != ""){
+        if(!deeplink.isNullOrEmpty()){
             Log.e("link", deeplink!!)
             callDynamicLink(deeplink)
-        }
+        } /*else {
+            val table1DataList = dbHelper.getAllDataFromSpace()
+            for (data in table1DataList) {
+                Log.e("tag","Name: ${data.name}, Slug: ${data.slug}, \nPermissions: ${data.permissions},\nPlan: ${data.planDefinition}")
+            }
+        }*/
+
+
+
+        // Insert data into Table 1
+        /*dbHelper.insertDataIntoTable1("John Doe", "john@example.com")
+
+// Insert data into Table 2
+        dbHelper.insertDataIntoTable2("Title", "Content")*/
+
+// Retrieve data from Table 1
+
     }
 
     private fun manageClick() = with(binding){
@@ -100,7 +120,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
                         callLinkDevice()
                     }
                 } else {
-                    showMessage("Session expire! Try again")
+                    showMessage("Link expire! Try again")
                     Log.e("else", "cookie")
                 }
             } else {
@@ -119,6 +139,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
             hideLoader()
             if(!it.isError){
                 if(it.responseCode == 200){
+                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
                     navigator.load(ChooseSpaceFragment::class.java).replace(false)
                 } else {
                     showMessage("Session expire! Try again")

@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
@@ -153,6 +154,10 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
     fun showMessage(message: String) {
         showSnackBar(message)
 
+    }
+
+    fun showToast(msg: String){
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
     fun showMessage(@StringRes stringId: Int) {

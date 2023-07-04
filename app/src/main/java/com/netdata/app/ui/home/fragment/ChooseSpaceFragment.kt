@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.Editable
 import android.text.SpannableString
 import android.text.TextPaint
+import android.text.TextWatcher
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
@@ -18,6 +20,7 @@ import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import com.netdata.app.R
 import com.netdata.app.data.pojo.request.ChooseSpaceList
+import com.netdata.app.data.pojo.response.SpaceList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
 import com.netdata.app.databinding.ChooseSpaceFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
@@ -26,11 +29,18 @@ import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.HomeActivity
 import com.netdata.app.ui.home.adapter.ChooseSpaceAdapter
 import com.netdata.app.ui.settings.fragment.SettingsFragment
+import com.netdata.app.utils.AppUtils
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.customapi.ApiViewModel
+import com.netdata.app.utils.localdb.DatabaseHelper
 import com.netdata.app.utils.visible
+import java.util.Locale.filter
 
 class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
+
+    lateinit var dbHelper: DatabaseHelper
+
+    private var spaceList = ArrayList<SpaceList>()
 
     private val apiViewModel by lazy {
         ViewModelProvider(this)[ApiViewModel::class.java]
@@ -40,7 +50,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         ChooseSpaceAdapter(){ view, position, item ->
             when(view.id){
                 R.id.constraintTop -> {
-                    appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.spaceName)
+                    appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.name!!)
                     navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
                 }
             }
@@ -61,10 +71,12 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     }
 
     override fun bindData() {
+        dbHelper = DatabaseHelper(requireContext())
         toolbar()
         manageClick()
         setAdapter()
         spannableString()
+        editTextChanged()
     }
 
     override fun onResume() {
@@ -86,17 +98,46 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter() = with(binding){
         recyclerViewChooseSpace.adapter = chooseSpaceAdapter
-
-        addData()
         chooseSpaceAdapter.notifyDataSetChanged()
     }
 
-    private fun addData(){
+    private fun editTextChanged() {
+        binding.editTextSearchServices.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                filter(s.toString())
+//                callSearchCity(s.toString())
+            }
+
+        })
+    }
+
+    fun filter(text: String?) {
+        val temp = ArrayList<SpaceList>()
+        for (d in spaceList) {
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+            if (d.name!!.contains(text!!,true)) {
+                temp.add(d)
+            }
+        }
+        //update recyclerview
+        chooseSpaceAdapter.updateList(temp)
+    }
+
+    /*private fun addData(){
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 1","1"))
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 3","3"))
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 2",""))
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 4",""))
-    }
+    }*/
 
     private fun spannableString() {
         val spanString =
@@ -125,13 +166,29 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     }
 
     private fun callGetSpaceList(){
+        showLoader()
         Log.e("spacecall", "spacecall")
         apiViewModel.callGetSpaceList()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun observeGetSpaceList(){
         apiViewModel.spaceListLiveData.observe(this){
-            Log.e("space", it.toString())
+            hideLoader()
+            if(it.responseCode == 200){
+                if(it.data!!.isNotEmpty()){
+                    /*it.data.forEach {item ->
+                        dbHelper.insertSpaceData(item)
+                    }*/
+                    spaceList.clear()
+                    chooseSpaceAdapter.list.clear()
+                    spaceList.addAll(it.data)
+                    chooseSpaceAdapter.list.addAll(it.data)
+                    chooseSpaceAdapter.notifyDataSetChanged()
+                }
+            } else {
+                showMessage("Something wrong")
+            }
         }
     }
 }

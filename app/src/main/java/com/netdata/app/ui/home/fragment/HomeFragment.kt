@@ -1,6 +1,7 @@
 package com.netdata.app.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.jaygoo.widget.OnRangeChangedListener
@@ -18,24 +20,27 @@ import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
 import com.netdata.app.data.pojo.HomeDataList
 import com.netdata.app.data.pojo.enumclass.AlertStatus
-import com.netdata.app.data.pojo.request.ExistisWarRoomsList
-import com.netdata.app.data.pojo.request.FilterList
-import com.netdata.app.data.pojo.request.FilterSelectedList
-import com.netdata.app.data.pojo.request.WarRoomsList
+import com.netdata.app.data.pojo.request.*
 import com.netdata.app.databinding.HomeFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
+import com.netdata.app.ui.auth.AuthActivity
 import com.netdata.app.ui.auth.IsolatedFullActivity
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.adapter.*
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.Constant
+import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.invisible
 import com.netdata.app.utils.visible
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
+
+    private val apiViewModel by lazy {
+        ViewModelProvider(this)[ApiViewModel::class.java]
+    }
 
     private var warRoomsItemPosition = 0
     private var sortByTimeItemPosition = -1
@@ -143,6 +148,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         fragmentComponent.inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        observeLinkDevice()
+    }
+
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -165,6 +175,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     override fun onResume() {
         super.onResume()
+        callLinkDevice()
         if (appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)) {
             showMessage("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}")
             appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, false)
@@ -831,5 +842,25 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
 
+    }
+
+    private fun callLinkDevice() {
+        showLoader()
+        apiViewModel.callLinkDevice(APIRequest(token = session.deviceId))
+    }
+
+    private fun observeLinkDevice() {
+        apiViewModel.linkDeviceLiveData.observe(this) {
+            hideLoader()
+            if (it.isError || it.responseCode != 200) {
+
+                showToast("Session expired! Please login again")
+                appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
+                appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
+                navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
+
+            }
+        }
+//            Log.e("link device", it.toString())
     }
 }
