@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.netdata.app.data.pojo.MyResponseBody
 import com.netdata.app.data.pojo.request.APIRequest
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.data.pojo.response.SpaceList
 import com.netdata.app.utils.Constant
 import retrofit2.Call
@@ -13,7 +14,7 @@ import retrofit2.Response
 
 class ApiViewModel: ViewModel() {
 
-    val baseUrl = "https://app.netdata.cloud/"
+    val baseUrl = "https://testing.netdata.cloud/"
 
     init {
         NetworkClient.setBaseUrl(baseUrl)
@@ -23,6 +24,7 @@ class ApiViewModel: ViewModel() {
     val linkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
     val unlinkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
     val spaceListLiveData = MutableLiveData<MyResponseBody<ArrayList<SpaceList>>>()
+    val fetchHomeNotificationLiveData = MutableLiveData<MyResponseBody<ArrayList<HomeNotificationList>>>()
 
     fun callMagicLink(apiRequest: APIRequest)
     {
@@ -112,6 +114,30 @@ class ApiViewModel: ViewModel() {
 
             override fun onFailure(call: Call<ArrayList<SpaceList>>, t: Throwable) {
                 spaceListLiveData.postValue(MyResponseBody(0, "Test", ArrayList(),isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callFetchHomeNotification()
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.fetchHomeNotification(cookie)
+        callApi.enqueue(object: Callback<ArrayList<HomeNotificationList>>{
+
+            override fun onResponse(call: Call<ArrayList<HomeNotificationList>>, response: Response<ArrayList<HomeNotificationList>>) {
+                fetchHomeNotificationLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<ArrayList<HomeNotificationList>>, t: Throwable) {
+                fetchHomeNotificationLiveData.postValue(MyResponseBody(0, "Test", ArrayList(),isError = true, throwable = t))
                 Log.e("Fail Space", call.toString())
             }
 

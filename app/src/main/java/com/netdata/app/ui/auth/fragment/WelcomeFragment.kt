@@ -124,6 +124,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
                     Log.e("else", "cookie")
                 }
             } else {
+                showMessage("Link expire! Try again")
                 Log.e("else", "else")
             }
         }

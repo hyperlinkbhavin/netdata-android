@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
@@ -29,54 +30,121 @@ import com.fondesa.kpermissions.extension.onDenied
 import com.fondesa.kpermissions.extension.onPermanentlyDenied
 import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.netdata.app.R
+import com.netdata.app.data.pojo.enumclass.Priority
+import com.netdata.app.data.pojo.response.NotificationPriorityList
 import com.netdata.app.databinding.NotificationPrioritySettingsFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment
+import com.netdata.app.utils.FileUtils
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.invisible
+import com.netdata.app.utils.localdb.DatabaseHelper
 import com.netdata.app.utils.visible
+import kotlinx.android.synthetic.main.notification_priority_settings_fragment.*
 
 
-class NotificationPrioritySettingsFragment: BaseFragment<NotificationPrioritySettingsFragmentBinding>() {
+class NotificationPrioritySettingsFragment :
+    BaseFragment<NotificationPrioritySettingsFragmentBinding>() {
 
-    private var isHighPrioritySound = false
+    lateinit var dbHelper: DatabaseHelper
+    private var notificationPriorityList = ArrayList<NotificationPriorityList>()
+
+    /*private var isHighPrioritySound = false
     private var isMediumPrioritySound = false
-    private var isLowPrioritySound = false
+    private var isLowPrioritySound = false*/
 
     private var isTempHighPrioritySound = false
     private var isTempMediumPrioritySound = false
     private var isTempLowPrioritySound = false
 
+    private var conditionId = 0
+
     override fun inject(fragmentComponent: FragmentComponent) {
         fragmentComponent.inject(this)
     }
 
-    override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): NotificationPrioritySettingsFragmentBinding {
-        return NotificationPrioritySettingsFragmentBinding.inflate(inflater,container,attachToRoot)
+    override fun createViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        attachToRoot: Boolean
+    ): NotificationPrioritySettingsFragmentBinding {
+        return NotificationPrioritySettingsFragmentBinding.inflate(
+            inflater,
+            container,
+            attachToRoot
+        )
     }
 
     override fun bindData() {
+        dbHelper = DatabaseHelper(requireContext())
         toolbar()
         manageClick()
 
+        if(dbHelper.getAllDataFromNotificationPriority().isEmpty()){
+            dbHelper.insertNotificationPriorityData(
+            NotificationPriorityList(
+                1,
+                Priority.HIGH_PRIORITY.name,
+                0,
+                "",
+                "",
+                0,
+                0
+            )
+        )
+        dbHelper.insertNotificationPriorityData(
+            NotificationPriorityList(
+                2,
+                Priority.MEDIUM_PRIORITY.name,
+                0,
+                "",
+                "",
+                0,
+                0
+            )
+        )
+        dbHelper.insertNotificationPriorityData(
+            NotificationPriorityList(
+                3,
+                Priority.LOW_PRIORITY.name,
+                0,
+                "",
+                "",
+                0,
+                0
+            )
+        )
+        }
+
+//        dbHelper.updateNotificationPriorityData(1,"Test", "url",1,1,1)
+
+        notificationPriorityList = dbHelper.getAllDataFromNotificationPriority()
+
         setFragmentResultListener(SingleAudioPicker.SINGLE_AUDIO_REQUEST_KEY) { _, bundle ->
-            val loadedModel = bundle.getParcelable<AudioModel>(SingleAudioPicker.ON_SINGLE_AUDIO_PICK_KEY)
+            val loadedModel =
+                bundle.getParcelable<AudioModel>(SingleAudioPicker.ON_SINGLE_AUDIO_PICK_KEY)
             loadedModel?.let {
                 binding.apply {
-                    if(isTempHighPrioritySound){
-                        isHighPrioritySound = true
+                    dbHelper.updateNotificationPriorityData(
+                        isSound = 1,
+                        soundName = it.displayName,
+                        soundUrl = FileUtils.getRealPathFromURI(requireContext(), it.contentUri),
+                        conditionID = conditionId
+                    )
+                    if (isTempHighPrioritySound) {
+//                        isHighPrioritySound = true
                         buttonHighPriorityApplyCustomTune.invisible()
                         buttonHighPriorityChangeSoundTune.visible()
                         textViewHighPrioritySoundTune.visible()
                         textViewHighPrioritySoundTune.text = it.displayName
-                    } else if(isTempMediumPrioritySound){
-                        isMediumPrioritySound = true
+                    } else if (isTempMediumPrioritySound) {
+//                        isMediumPrioritySound = true
                         buttonMediumPriorityApplyCustomTune.invisible()
                         buttonMediumPriorityChangeSoundTune.visible()
                         textViewMediumPrioritySoundTune.visible()
                         textViewMediumPrioritySoundTune.text = it.displayName
                     } else {
-                        isLowPrioritySound = true
+//                        isLowPrioritySound = true
                         buttonLowPriorityApplyCustomTune.invisible()
                         buttonLowPriorityChangeSoundTune.visible()
                         textViewLowPrioritySoundTune.visible()
@@ -86,28 +154,116 @@ class NotificationPrioritySettingsFragment: BaseFragment<NotificationPrioritySet
 
             }
         }
+
+        setData()
+
+        /*dbHelper.getAllDataFromNotificationPriority()*/
     }
 
-    private fun toolbar() = with(binding){
+    private fun toolbar() = with(binding) {
         includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
-        includeToolbar.textViewToolbarTitle.text = getString(R.string.title_notification_priority_settings)
+        includeToolbar.textViewToolbarTitle.text =
+            getString(R.string.title_notification_priority_settings)
 
-        checkSwitch(switchHighPrioritySound, buttonHighPriorityApplyCustomTune)
+        /*checkSwitch(switchHighPrioritySound, buttonHighPriorityApplyCustomTune)
         checkSwitch(switchMediumPrioritySound, buttonMediumPriorityApplyCustomTune)
-        checkSwitch(switchLowPrioritySound, buttonLowPriorityApplyCustomTune)
+        checkSwitch(switchLowPrioritySound, buttonLowPriorityApplyCustomTune)*/
     }
 
-    private fun manageClick() = with(binding){
+    private fun setData() = with(binding) {
+        notificationCheck(
+            0,
+            notificationPriorityList[0],
+            switchHighPrioritySound,
+            switchHighPriorityBanner,
+            switchHighPriorityVibration,
+            buttonHighPriorityApplyCustomTune,
+            buttonHighPriorityChangeSoundTune,
+            textViewHighPrioritySoundTune
+        )
+        notificationCheck(
+            1,
+            notificationPriorityList[1],
+            switchMediumPrioritySound,
+            switchMediumPriorityBanner,
+            switchMediumPriorityVibration,
+            buttonMediumPriorityApplyCustomTune,
+            buttonMediumPriorityChangeSoundTune,
+            textViewMediumPrioritySoundTune
+        )
+        notificationCheck(
+            2,
+            notificationPriorityList[2],
+            switchLowPrioritySound,
+            switchLowPriorityBanner,
+            switchLowPriorityVibration,
+            buttonLowPriorityApplyCustomTune,
+            buttonLowPriorityChangeSoundTune,
+            textViewLowPrioritySoundTune
+        )
+    }
+
+    private fun notificationCheck(
+        position: Int,
+        item: NotificationPriorityList,
+        switchSound: SwitchCompat,
+        switchBanner: SwitchCompat,
+        switchVibration: SwitchCompat,
+        buttonView: AppCompatButton,
+        buttonView2: AppCompatButton,
+        textView: AppCompatTextView,
+    ) {
+        if (item.isSound == 1) {
+            switchSound.isChecked = true
+            buttonView.isClickable = true
+            buttonView.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            )
+            buttonView.invisible()
+            buttonView2.visible()
+            textView.visible()
+            textView.text = notificationPriorityList[position].soundName
+        } else {
+            switchSound.isChecked = false
+            buttonView.isClickable = false
+            buttonView.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorGreyCF)
+            )
+        }
+
+        switchBanner.isChecked = item.isBanner == 1
+        switchVibration.isChecked = item.isVibration == 1
+    }
+
+    private fun manageClick() = with(binding) {
         switchHighPrioritySound.setOnCheckedChangeListener { buttonView, isChecked ->
-            switchCheckChanged(isChecked, buttonHighPriorityApplyCustomTune, buttonHighPriorityChangeSoundTune, textViewHighPrioritySoundTune)
+            conditionId = 1
+            switchCheckChanged(
+                isChecked,
+                buttonHighPriorityApplyCustomTune,
+                buttonHighPriorityChangeSoundTune,
+                textViewHighPrioritySoundTune
+            )
         }
 
         switchMediumPrioritySound.setOnCheckedChangeListener { buttonView, isChecked ->
-            switchCheckChanged(isChecked, buttonMediumPriorityApplyCustomTune, buttonMediumPriorityChangeSoundTune, textViewMediumPrioritySoundTune)
+            conditionId = 2
+            switchCheckChanged(
+                isChecked,
+                buttonMediumPriorityApplyCustomTune,
+                buttonMediumPriorityChangeSoundTune,
+                textViewMediumPrioritySoundTune
+            )
         }
 
         switchLowPrioritySound.setOnCheckedChangeListener { buttonView, isChecked ->
-            switchCheckChanged(isChecked, buttonLowPriorityApplyCustomTune, buttonLowPriorityChangeSoundTune, textViewLowPrioritySoundTune)
+            conditionId = 3
+            switchCheckChanged(
+                isChecked,
+                buttonLowPriorityApplyCustomTune,
+                buttonLowPriorityChangeSoundTune,
+                textViewLowPrioritySoundTune
+            )
         }
 
         binding.buttonHighPriorityApplyCustomTune.setOnClickListener {
@@ -161,6 +317,48 @@ class NotificationPrioritySettingsFragment: BaseFragment<NotificationPrioritySet
         buttonLowPriorityChangeSoundTune.setOnClickListener {
             buttonLowPriorityApplyCustomTune.performClick()
         }
+
+        switchHighPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
+            dbHelper.updateNotificationPriorityData(
+                isBanner = if (isChecked) 1 else 0,
+                conditionID = 1
+            )
+        }
+
+        switchMediumPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
+            dbHelper.updateNotificationPriorityData(
+                isBanner = if (isChecked) 1 else 0,
+                conditionID = 2
+            )
+        }
+
+        switchLowPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
+            dbHelper.updateNotificationPriorityData(
+                isBanner = if (isChecked) 1 else 0,
+                conditionID = 3
+            )
+        }
+
+        switchHighPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
+            dbHelper.updateNotificationPriorityData(
+                isVibration = if (isChecked) 1 else 0,
+                conditionID = 1
+            )
+        }
+
+        switchMediumPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
+            dbHelper.updateNotificationPriorityData(
+                isVibration = if (isChecked) 1 else 0,
+                conditionID = 2
+            )
+        }
+
+        switchLowPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
+            dbHelper.updateNotificationPriorityData(
+                isVibration = if (isChecked) 1 else 0,
+                conditionID = 3
+            )
+        }
     }
 
     private fun getPermission() {
@@ -210,7 +408,7 @@ class NotificationPrioritySettingsFragment: BaseFragment<NotificationPrioritySet
             .show()
     }*/
 
-    private fun bottomSheetSingleAudioPicker(color: Int){
+    private fun bottomSheetSingleAudioPicker(color: Int) {
         getPermission()
 
         SingleAudioPicker.showPicker(requireContext(), {
@@ -246,28 +444,43 @@ class NotificationPrioritySettingsFragment: BaseFragment<NotificationPrioritySet
         }
     }*/
 
-    private fun checkSwitch(switchView: SwitchCompat, buttonView: AppCompatButton){
-        if(switchView.isChecked){
+    /*private fun checkSwitch(switchView: SwitchCompat, buttonView: AppCompatButton) {
+        if (switchView.isChecked) {
             buttonView.isClickable = true
             buttonView.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            )
         } else {
             buttonView.isClickable = false
             buttonView.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorGreyCF))
+                ContextCompat.getColor(requireContext(), R.color.colorGreyCF)
+            )
         }
-    }
+    }*/
 
-    private fun switchCheckChanged(isChecked: Boolean, buttonView: AppCompatButton, buttonView2: AppCompatButton, textView: AppCompatTextView){
-        if(isChecked){
+    private fun switchCheckChanged(
+        isChecked: Boolean,
+        buttonView: AppCompatButton,
+        buttonView2: AppCompatButton,
+        textView: AppCompatTextView
+    ) {
+        if (isChecked) {
             buttonView.isClickable = true
             buttonView.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            )
         } else {
+            dbHelper.updateNotificationPriorityData(
+                isSound = 0,
+                soundName = "",
+                soundUrl = "",
+                conditionID = conditionId
+            )
             buttonView.visible()
             buttonView.isClickable = false
             buttonView.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorGreyCF))
+                ContextCompat.getColor(requireContext(), R.color.colorGreyCF)
+            )
             buttonView2.gone()
             textView.gone()
         }

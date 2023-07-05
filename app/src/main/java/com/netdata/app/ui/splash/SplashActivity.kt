@@ -9,6 +9,7 @@ import android.view.View
 import android.view.WindowManager
 import android.webkit.CookieManager
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.netdata.app.core.AppPreferences
@@ -27,6 +28,7 @@ import com.netdata.app.utils.Constant
 import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.customapi.DynamicViewModel
 import com.netdata.app.utils.gone
+import com.netdata.app.utils.localdb.DatabaseHelper
 import com.netdata.app.utils.visible
 import java.net.HttpURLConnection
 import java.net.URL
@@ -35,6 +37,7 @@ import java.util.*
 import javax.inject.Inject
 
 class SplashActivity : BaseActivity() {
+
     //Data store on after user login
     private val dynamicViewModel by lazy {
         ViewModelProvider(this)[DynamicViewModel::class.java]

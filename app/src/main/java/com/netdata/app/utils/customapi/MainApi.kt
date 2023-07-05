@@ -1,6 +1,7 @@
 package com.netdata.app.utils.customapi
 
 import com.netdata.app.data.pojo.request.APIRequest
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.data.pojo.response.SpaceList
 import retrofit2.Call
 import retrofit2.http.*
@@ -21,5 +22,8 @@ interface MainApi {
 
     @GET("api/v3/spaces")
     fun getSpaceList(@Header("Cookie") cookie: String): Call<ArrayList<SpaceList>>
+
+    @GET("api/v1/notifications/NetdataMobileApp")
+    fun fetchHomeNotification(@Header("Cookie") cookie: String): Call<ArrayList<HomeNotificationList>>
 
 }

@@ -27,8 +27,8 @@ object URLFactory {
     }
 
     object Link {
-        const val SIGN_IN_LINK = "https://app.netdata.cloud/sign-in"
-        const val SIGN_UP_LINK = "https://app.netdata.cloud/sign-up"
+        const val SIGN_IN_LINK = "https://testing.netdata.cloud/sign-in"
+        const val SIGN_UP_LINK = "https://testing.netdata.cloud/sign-up"
     }
 
 }
