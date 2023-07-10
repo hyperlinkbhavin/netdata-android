@@ -25,6 +25,13 @@ class ApiViewModel: ViewModel() {
     val unlinkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
     val spaceListLiveData = MutableLiveData<MyResponseBody<ArrayList<SpaceList>>>()
     val fetchHomeNotificationLiveData = MutableLiveData<MyResponseBody<ArrayList<HomeNotificationList>>>()
+    val listSpaceAlertCountLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val listActiveAlertPerRoomLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val getAlertDetailedLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val getAccountNotificationsSettingsLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val updateAccountNotificationsSettingsLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val silenceSpaceLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val unsilenceSpaceLiveData = MutableLiveData<MyResponseBody<Any>>()
 
     fun callMagicLink(apiRequest: APIRequest)
     {
@@ -138,6 +145,174 @@ class ApiViewModel: ViewModel() {
 
             override fun onFailure(call: Call<ArrayList<HomeNotificationList>>, t: Throwable) {
                 fetchHomeNotificationLiveData.postValue(MyResponseBody(0, "Test", ArrayList(),isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callListSpaceAlertCount(spaceID: String)
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.listSpaceAlertCount(cookie, spaceID)
+        callApi.enqueue(object: Callback<Any>{
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                listSpaceAlertCountLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                listSpaceAlertCountLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callListActiveAlertPerRoom(spaceID: String, roomID: String)
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.listActiveAlertPerRoom(cookie, spaceID, roomID)
+        callApi.enqueue(object: Callback<Any>{
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                listActiveAlertPerRoomLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                listActiveAlertPerRoomLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callGetAlertDetailed(spaceID: String, roomID: String, alarm: String, chart: String)
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.getAlertDetailed(cookie, spaceID, roomID, alarm, chart)
+        callApi.enqueue(object: Callback<Any>{
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                getAlertDetailedLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                getAlertDetailedLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callGetAccountNotificationsSettings()
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.getAccountNotificationsSettings(cookie)
+        callApi.enqueue(object: Callback<Any>{
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                getAccountNotificationsSettingsLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                getAccountNotificationsSettingsLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callUpdateAccountNotificationsSettings(apiRequest: APIRequest)
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.updateAccountNotificationsSettings(cookie, apiRequest)
+        callApi.enqueue(object: Callback<Any>{
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                updateAccountNotificationsSettingsLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                updateAccountNotificationsSettingsLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callSilenceSpace(spaceID: String, apiRequest: APIRequest)
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.silenceSpace(cookie, spaceID, apiRequest)
+        callApi.enqueue(object: Callback<Any>{
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                silenceSpaceLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                silenceSpaceLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+                Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callUnsilenceSpace(spaceID: String, apiRequest: APIRequest)
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.unsilenceSpace(cookie, spaceID, apiRequest)
+        callApi.enqueue(object: Callback<Any>{
+
+            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                unsilenceSpaceLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<Any>, t: Throwable) {
+                unsilenceSpaceLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
                 Log.e("Fail Space", call.toString())
             }
 

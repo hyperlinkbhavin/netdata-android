@@ -20,6 +20,18 @@
         <item name="android:windowContentOverlay">@null</item>
 
         <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
+        <item name="chipStyle">@style/Widget.MaterialComponents.Chip</item>
+    </style>
+
+    <!-- Chip style   -->
+    <style name="Widget.MaterialComponents.Chip" parent="Widget.MaterialComponents.Button">
+        <!-- Customize the appearance and behavior of the chip -->
+
+        <!-- Example customizations -->
+        <item name="android:textColor">@color/colorBlack35</item>
+        <item name="android:textSize">@dimen/sp_14</item>
+        <!-- Add more customizations as needed -->
     </style>
 
     <!--  BottomSheet Dialog Corner  -->

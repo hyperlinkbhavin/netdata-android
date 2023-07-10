@@ -9,7 +9,7 @@ import retrofit2.http.*
 interface MainApi {
 
     @POST("api/v2/auth/account/magic-link")
-    fun loginData(@Body apiRequest: APIRequest):Call<Any>
+    fun loginData(@Body apiRequest: APIRequest): Call<Any>
 
     @GET("ls/click")
     fun fetchData(@Query("upn") dynamicLink: String): Call<Any>
@@ -25,5 +25,36 @@ interface MainApi {
 
     @GET("api/v1/notifications/NetdataMobileApp")
     fun fetchHomeNotification(@Header("Cookie") cookie: String): Call<ArrayList<HomeNotificationList>>
+
+    @GET("api/v2/spaces/{spaceID}/alarms")
+    fun listSpaceAlertCount(@Header("Cookie") cookie: String, @Path("spaceID") spaceID: String): Call<Any>
+
+    @GET("api/v2/spaces/{spaceID}/rooms/{roomID}/alarms-active")
+    fun listActiveAlertPerRoom(
+        @Header("Cookie") cookie: String,
+        @Path("spaceID") spaceID: String,
+        @Path("roomID") roomID: String
+    ): Call<Any>
+
+    @GET("api/v2/spaces/{spaceID}/rooms/{roomID}/alarms/{alarm}/nodes/{nodeID}/charts/{chart}")
+    fun getAlertDetailed(
+        @Header("Cookie") cookie: String,
+        @Path("spaceID") spaceID: String,
+        @Path("roomID") roomID: String,
+        @Path("alarm") alarm: String,
+        @Path("chart") chart: String
+    ): Call<Any>
+
+    @GET("api/v2/accounts/me/notifications/settings")
+    fun getAccountNotificationsSettings(@Header("Cookie") cookie: String): Call<Any>
+
+    @PATCH("api/v2/accounts/me/notifications/settings")
+    fun updateAccountNotificationsSettings(@Header("Cookie") cookie: String, @Body apiRequest: APIRequest): Call<Any>
+
+    @POST("api/v2/spaces/{spaceID}/notifications/silencing/rule")
+    fun silenceSpace(@Header("Cookie") cookie: String, @Path("spaceID") spaceID: String, @Body apiRequest: APIRequest): Call<Any>
+
+    @POST("api/v2/spaces/{spaceID}/notifications/silencing/rules/delete")
+    fun unsilenceSpace(@Header("Cookie") cookie: String, @Path("spaceID") spaceID: String, @Body apiRequest: APIRequest): Call<Any>
 
 }

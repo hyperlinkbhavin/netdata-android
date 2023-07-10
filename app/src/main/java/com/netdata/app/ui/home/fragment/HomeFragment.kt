@@ -13,8 +13,12 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.chip.Chip
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
@@ -41,6 +45,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private val apiViewModel by lazy {
         ViewModelProvider(this)[ApiViewModel::class.java]
     }
+
+    lateinit var flexLayoutManager: FlexboxLayoutManager
 
     private var warRoomsItemPosition = 0
     private var sortByTimeItemPosition = -1
@@ -151,6 +157,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeLinkDevice()
+        observeFetchHomeNotification()
     }
 
     override fun createViewBinding(
@@ -277,7 +284,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     constraintFilterSelected.visible()
                     filterSelectedAdapter.list.add(FilterSelectedList("Priority:High"))
                     filterSelectedAdapter.list.add(FilterSelectedList("Priority:Medium"))
+                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:Low"))
+                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:Medium"))
+                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:High"))
                     filterSelectedAdapter.notifyDataSetChanged()
+
+                    /*addChip("Priority: High")
+                    addChip("Priority: Medium")
+                    addChip("Priority: Low")
+                    addChip("Class: High1")
+                    addChip("Class: High2")
+                    addChip("Class: High3")*/
+
 
                 } else {
                     includeToolbar.textViewFilterCount.gone()
@@ -338,6 +356,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
+    private fun addChip(text: String){
+        val chip = Chip(binding.chipGroupFilterSelected.context)
+        chip.text = text
+        chip.isCloseIconVisible = true
+
+        chip.setOnClickListener {
+            binding.chipGroupFilterSelected.removeView(chip)
+        }
+
+        binding.chipGroupFilterSelected.addView(chip)
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun removeFilterSelected(position: Int) {
         filterSelectedAdapter.list.removeAt(position)
@@ -349,7 +379,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun setAdapter() = with(binding) {
+        flexLayoutManager  = FlexboxLayoutManager(context)
+        flexLayoutManager.flexDirection = FlexDirection.ROW
+
         recyclerViewHome.adapter = homeAdapter
+        recyclerViewFilterSelected.layoutManager = flexLayoutManager
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
     }
 
@@ -859,8 +893,24 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
                 navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
 
+            } else {
+                callFetchHomeNotification()
             }
         }
 //            Log.e("link device", it.toString())
+    }
+
+    private fun callFetchHomeNotification() {
+        showLoader()
+        apiViewModel.callFetchHomeNotification()
+    }
+
+    private fun observeFetchHomeNotification() {
+        apiViewModel.fetchHomeNotificationLiveData.observe(this) {
+            hideLoader()
+            if (it.isError || it.responseCode != 200) {
+
+            }
+        }
     }
 }
