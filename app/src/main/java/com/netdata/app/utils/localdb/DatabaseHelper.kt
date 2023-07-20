@@ -115,6 +115,30 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 
+    fun getAllAppData(): ArrayList<AppDetails> {
+        val dataList = ArrayList<AppDetails>()
+        val db = readableDatabase
+        val selectQuery = "SELECT * FROM $TABLE_APP_DETAILS"
+
+        val cursor = db.rawQuery(selectQuery, null)
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val id = cursor.getInt(cursor.getColumnIndexOrThrow(ID))
+                val siCookie = cursor.getString(cursor.getColumnIndexOrThrow(ID))
+                val svCookie = cursor.getString(cursor.getColumnIndexOrThrow(ID))
+                val isLogin = cursor.getInt(cursor.getColumnIndexOrThrow(ID))
+                val isNPData = cursor.getInt(cursor.getColumnIndexOrThrow(ID))
+
+                val data = AppDetails(id, siCookie, svCookie, isLogin, isNPData)
+                dataList.add(data)
+            }
+        }
+
+        db.close()
+        Log.e("app data", dataList.toString())
+        return dataList
+    }
+
     fun insertSpaceData(item: SpaceList) {
         val values = ContentValues().apply {
             put(ID, item.id)
@@ -131,6 +155,34 @@ class DatabaseHelper(context: Context) :
         val db = writableDatabase
         db.insert(TABLE_SPACE, null, values)
         db.close()
+    }
+
+    fun getAllDataFromSpace(): ArrayList<SpaceList> {
+        val dataList = ArrayList<SpaceList>()
+        val db = readableDatabase
+        val selectQuery = "SELECT * FROM $TABLE_SPACE"
+
+        val cursor = db.rawQuery(selectQuery, null)
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val id = cursor.getString(cursor.getColumnIndexOrThrow(ID))
+                val slug = cursor.getString(cursor.getColumnIndexOrThrow(SLUG))
+                val name = cursor.getString(cursor.getColumnIndexOrThrow(NAME))
+                val description = cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION))
+                val iconUrl = cursor.getString(cursor.getColumnIndexOrThrow(ICON_URL))
+                val createdAt = cursor.getString(cursor.getColumnIndexOrThrow(CREATED_AT))
+                val permissions = cursor.getString(cursor.getColumnIndexOrThrow(PERMISSIONS))
+                val plan = cursor.getString(cursor.getColumnIndexOrThrow(PLAN))
+                val planDefinition = cursor.getString(cursor.getColumnIndexOrThrow(PLAN_DEFINITION))
+                val permissionsType = object : TypeToken<ArrayList<String>>() {}.type
+                val permissionList: ArrayList<String> = Gson().fromJson(permissions, permissionsType)
+                val data = SpaceList(id, slug, name, description, iconUrl, createdAt, permissionList, plan, Gson().fromJson(planDefinition, SpaceList.PlanDefinition::class.java))
+                dataList.add(data)
+            }
+        }
+
+        db.close()
+        return dataList
     }
 
     fun insertNotificationPriorityData(item: NotificationPriorityList) {
@@ -160,58 +212,6 @@ class DatabaseHelper(context: Context) :
         val db = writableDatabase
         db.update(TABLE_NOTIFICATION_PRIORITY, values, "id = $conditionID", null)
         db.close()
-    }
-
-    fun getAllDataFromApp(): ArrayList<AppDetails> {
-        val dataList = ArrayList<AppDetails>()
-        val db = readableDatabase
-        val selectQuery = "SELECT * FROM $TABLE_APP_DETAILS"
-
-        val cursor = db.rawQuery(selectQuery, null)
-        cursor.use {
-            while (cursor.moveToNext()) {
-                val id = cursor.getInt(cursor.getColumnIndexOrThrow(ID))
-                val siCookie = cursor.getString(cursor.getColumnIndexOrThrow(ID))
-                val svCookie = cursor.getString(cursor.getColumnIndexOrThrow(ID))
-                val isLogin = cursor.getInt(cursor.getColumnIndexOrThrow(ID))
-                val isNPData = cursor.getInt(cursor.getColumnIndexOrThrow(ID))
-
-                val data = AppDetails(id, siCookie, svCookie, isLogin, isNPData)
-                dataList.add(data)
-            }
-        }
-
-        db.close()
-        Log.e("app data", dataList.toString())
-        return dataList
-    }
-
-    fun getAllDataFromSpace(): ArrayList<SpaceList> {
-        val dataList = ArrayList<SpaceList>()
-        val db = readableDatabase
-        val selectQuery = "SELECT * FROM $TABLE_SPACE"
-
-        val cursor = db.rawQuery(selectQuery, null)
-        cursor.use {
-            while (cursor.moveToNext()) {
-                val id = cursor.getString(cursor.getColumnIndexOrThrow(ID))
-                val slug = cursor.getString(cursor.getColumnIndexOrThrow(SLUG))
-                val name = cursor.getString(cursor.getColumnIndexOrThrow(NAME))
-                val description = cursor.getString(cursor.getColumnIndexOrThrow(DESCRIPTION))
-                val iconUrl = cursor.getString(cursor.getColumnIndexOrThrow(ICON_URL))
-                val createdAt = cursor.getString(cursor.getColumnIndexOrThrow(CREATED_AT))
-                val permissions = cursor.getString(cursor.getColumnIndexOrThrow(PERMISSIONS))
-                val plan = cursor.getString(cursor.getColumnIndexOrThrow(PLAN))
-                val planDefinition = cursor.getString(cursor.getColumnIndexOrThrow(PLAN_DEFINITION))
-                val permissionsType = object : TypeToken<ArrayList<String>>() {}.type
-                val permissionList: ArrayList<String> = Gson().fromJson(permissions, permissionsType)
-                val data = SpaceList(id, slug, name, description, iconUrl, createdAt, permissionList, plan, Gson().fromJson(planDefinition, SpaceList.PlanDefinition::class.java))
-                dataList.add(data)
-            }
-        }
-
-        db.close()
-        return dataList
     }
 
     fun getAllDataFromNotificationPriority(): ArrayList<NotificationPriorityList> {

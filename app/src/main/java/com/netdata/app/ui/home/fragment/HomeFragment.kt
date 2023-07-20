@@ -25,6 +25,7 @@ import com.netdata.app.R
 import com.netdata.app.data.pojo.HomeDataList
 import com.netdata.app.data.pojo.enumclass.AlertStatus
 import com.netdata.app.data.pojo.request.*
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.HomeFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.auth.AuthActivity
@@ -55,7 +56,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private var totalFilterCount = 0
 
-    private var homeList = ArrayList<HomeDataList>()
+    private var homeList = ArrayList<HomeNotificationList>()
 
     private var isCurrentNodes = true
 
@@ -172,7 +173,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         toolbar()
         manageClick()
         setAdapter()
-        addData()
+//        addData()
 
         binding.buttonAll.isSelected = isAllButtonSelected
         binding.buttonUnread.isSelected = !isAllButtonSelected
@@ -387,7 +388,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+   /* @SuppressLint("NotifyDataSetChanged")
     private fun addData() {
         homeList.add(
             HomeDataList(
@@ -461,7 +462,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         homeAdapter.list.addAll(homeList)
 
         homeAdapter.notifyDataSetChanged()
-    }
+    }*/
 
     @SuppressLint("NotifyDataSetChanged")
     private fun leftSwipeManage(position: Int) {
@@ -905,11 +906,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         apiViewModel.callFetchHomeNotification()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun observeFetchHomeNotification() {
         apiViewModel.fetchHomeNotificationLiveData.observe(this) {
             hideLoader()
-            if (it.isError || it.responseCode != 200) {
-
+            if (!it.isError || it.responseCode == 200) {
+                Log.e("home data", it.data.toString())
+                homeAdapter.list.addAll(it.data!!)
+                homeAdapter.notifyDataSetChanged()
             }
         }
     }

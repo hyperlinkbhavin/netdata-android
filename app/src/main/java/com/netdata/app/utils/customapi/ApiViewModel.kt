@@ -140,6 +140,7 @@ class ApiViewModel: ViewModel() {
         callApi.enqueue(object: Callback<ArrayList<HomeNotificationList>>{
 
             override fun onResponse(call: Call<ArrayList<HomeNotificationList>>, response: Response<ArrayList<HomeNotificationList>>) {
+                Log.e("home code", response.code().toString())
                 fetchHomeNotificationLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
             }
 
