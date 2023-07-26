@@ -1,19 +1,25 @@
 package com.netdata.app.ui.home.adapter
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.netdata.app.R
+import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.RowItemHomeBinding
-import com.netdata.app.utils.invisible
-import com.netdata.app.utils.visible
+import com.netdata.app.utils.*
 import com.zerobranch.layout.SwipeLayout.SwipeActionsListener
+import java.util.*
+import kotlin.collections.ArrayList
 
 
-class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
+    RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
     var list = ArrayList<HomeNotificationList>()
     var selectedPos = -1
@@ -53,7 +59,7 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) : Rec
                 swipeLayout.setOnActionsListener(object : SwipeActionsListener {
                     override fun onOpen(direction: Int, isContinuous: Boolean) {
 //                        notifyItemChanged(selectedPos)
-                        if(absoluteAdapterPosition != selectedPos){
+                        if (absoluteAdapterPosition != selectedPos) {
                             previousPos = selectedPos
                             selectedPos = absoluteAdapterPosition
                             notifyItemChanged(previousPos)
@@ -85,11 +91,11 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) : Rec
 
         @SuppressLint("SetTextI18n")
         fun bind(item: HomeNotificationList) = with(binding) {
-            if (absoluteAdapterPosition != selectedPos && (swipeLayout.isRightOpen || swipeLayout.isLeftOpen)){
+            if (absoluteAdapterPosition != selectedPos && (swipeLayout.isRightOpen || swipeLayout.isLeftOpen)) {
                 swipeLayout.close(true)
             }
 
-            if(item.isRead){
+            if (item.isRead) {
                 constraintTop.isSelected = true
 //                Glide.with(imageViewMessage.context).load(R.drawable.ic_message_read).into(imageViewMessage)
                 imageViewMessageRead.visible()
@@ -106,11 +112,99 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) : Rec
             }
 
             textViewName.text = item.data!!.alarm!!.name
-            /*textViewDateTime.text = item.dateTime
-            textViewGKE.text = item.gke
-            textViewDiskSpace.text = item.diskSpace
-            textViewWarRoomsList.text = item.warRooms
-            textViewTypeAndComponent.text = item.typeComponent*/
+            textViewDateTime.text = "${
+                ConvertDateTimeFormat.getPrettyTime(
+                    ConvertDateTimeFormat.convertUTCToLocalDate(
+                        item.createdAt!!,
+                        DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW,
+                        "yyyy-MM-dd HH:mm:ss"
+                    ) ,
+                    textViewDateTime.context
+                )
+//                AppUtils.getTimeAgo(item.createdAt!!)
+            } · ${
+                ConvertDateTimeFormat.convertUTCToLocalDate(
+                    item.createdAt!!,
+                    DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW,
+                    "dd/MM/yyyy-HH:mm:ss"
+                )
+            }"
+            textViewGKE.text = item.data!!.node!!.id
+            textViewDiskSpace.text = item.data!!.alarm!!.chart
+//            textViewWarRoomsList.text = item.warRooms
+            textViewTypeAndComponent.text = "Type & Component : ${item.data!!.alarm!!.details}"
+            textViewLabelWarning.text = item.data!!.alarm!!.status!!.replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(
+                    Locale.getDefault()
+                ) else it.toString()
+            }
+            textViewWarningPercent.text = item.data!!.alarm!!.valueWithUnits
+            textViewCriticalPercent.text = item.data!!.alarm!!.valueWithUnits
+
+            if (item.data!!.alarm!!.status.equals("critical", true)) {
+                textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        textViewLabelWarning.context,
+                        R.color.colorRedFF
+                    )
+                )
+                textViewWarningPercent.gone()
+                textViewCriticalPercent.visible()
+            } else if (item.data!!.alarm!!.status.equals("warning", true)) {
+                textViewWarningPercent.visible()
+                textViewCriticalPercent.gone()
+                textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        textViewLabelWarning.context,
+                        R.color.colorYellowF9
+                    )
+                )
+                textViewWarningPercent.setTextColor(
+                    ContextCompat.getColor(
+                        textViewWarningPercent.context,
+                        R.color.colorYellowF9
+                    )
+                )
+                textViewWarningPercent.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        textViewWarningPercent.context,
+                        R.color.colorLightYellowFF
+                    )
+                )
+            } else {
+                textViewWarningPercent.visible()
+                textViewCriticalPercent.gone()
+                textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        textViewLabelWarning.context,
+                        R.color.colorPrimary
+                    )
+                )
+                textViewWarningPercent.setTextColor(
+                    ContextCompat.getColor(
+                        textViewWarningPercent.context,
+                        R.color.colorPrimary
+                    )
+                )
+                textViewWarningPercent.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        textViewWarningPercent.context,
+                        R.color.colorGreen80
+                    )
+                )
+            }
+
+            if (item.priority.equals(Priority.HIGH_PRIORITY.shortName, true)) {
+                Glide.with(imageViewPriority.context).load(R.drawable.ic_high_priority)
+                    .into(imageViewPriority)
+            } else if (item.priority.equals(Priority.MEDIUM_PRIORITY.shortName, true)) {
+                Glide.with(imageViewPriority.context).load(R.drawable.ic_medium_priority)
+                    .into(imageViewPriority)
+            } else {
+                Glide.with(imageViewPriority.context).load(R.drawable.ic_low_priority)
+                    .into(imageViewPriority)
+            }
+
         }
 
     }

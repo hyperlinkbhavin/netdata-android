@@ -4,9 +4,11 @@ import com.google.gson.annotations.SerializedName
 import org.w3c.dom.Node
 
 data class HomeNotificationList(
+    var id: Long? = 0,
     @SerializedName("data") var data: Data? = Data(),
     @SerializedName("createdAt") var createdAt: String? = null,
-    var isRead: Boolean = false
+    var isRead: Boolean = false,
+    var priority: String?= null
 ) {
     data class Data(
         @SerializedName("node") var node: Node? = Node(),
@@ -52,8 +54,8 @@ data class HomeNotificationList(
         )
 
         data class RateLimit(
-            @SerializedName("threshold") var threshold: Int? = null,
-            @SerializedName("window") var window: Int? = null
+            @SerializedName("threshold") var threshold: Long? = null,
+            @SerializedName("window") var window: Long? = null
         )
 
         data class Alarm(
@@ -67,15 +69,15 @@ data class HomeNotificationList(
             @SerializedName("value_with_units") var valueWithUnits: String? = null,
             @SerializedName("details") var details: String? = null,
             @SerializedName("when") var whenData: String? = null,
-            @SerializedName("duration") var duration: Int? = null,
-            @SerializedName("non_clear_duration") var nonClearDuration: Int? = null,
+            @SerializedName("duration") var duration: Long? = null,
+            @SerializedName("non_clear_duration") var nonClearDuration: Long? = null,
             @SerializedName("classification") var classification: String? = null,
             @SerializedName("role") var role: String? = null,
             @SerializedName("raised_by") var raisedBy: String? = null,
             @SerializedName("edit_command") var editCommand: String? = null,
-            @SerializedName("edit_line") var editLine: Int? = null,
-            @SerializedName("warning_count") var warningCount: Int? = null,
-            @SerializedName("critical_count") var criticalCount: Int? = null,
+            @SerializedName("edit_line") var editLine: Long? = null,
+            @SerializedName("warning_count") var warningCount: Long? = null,
+            @SerializedName("critical_count") var criticalCount: Long? = null,
             @SerializedName("conf_file") var confFile: String? = null,
             @SerializedName("calc_expr") var calcExpr: String? = null,
             @SerializedName("log") var log: ArrayList<Log> = arrayListOf()

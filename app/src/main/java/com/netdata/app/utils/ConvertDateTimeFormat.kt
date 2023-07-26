@@ -1,5 +1,7 @@
 package com.netdata.app.utils
 
+import android.content.Context
+import com.netdata.app.R
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -160,7 +162,7 @@ object ConvertDateTimeFormat {
         }
     }*/
 
-    /*fun getPrettyTime(startDate: String, context: Context): String {
+    fun getPrettyTime(startDate: String, context: Context): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
         val currentDate = sdf.format(Date())
 
@@ -188,32 +190,28 @@ object ConvertDateTimeFormat {
 
         when {
             year > 0 -> time =
-                convertDate(startDate, "yyyy-MM-dd HH:mm:ss", "hh:mm a", true)
+                convertDate(startDate, "yyyy-MM-dd HH:mm:ss", "dd/MM/yyyy", true)
 
             month > 0 -> time =
-                convertDate(startDate, "yyyy-MM-dd HH:mm:ss", "hh:mm a", true)
+                convertDate(startDate, "yyyy-MM-dd HH:mm:ss", "dd/MM/yyyy", true)
 
             week > 0 -> time =
-                convertDate(startDate, "yyyy-MM-dd HH:mm:ss", "hh:mm a", true)
+                "$week " + if (week > 1) "week ago" else "week ago"
 
             day > 0 -> time =
-                convertDate(startDate, "yyyy-MM-dd HH:mm:ss", "hh:mm a", true)
+                "$day " + if (day > 1) "days ago" else "day ago"
 
             hour > 0 -> time =
-                "$hour " + if (hour > 1) context.getString(R.string.label_hours) else context.getString(
-                    R.string.label_hour
-                )
+                "$hour " + if (hour > 1) "hours ago" else "hour ago"
             minute > 0 -> time =
-                "$minute " + if (minute > 1) context.getString(R.string.minute_ago) else context.getString(
-                    R.string.minute_ago
-                )
-            second > 0 -> time = context.getString(R.string.label_now)
+                "$minute " + if (minute > 1) "minutes ago" else "minute ago"
+            second > 0 -> time = "$second " + if (second > 1) "seconds ago" else "second ago"
         }
         if (time != null)
             return time
 
         return ""
-    }*/
+    }
 
 
 }

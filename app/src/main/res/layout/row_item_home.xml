@@ -26,7 +26,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/leftViewSwipe"
             android:layout_width="@dimen/dp_135"
-            android:layout_height="@dimen/dp_220"
+            android:layout_height="@dimen/dp_235"
             android:layout_gravity="start"
             android:scaleType="fitXY"
             android:src="@drawable/ic_swipe_mark_as_unread"
@@ -36,7 +36,7 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/rightViewSwipe"
             android:layout_width="@dimen/dp_135"
-            android:layout_height="@dimen/dp_220"
+            android:layout_height="@dimen/dp_235"
             android:layout_gravity="end"
             android:scaleType="fitXY"
             android:src="@drawable/ic_swipe_change_priority"
@@ -45,11 +45,12 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintTop"
-        android:layout_height="@dimen/dp_220"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:paddingVertical="@dimen/dp_16"
         android:paddingStart="@dimen/dp_16"
         android:paddingEnd="@dimen/dp_10"
+        android:minHeight="@dimen/dp_235"
         android:background="@drawable/dw_constraint_home_bg"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -66,9 +67,9 @@
             android:layout_width="wrap_content"
             style="@style/ChangeTintColorBlack35ToGreyCF"
             android:src="@drawable/ic_calendar"
-            android:layout_marginTop="@dimen/dp_16"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toBottomOf="@id/textViewName"/>
+            app:layout_constraintTop_toTopOf="@id/textViewDateTime"
+            app:layout_constraintBottom_toBottomOf="@id/textViewDateTime"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewDateTime"
@@ -76,9 +77,9 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="24 seconds ago · 04/04/2022 - 15:44:23"
             android:layout_marginStart="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_12"
             app:layout_constraintStart_toEndOf="@id/imageViewCalendar"
-            app:layout_constraintTop_toTopOf="@id/imageViewCalendar"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewCalendar"
+            app:layout_constraintTop_toBottomOf="@id/textViewName"
             app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -87,9 +88,9 @@
             android:layout_width="wrap_content"
             style="@style/ChangeTintColorBlack35ToGreyCF"
             android:src="@drawable/ic_notification_priority_gke"
-            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toBottomOf="@id/imageViewCalendar"/>
+            app:layout_constraintTop_toTopOf="@id/textViewGKE"
+            app:layout_constraintBottom_toBottomOf="@id/textViewGKE"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewGKE"
@@ -97,9 +98,9 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
             android:layout_marginStart="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_5"
             app:layout_constraintStart_toEndOf="@id/imageViewGKE"
-            app:layout_constraintTop_toTopOf="@id/imageViewGKE"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewGKE"
+            app:layout_constraintTop_toBottomOf="@id/textViewDateTime"
             app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -108,9 +109,9 @@
             android:layout_width="wrap_content"
             style="@style/ChangeTintColorBlack35ToGreyCF"
             android:src="@drawable/ic_disk_space"
-            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toBottomOf="@id/imageViewGKE"/>
+            app:layout_constraintTop_toTopOf="@id/textViewDiskSpace"
+            app:layout_constraintBottom_toBottomOf="@id/textViewDiskSpace"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewDiskSpace"
@@ -118,9 +119,9 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="disk_space._boot_efi"
             android:layout_marginStart="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_5"
             app:layout_constraintStart_toEndOf="@id/imageViewDiskSpace"
-            app:layout_constraintTop_toTopOf="@id/imageViewDiskSpace"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewDiskSpace"
+            app:layout_constraintTop_toBottomOf="@id/textViewGKE"
             app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
 
         <androidx.appcompat.widget.AppCompatImageView
@@ -129,9 +130,9 @@
             android:layout_width="wrap_content"
             style="@style/ChangeTintColorBlack35ToGreyCF"
             android:src="@drawable/ic_war_rooms_list"
-            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toBottomOf="@id/imageViewDiskSpace"/>
+            app:layout_constraintTop_toTopOf="@id/textViewWarRoomsList"
+            app:layout_constraintBottom_toBottomOf="@id/textViewWarRoomsList"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewWarRoomsList"
@@ -139,11 +140,11 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="War Room 1 • War Room 2 • War Room 3 • War Rom 4 "
             android:layout_marginStart="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_5"
             android:ellipsize="end"
             android:maxLines="1"
             app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsList"
-            app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsList"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsList"
+            app:layout_constraintTop_toBottomOf="@id/textViewDiskSpace"
             app:layout_constraintEnd_toStartOf="@id/textViewWarRoomsListCount"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -166,9 +167,9 @@
             android:layout_width="wrap_content"
             style="@style/ChangeTintColorBlack35ToGreyCF"
             android:src="@drawable/ic_type_component"
-            android:layout_marginTop="@dimen/dp_8"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toBottomOf="@id/imageViewWarRoomsList"/>
+            app:layout_constraintTop_toTopOf="@id/textViewTypeAndComponent"
+            app:layout_constraintBottom_toBottomOf="@id/textViewTypeAndComponent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewTypeAndComponent"
@@ -176,9 +177,9 @@
             style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
             android:text="Type &amp; Component : System • Network"
             android:layout_marginStart="@dimen/dp_6"
+            android:layout_marginTop="@dimen/dp_5"
             app:layout_constraintStart_toEndOf="@id/imageViewTypeAndComponent"
-            app:layout_constraintTop_toTopOf="@id/imageViewTypeAndComponent"
-            app:layout_constraintBottom_toBottomOf="@id/imageViewTypeAndComponent"
+            app:layout_constraintTop_toBottomOf="@id/textViewWarRoomsList"
             app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -198,7 +199,7 @@
             android:paddingHorizontal="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_16"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toBottomOf="@id/imageViewTypeAndComponent"/>
+            app:layout_constraintTop_toBottomOf="@id/textViewTypeAndComponent"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewWarningPercent"

@@ -19,6 +19,8 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
@@ -38,7 +40,11 @@ import com.netdata.app.utils.Constant
 import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.invisible
+import com.netdata.app.utils.localdb.DatabaseHelper
 import com.netdata.app.utils.visible
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -48,6 +54,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     lateinit var flexLayoutManager: FlexboxLayoutManager
+    lateinit var dbHelper: DatabaseHelper
 
     private var warRoomsItemPosition = 0
     private var sortByTimeItemPosition = -1
@@ -170,6 +177,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     override fun bindData() {
+        dbHelper = DatabaseHelper(requireContext())
         toolbar()
         manageClick()
         setAdapter()
@@ -884,6 +892,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         apiViewModel.callLinkDevice(APIRequest(token = session.deviceId))
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun observeLinkDevice() {
         apiViewModel.linkDeviceLiveData.observe(this) {
             hideLoader()
@@ -895,10 +904,29 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
 
             } else {
-                callFetchHomeNotification()
+//                callFetchHomeNotification()
+                /*val gson = Gson()
+                val type = object : TypeToken<List<HomeNotificationList>>() {}.type
+                val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
+                for(item in alarmDataList){
+                    dbHelper.insertFetchNotificationData(item)
+                }*/
+//                Log.e("current", getCurrentUTCTime())
+                Log.e("db data", dbHelper.getAllDataFromFetchNotification().toString())
+
+                homeAdapter.list.addAll(dbHelper.getAllDataFromFetchNotification())
+                homeAdapter.notifyDataSetChanged()
             }
         }
 //            Log.e("link device", it.toString())
+    }
+
+    fun getCurrentUTCTime(): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        val currentTimeInMillis = System.currentTimeMillis()
+        return dateFormat.format(Date(currentTimeInMillis))
     }
 
     private fun callFetchHomeNotification() {
