@@ -50,6 +50,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         ChooseSpaceAdapter(){ view, position, item ->
             when(view.id){
                 R.id.constraintTop -> {
+                    appPreferences.putString(Constant.APP_PREF_SPACE_ID, item.id!!)
                     appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.name!!)
                     navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
                 }

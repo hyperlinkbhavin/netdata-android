@@ -107,4 +107,8 @@
     <string name="btn_sign_in_with_email_address">Sign In With Email Address</string>
     <string name="dummy_lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Dictum vestibulum, sed varius purus nulla posuere turpis fringilla sit. Maecenas sit pretium senectus maecenas dolor mauris dictum purus interdum. Ornare orci, sed amet interdum aenean tincidunt \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Dictum vestibulum, sed varius purus nulla posuere turpis fringilla sit. Maecenas sit pretium senectus maecenas dolor mauris dictum purus interdum. Ornare orci, sed amet interdum aenean tincidunt \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Dictum vestibulum, sed varius purus nulla posuere turpis fringilla sit. Maecenas sit pretium senectus maecenas dolor mauris dictum purus interdum. Ornare orci, sed amet interdum aenean tincidunt \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Dictum vestibulum, sed varius purus nulla posuere turpis fringilla sit. Maecenas sit pretium senectus maecenas dolor mauris dictum purus interdum. Ornare orci, sed amet interdum aenean tincidunt \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Dictum vestibulum, sed varius purus nulla posuere turpis fringilla sit. Maecenas sit pretium senectus maecenas dolor mauris dictum purus interdum. Ornare orci, sed amet interdum aenean tincidunt </string>
     <string name="label_delete">Delete</string>
+    <string name="btn_all">All</string>
+    <string name="btn_unread">Unread</string>
+    <string name="btn_all_0">All (0)</string>
+    <string name="btn_unread_0">Unread (0)</string>
 </resources>

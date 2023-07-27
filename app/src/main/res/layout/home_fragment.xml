@@ -161,7 +161,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonAll"
                 style="@style/AppCompatButtonGreenWithCorner16"
-                android:text="All (3)"
+                android:text="@string/btn_all_0"
                 android:layout_marginTop="@dimen/dp_16"
                 app:layout_constraintStart_toStartOf="@id/guidelineStart"
                 app:layout_constraintTop_toBottomOf="@id/editTextSearchServices"/>
@@ -169,7 +169,7 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/buttonUnread"
                 style="@style/AppCompatButtonGreenWithCorner16"
-                android:text="Unread (3)"
+                android:text="@string/btn_unread_0"
                 android:layout_marginStart="@dimen/dp_8"
                 app:layout_constraintStart_toEndOf="@id/buttonAll"
                 app:layout_constraintTop_toTopOf="@id/buttonAll"

@@ -2,6 +2,8 @@ package com.netdata.app.ui.home.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,12 +39,12 @@ import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.adapter.*
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
-import com.netdata.app.utils.Constant
+import com.netdata.app.utils.*
+import com.netdata.app.utils.Constant.sortByCriticalityItemPosition
+import com.netdata.app.utils.Constant.sortByNotificationPriorityItemPosition
+import com.netdata.app.utils.Constant.sortByTimeItemPosition
 import com.netdata.app.utils.customapi.ApiViewModel
-import com.netdata.app.utils.gone
-import com.netdata.app.utils.invisible
 import com.netdata.app.utils.localdb.DatabaseHelper
-import com.netdata.app.utils.visible
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -57,13 +60,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     lateinit var dbHelper: DatabaseHelper
 
     private var warRoomsItemPosition = 0
-    private var sortByTimeItemPosition = -1
-    private var sortByNotificationPriorityItemPosition = -1
-    private var sortByCriticalityItemPosition = -1
 
     private var totalFilterCount = 0
 
     private var homeList = ArrayList<HomeNotificationList>()
+    private var tempHomeList = ArrayList<HomeNotificationList>()
 
     private var isCurrentNodes = true
 
@@ -82,7 +83,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
 
                 R.id.leftViewSwipe -> {
-                    leftSwipeManage(position)
+                    leftSwipeManage(position, item)
                 }
 
                 R.id.rightViewSwipe -> {
@@ -187,6 +188,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         binding.buttonUnread.isSelected = !isAllButtonSelected
 
         drawerFilter()
+        editTextChanged()
     }
 
     override fun onResume() {
@@ -215,6 +217,47 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
+    private fun editTextChanged() {
+        binding.editTextSearchServices.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                filter(s.toString())
+//                callSearchCity(s.toString())
+            }
+
+        })
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun filter(text: String?) {
+        val temp = ArrayList<HomeNotificationList>()
+        for (d in homeList) {
+            //or use .equal(text) with you want equal match
+            //use .toLowerCase() for better matches
+            if (d.data!!.alarm!!.name!!.contains(text!!, true)) {
+                temp.add(d)
+            }
+        }
+        //update recyclerview
+        val unreadItem = temp.filter { !it.isRead }
+
+        binding.buttonAll.text = "${getString(R.string.btn_all)} (${temp.size})"
+        binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
+        if(!isAllButtonSelected){
+            homeAdapter.updateList(temp.filter { !it.isRead } as ArrayList<HomeNotificationList>)
+        } else {
+            homeAdapter.updateList(temp)
+        }
+
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun manageClick() = with(binding) {
         buttonAll.setOnClickListener {
@@ -223,7 +266,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.buttonUnread.isSelected = !isAllButtonSelected
 
             homeAdapter.list.clear()
-            homeAdapter.list.addAll(homeList)
+            homeAdapter.list.addAll(getAllData())
             homeAdapter.notifyDataSetChanged()
         }
 
@@ -232,9 +275,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.buttonAll.isSelected = isAllButtonSelected
             binding.buttonUnread.isSelected = !isAllButtonSelected
 
-            val data = homeList.filter { !it.isRead }
             homeAdapter.list.clear()
-            homeAdapter.list.addAll(data)
+            homeAdapter.list.addAll(getUnreadData())
 
             homeAdapter.notifyDataSetChanged()
         }
@@ -365,7 +407,49 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
-    private fun addChip(text: String){
+    private fun getAllData(): ArrayList<HomeNotificationList> {
+        val data = ArrayList<HomeNotificationList>()
+        if (binding.editTextSearchServices.text!!.trim().isNotEmpty()) {
+            for (d in homeList) {
+                //or use .equal(text) with you want equal match
+                //use .toLowerCase() for better matches
+                if (d.data!!.alarm!!.name!!.contains(
+                        binding.editTextSearchServices.text!!.trim(),
+                        true
+                    )
+                ) {
+                    data.add(d)
+                }
+            }
+        } else {
+            data.addAll(homeList)
+        }
+
+        return data
+    }
+
+    private fun getUnreadData() : ArrayList<HomeNotificationList>{
+        val data = ArrayList<HomeNotificationList>()
+        if (binding.editTextSearchServices.text!!.trim().isNotEmpty()) {
+            for (d in homeList) {
+                //or use .equal(text) with you want equal match
+                //use .toLowerCase() for better matches
+                if (d.data!!.alarm!!.name!!.contains(
+                        binding.editTextSearchServices.text!!.trim(),
+                        true
+                    )
+                ) {
+                    data.add(d)
+                }
+            }
+        } else {
+            data.addAll(homeList)
+        }
+
+        return data.filter { !it.isRead } as ArrayList<HomeNotificationList>
+    }
+
+    private fun addChip(text: String) {
         val chip = Chip(binding.chipGroupFilterSelected.context)
         chip.text = text
         chip.isCloseIconVisible = true
@@ -388,7 +472,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun setAdapter() = with(binding) {
-        flexLayoutManager  = FlexboxLayoutManager(context)
+        flexLayoutManager = FlexboxLayoutManager(context)
         flexLayoutManager.flexDirection = FlexDirection.ROW
 
         recyclerViewHome.adapter = homeAdapter
@@ -396,91 +480,95 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
     }
 
-   /* @SuppressLint("NotifyDataSetChanged")
-    private fun addData() {
-        homeList.add(
-            HomeDataList(
-                "inbound packets dropped ratio",
-                "24 seconds ago · 04/04/2022 - 15:44:23",
-                "gke-staging-streamnative-202103050938-3a4480ce",
-                "disk_space._boot_efi",
-                "War Room 1•War Room 2•War Room 3•War Room 4",
-                "Type & Component : System • Network",
-                true
-            )
-        )
+    /* @SuppressLint("NotifyDataSetChanged")
+     private fun addData() {
+         homeList.add(
+             HomeDataList(
+                 "inbound packets dropped ratio",
+                 "24 seconds ago · 04/04/2022 - 15:44:23",
+                 "gke-staging-streamnative-202103050938-3a4480ce",
+                 "disk_space._boot_efi",
+                 "War Room 1•War Room 2•War Room 3•War Room 4",
+                 "Type & Component : System • Network",
+                 true
+             )
+         )
 
-        homeList.add(
-            HomeDataList(
-                "inbound packets dropped ratio",
-                "24 seconds ago · 04/04/2022 - 15:44:23",
-                "gke-staging-streamnative-202103050938-3a4480ce",
-                "disk_space._boot_efi",
-                "War Room 1•War Room 2•War Room 3•War Room 4",
-                "Type & Component : System • Network",
-            )
-        )
+         homeList.add(
+             HomeDataList(
+                 "inbound packets dropped ratio",
+                 "24 seconds ago · 04/04/2022 - 15:44:23",
+                 "gke-staging-streamnative-202103050938-3a4480ce",
+                 "disk_space._boot_efi",
+                 "War Room 1•War Room 2•War Room 3•War Room 4",
+                 "Type & Component : System • Network",
+             )
+         )
 
-        homeList.add(
-            HomeDataList(
-                "inbound packets dropped ratio",
-                "24 seconds ago · 04/04/2022 - 15:44:23",
-                "gke-staging-streamnative-202103050938-3a4480ce",
-                "disk_space._boot_efi",
-                "War Room 1•War Room 2•War Room 3•War Room 4",
-                "Type & Component : System • Network",
-                true
-            )
-        )
+         homeList.add(
+             HomeDataList(
+                 "inbound packets dropped ratio",
+                 "24 seconds ago · 04/04/2022 - 15:44:23",
+                 "gke-staging-streamnative-202103050938-3a4480ce",
+                 "disk_space._boot_efi",
+                 "War Room 1•War Room 2•War Room 3•War Room 4",
+                 "Type & Component : System • Network",
+                 true
+             )
+         )
 
-        homeList.add(
-            HomeDataList(
-                "inbound packets dropped ratio",
-                "24 seconds ago · 04/04/2022 - 15:44:23",
-                "gke-staging-streamnative-202103050938-3a4480ce",
-                "disk_space._boot_efi",
-                "War Room 1•War Room 2•War Room 3•War Room 4",
-                "Type & Component : System • Network",
-            )
-        )
+         homeList.add(
+             HomeDataList(
+                 "inbound packets dropped ratio",
+                 "24 seconds ago · 04/04/2022 - 15:44:23",
+                 "gke-staging-streamnative-202103050938-3a4480ce",
+                 "disk_space._boot_efi",
+                 "War Room 1•War Room 2•War Room 3•War Room 4",
+                 "Type & Component : System • Network",
+             )
+         )
 
-        homeList.add(
-            HomeDataList(
-                "inbound packets dropped ratio",
-                "24 seconds ago · 04/04/2022 - 15:44:23",
-                "gke-staging-streamnative-202103050938-3a4480ce",
-                "disk_space._boot_efi",
-                "War Room 1•War Room 2•War Room 3•War Room 4",
-                "Type & Component : System • Network",
-                true
-            )
-        )
+         homeList.add(
+             HomeDataList(
+                 "inbound packets dropped ratio",
+                 "24 seconds ago · 04/04/2022 - 15:44:23",
+                 "gke-staging-streamnative-202103050938-3a4480ce",
+                 "disk_space._boot_efi",
+                 "War Room 1•War Room 2•War Room 3•War Room 4",
+                 "Type & Component : System • Network",
+                 true
+             )
+         )
 
-        homeList.add(
-            HomeDataList(
-                "inbound packets dropped ratio",
-                "24 seconds ago · 04/04/2022 - 15:44:23",
-                "gke-staging-streamnative-202103050938-3a4480ce",
-                "disk_space._boot_efi",
-                "War Room 1•War Room 2•War Room 3•War Room 4",
-                "Type & Component : System • Network",
-            )
-        )
+         homeList.add(
+             HomeDataList(
+                 "inbound packets dropped ratio",
+                 "24 seconds ago · 04/04/2022 - 15:44:23",
+                 "gke-staging-streamnative-202103050938-3a4480ce",
+                 "disk_space._boot_efi",
+                 "War Room 1•War Room 2•War Room 3•War Room 4",
+                 "Type & Component : System • Network",
+             )
+         )
 
-        homeAdapter.list.addAll(homeList)
+         homeAdapter.list.addAll(homeList)
 
-        homeAdapter.notifyDataSetChanged()
-    }*/
+         homeAdapter.notifyDataSetChanged()
+     }*/
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun leftSwipeManage(position: Int) {
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
+    private fun leftSwipeManage(position: Int, item: HomeNotificationList) {
         if (isAllButtonSelected) {
-            homeAdapter.list[position].isRead = !homeAdapter.list[position].isRead
+            dbHelper.updateFetchNotificationData(item)
+//            homeAdapter.list[position].isRead = !homeAdapter.list[position].isRead
             homeAdapter.notifyDataSetChanged()
         } else {
+            dbHelper.updateFetchNotificationData(item)
             homeAdapter.list.removeAt(position)
             homeAdapter.notifyDataSetChanged()
         }
+        binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
+        binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${getUnreadData().size})"
     }
 
     private fun bottomSheetPriority() {
@@ -726,35 +814,58 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val view = layoutInflater.inflate(R.layout.bottom_sheet_sort_by, null)
 
-        val sortByTimeAdapter by lazy {
-            SortByAdapter() { view, position, item ->
-                when (view.id) {
-                    R.id.constraintMain -> {
-                        sortByTimeItemPosition = position
-                    }
-                }
-            }
-        }
+        lateinit var sortByTimeAdapter: SortByAdapter
+        lateinit var sortByNotificationPriorityAdapter: SortByAdapter
+        lateinit var sortByCriticalityAdapter: SortByAdapter
 
-        val sortByNotificationPriorityAdapter by lazy {
+        sortByTimeAdapter =
             SortByAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        sortByNotificationPriorityItemPosition = position
+                        sortByTimeItemPosition = getItemPosition(item)
+                        sortByNotificationPriorityItemPosition = -1
+                        sortByCriticalityItemPosition = -1
+                        sortByNotificationPriorityAdapter.selectedItemPosition = -1
+                        sortByCriticalityAdapter.selectedItemPosition = -1
+                        Log.e("item 1", sortByTimeItemPosition.toString())
+                        sortByNotificationPriorityAdapter.notifyDataSetChanged()
+                        sortByCriticalityAdapter.notifyDataSetChanged()
                     }
                 }
             }
-        }
 
-        val sortByCriticalityAdapter by lazy {
+
+        sortByNotificationPriorityAdapter =
             SortByAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        sortByCriticalityItemPosition = position
+                        sortByNotificationPriorityItemPosition = getItemPosition(item)
+                        sortByTimeItemPosition = -1
+                        sortByCriticalityItemPosition = -1
+                        sortByTimeAdapter.selectedItemPosition = -1
+                        sortByCriticalityAdapter.selectedItemPosition = -1
+                        Log.e("item 2", sortByNotificationPriorityItemPosition.toString())
+                        sortByTimeAdapter.notifyDataSetChanged()
+                        sortByCriticalityAdapter.notifyDataSetChanged()
                     }
                 }
             }
-        }
+
+        sortByCriticalityAdapter =
+            SortByAdapter() { view, position, item ->
+                when (view.id) {
+                    R.id.constraintMain -> {
+                        sortByCriticalityItemPosition = getItemPosition(item)
+                        sortByTimeItemPosition = -1
+                        sortByNotificationPriorityItemPosition = -1
+                        sortByTimeAdapter.selectedItemPosition = -1
+                        sortByNotificationPriorityAdapter.selectedItemPosition = -1
+                        Log.e("item 3", sortByCriticalityItemPosition.toString())
+                        sortByTimeAdapter.notifyDataSetChanged()
+                        sortByNotificationPriorityAdapter.notifyDataSetChanged()
+                    }
+                }
+            }
 
         val recyclerViewTime = view.findViewById<RecyclerView>(R.id.recyclerViewTime)
         val recyclerViewNotificationPriority =
@@ -765,26 +876,33 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewNotificationPriority.adapter = sortByNotificationPriorityAdapter
         recyclerViewCriticality.adapter = sortByCriticalityAdapter
 
-        sortByTimeAdapter.list.add(WarRoomsList("New on top"))
+        Constant.addData()
+        /*sortByTimeAdapter.list.clear()
+        sortByNotificationPriorityAdapter.list.clear()
+        sortByTimeAdapter.list.clear()*/
+        sortByTimeAdapter.list.addAll(Constant.sortByTimeList)
+        sortByNotificationPriorityAdapter.list.addAll(Constant.sortByNotificationPriorityList)
+        sortByCriticalityAdapter.list.addAll(Constant.sortByCriticalityList)
+        /*sortByTimeAdapter.list.add(WarRoomsList("New on top"))
         sortByTimeAdapter.list.add(WarRoomsList("Old on top"))
 
         sortByNotificationPriorityAdapter.list.add(WarRoomsList("High to Low"))
         sortByNotificationPriorityAdapter.list.add(WarRoomsList("Low to High"))
 
         sortByCriticalityAdapter.list.add(WarRoomsList("Critical to Clear"))
-        sortByCriticalityAdapter.list.add(WarRoomsList("Clear to Critical"))
+        sortByCriticalityAdapter.list.add(WarRoomsList("Clear to Critical"))*/
 
         if (sortByTimeItemPosition != -1) {
-            sortByTimeAdapter.selectionPosition = sortByTimeItemPosition
+            sortByTimeAdapter.selectedItemPosition = sortByTimeItemPosition
         }
 
         if (sortByNotificationPriorityItemPosition != -1) {
-            sortByNotificationPriorityAdapter.selectionPosition =
+            sortByNotificationPriorityAdapter.selectedItemPosition =
                 sortByNotificationPriorityItemPosition
         }
 
         if (sortByCriticalityItemPosition != -1) {
-            sortByCriticalityAdapter.selectionPosition = sortByCriticalityItemPosition
+            sortByCriticalityAdapter.selectedItemPosition = sortByCriticalityItemPosition
         }
 
         sortByTimeAdapter.notifyDataSetChanged()
@@ -792,6 +910,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         sortByCriticalityAdapter.notifyDataSetChanged()
 
         textViewLabelClose.setOnClickListener {
+            callFetchHomeNotification()
+            dialog.dismiss()
+        }
+
+        dialog.setOnDismissListener {
+            callFetchHomeNotification()
             dialog.dismiss()
         }
 
@@ -801,12 +925,22 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         dialog.setOnKeyListener { dialog, keyCode, event ->
             if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                callFetchHomeNotification()
                 dialog.dismiss()
             }
             true
         }
 
         dialog.show()
+    }
+
+    private fun getItemPosition(list: ArrayList<WarRoomsList>): Int {
+        for (i in list.indices) {
+            if (list[i].isSelected) {
+                return i
+            }
+        }
+        return -1
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -904,18 +1038,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
 
             } else {
-//                callFetchHomeNotification()
-                /*val gson = Gson()
-                val type = object : TypeToken<List<HomeNotificationList>>() {}.type
-                val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
-                for(item in alarmDataList){
-                    dbHelper.insertFetchNotificationData(item)
-                }*/
-//                Log.e("current", getCurrentUTCTime())
-                Log.e("db data", dbHelper.getAllDataFromFetchNotification().toString())
-
-                homeAdapter.list.addAll(dbHelper.getAllDataFromFetchNotification())
-                homeAdapter.notifyDataSetChanged()
+                callFetchHomeNotification()
             }
         }
 //            Log.e("link device", it.toString())
@@ -929,9 +1052,41 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         return dateFormat.format(Date(currentTimeInMillis))
     }
 
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun callFetchHomeNotification() {
-        showLoader()
-        apiViewModel.callFetchHomeNotification()
+//        showLoader()
+//        apiViewModel.callFetchHomeNotification()
+
+        /*val gson = Gson()
+                val type = object : TypeToken<List<HomeNotificationList>>() {}.type
+                val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
+                var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
+                for(item in alarmDataList){
+                    lastId++
+                    Log.e("id",lastId.toString())
+                    dbHelper.insertFetchNotificationData(lastId, item)
+                }*/
+//                Log.e("current", getCurrentUTCTime())
+        Log.e("db data", dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)).toString())
+
+        homeList.clear()
+        homeAdapter.list.clear()
+        Log.e("posi", "$sortByTimeItemPosition $sortByNotificationPriorityItemPosition $sortByCriticalityItemPosition")
+
+        if(sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1){
+            homeList.addAll(dbHelper.getSortByDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+            homeAdapter.list.addAll(dbHelper.getSortByDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+        } else {
+            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+            homeAdapter.list.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+        }
+
+        val unreadItem = homeList.filter { !it.isRead }
+
+        binding.buttonAll.text = "${getString(R.string.btn_all)} (${homeList.size})"
+        binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
+
+        homeAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
