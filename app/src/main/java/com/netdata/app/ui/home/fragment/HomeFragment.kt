@@ -1,6 +1,7 @@
 package com.netdata.app.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,10 +15,12 @@ import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -29,6 +32,7 @@ import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
 import com.netdata.app.data.pojo.HomeDataList
 import com.netdata.app.data.pojo.enumclass.AlertStatus
+import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.*
 import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.HomeFragmentBinding
@@ -40,6 +44,7 @@ import com.netdata.app.ui.home.adapter.*
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.*
+import com.netdata.app.utils.Constant.isFilterBy
 import com.netdata.app.utils.Constant.sortByCriticalityItemPosition
 import com.netdata.app.utils.Constant.sortByNotificationPriorityItemPosition
 import com.netdata.app.utils.Constant.sortByTimeItemPosition
@@ -79,7 +84,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
 
                 R.id.imageViewPriority -> {
-                    bottomSheetPriority()
+                    bottomSheetPriority(item)
                 }
 
                 R.id.leftViewSwipe -> {
@@ -87,7 +92,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
 
                 R.id.rightViewSwipe -> {
-                    bottomSheetPriority()
+                    bottomSheetPriority(item)
                 }
 
                 R.id.textViewWarRoomsListCount -> {
@@ -330,6 +335,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         buttonApplyFilter.setOnClickListener {
             binding.apply {
                 if (totalFilterCount != 0) {
+                    isFilterBy = true
                     includeToolbar.textViewFilterCount.visible()
                     includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
                     constraintFilterSelected.visible()
@@ -340,6 +346,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     filterSelectedAdapter.list.add(FilterSelectedList("Priority:High"))
                     filterSelectedAdapter.notifyDataSetChanged()
 
+                    callFetchHomeNotification()
+
                     /*addChip("Priority: High")
                     addChip("Priority: Medium")
                     addChip("Priority: Low")
@@ -349,8 +357,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
 
                 } else {
+                    isFilterBy = false
                     includeToolbar.textViewFilterCount.gone()
                     constraintFilterSelected.gone()
+                    callFetchHomeNotification()
                 }
                 drawerLayout.closeDrawer(GravityCompat.END)
             }
@@ -571,10 +581,22 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${getUnreadData().size})"
     }
 
-    private fun bottomSheetPriority() {
+    @SuppressLint("SetTextI18n")
+    private fun bottomSheetPriority(item: HomeNotificationList) {
         val dialog = BottomSheetDialog(requireContext())
 
         val view = layoutInflater.inflate(R.layout.bottom_sheet_notification_priority, null)
+
+        var priority = item.priority
+
+        val imageViewNotificationWarning = view.findViewById<AppCompatImageView>(R.id.imageViewNotificationWarning)
+        val textViewSpaceWarningPercent = view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningPercent)
+        val textViewSpaceWarningName = view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningName)
+        val textViewNodeId = view.findViewById<AppCompatTextView>(R.id.textViewNodeId)
+        val textViewDiskSpace = view.findViewById<AppCompatTextView>(R.id.textViewDiskSpace)
+        val textViewWarRoomsList = view.findViewById<AppCompatTextView>(R.id.textViewWarRoomsList)
+        val imageViewPriority = view.findViewById<AppCompatImageView>(R.id.imageViewPriority)
+        val textViewPriority = view.findViewById<AppCompatTextView>(R.id.textViewPriority)
 
         val textViewLabelEditPrioritySettings =
             view.findViewById<AppCompatTextView>(R.id.textViewLabelEditPrioritySettings)
@@ -595,13 +617,59 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         val seekBar = view.findViewById<RangeSeekBar>(R.id.seekbar)
 
-        radioButtonCurrentNodes.isChecked = isCurrentNodes
-        radioButtonAllNodes.isChecked = !isCurrentNodes
+        /*radioButtonCurrentNodes.isChecked = isCurrentNodes
+        radioButtonAllNodes.isChecked = !isCurrentNodes*/
+
+        if(item.data!!.alarm!!.status.equals(AlertStatus.CRITICAL.type, true)){
+            imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorRedFF))
+        } else if(item.data!!.alarm!!.status.equals(AlertStatus.WARNING.type, true)){
+            imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorYellowF9))
+        } else {
+            imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+        }
+
+        if(item.priority.equals(Priority.HIGH_PRIORITY.shortName, true)){
+            imageViewPriority.setImageResource(R.drawable.ic_high_priority)
+            imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
+            seekBar.setProgress(75f)
+        } else if(item.priority.equals(Priority.MEDIUM_PRIORITY.shortName, true)){
+            imageViewPriority.setImageResource(R.drawable.ic_medium_priority)
+            imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
+            seekBar.setProgress(45f)
+        } else {
+            imageViewPriority.setImageResource(R.drawable.ic_low_priority)
+            imageViewBigPriority.setImageResource(R.drawable.ic_low_priority)
+            seekBar.setProgress(15f)
+        }
+
+        textViewSpaceWarningPercent.text = item.data!!.alarm!!.valueWithUnits
+        textViewSpaceWarningName.text = item.data!!.alarm!!.name
+        textViewNodeId.text = item.data!!.node!!.id
+        textViewDiskSpace.text = item.data!!.alarm!!.chart
+        textViewWarRoomsList.text = "War Room 1 • War Room 2 • War Room 3 • War Rom 4"
+        textViewPriority.text = "${item.priority} ${getString(R.string.label_priority)}"
+        textViewPriorityName.text = "${item.priority} ${getString(R.string.label_priority)}"
 
         buttonChangeNotificationPriority.setOnClickListener {
+            /*if(buttonChangeNotificationPriority.text == getString(R.string.btn_done)){
+                item.priority = priority
+                dbHelper.updateFetchNotificationDataByNode(item, isCurrentNodes)
+                callFetchHomeNotification()
+                dialog.dismiss()
+            } else {
+                //            buttonChangeNotificationPriority.gone()
+                constraintNodes.visible()
+                seekBar.visible()
+                buttonChangeNotificationPriority.text = getString(R.string.btn_done)
+            }*/
+
             buttonChangeNotificationPriority.gone()
             constraintNodes.visible()
             seekBar.visible()
+//            buttonChangeNotificationPriority.text = getString(R.string.btn_done)
         }
 
         textViewLabelEditPrioritySettings.setOnClickListener {
@@ -614,6 +682,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             radioButtonCurrentNodes.isChecked = true
             radioButtonAllNodes.isChecked = false
             isCurrentNodes = true
+            item.priority = priority
+            dbHelper.updateFetchNotificationDataByNode(item, true)
+            callFetchHomeNotification()
             dialog.dismiss()
         }
 
@@ -621,6 +692,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             radioButtonCurrentNodes.isChecked = false
             radioButtonAllNodes.isChecked = true
             isCurrentNodes = false
+            item.priority = priority
+            dbHelper.updateFetchNotificationDataByNode(item, false)
+            callFetchHomeNotification()
             dialog.dismiss()
         }
 
@@ -634,7 +708,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             radioButtonAllNodes.isChecked = true
         }
 
-        seekBar.setProgress(90f)
+//        seekBar.setProgress(90f)
         seekBar.setOnRangeChangedListener(object : OnRangeChangedListener {
             override fun onRangeChanged(
                 view: RangeSeekBar?,
@@ -644,16 +718,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             ) {
                 when (leftValue.toInt()) {
                     in 0..30 -> {
+                        priority = Priority.LOW_PRIORITY.shortName
                         imageViewBigPriority.setImageResource(R.drawable.ic_low_priority)
-                        textViewPriorityName.text = getString(R.string.label_low_priority)
+                        textViewPriorityName.text = Priority.LOW_PRIORITY.fullName
                     }
                     in 31..60 -> {
+                        priority = Priority.MEDIUM_PRIORITY.shortName
                         imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
-                        textViewPriorityName.text = getString(R.string.label_medium_priority)
+                        textViewPriorityName.text = Priority.MEDIUM_PRIORITY.fullName
                     }
                     else -> {
+                        priority = Priority.HIGH_PRIORITY.shortName
                         imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
-                        textViewPriorityName.text = getString(R.string.label_high_priority)
+                        textViewPriorityName.text = Priority.HIGH_PRIORITY.fullName
                     }
                 }
             }
@@ -1067,18 +1144,21 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     dbHelper.insertFetchNotificationData(lastId, item)
                 }*/
 //                Log.e("current", getCurrentUTCTime())
-        Log.e("db data", dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)).toString())
+        Log.e("db data", dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), statusFilters = listOf(), priorityFilters = listOf()).toString())
 
         homeList.clear()
         homeAdapter.list.clear()
         Log.e("posi", "$sortByTimeItemPosition $sortByNotificationPriorityItemPosition $sortByCriticalityItemPosition")
 
         if(sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1){
-            homeList.addAll(dbHelper.getSortByDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
-            homeAdapter.list.addAll(dbHelper.getSortByDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), isSortBy = true, statusFilters = listOf(), priorityFilters = listOf()))
+            homeAdapter.list.addAll(homeList)
+        } else if(isFilterBy){
+            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), isFilterBy = true, statusFilters = listOf("critical"), priorityFilters = listOf("high")))
+            homeAdapter.list.addAll(homeList)
         } else {
-            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
-            homeAdapter.list.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), statusFilters = listOf(), priorityFilters = listOf()))
+            homeAdapter.list.addAll(homeList)
         }
 
         val unreadItem = homeList.filter { !it.isRead }

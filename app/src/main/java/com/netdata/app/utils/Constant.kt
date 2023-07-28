@@ -7,6 +7,7 @@ object Constant {
     var COOKIE_SV = ""
 
     var isSortBy = false
+    var isFilterBy = false
     var sortByTimeItemPosition = -1
     var sortByNotificationPriorityItemPosition = -1
     var sortByCriticalityItemPosition = -1

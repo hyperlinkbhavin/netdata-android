@@ -59,113 +59,115 @@
                 android:id="@+id/imageViewNotificationWarning"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_space_warning"
+                android:background="@drawable/ic_space_warning"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toTopOf="@id/constraintTop" />
+                app:layout_constraintTop_toTopOf="@id/textViewSpaceWarningName"
+                app:layout_constraintBottom_toBottomOf="@id/textViewSpaceWarningName"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewSpaceWarningPercent"
                 style="@style/AppTheme.AppTextView.BoldBlack14"
                 android:layout_marginStart="@dimen/dp_8"
-                android:text="54.3% •"
-                app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationWarning"
-                app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningText"
+                tools:text="54.3% •"
+                app:layout_constraintBottom_toBottomOf="@id/textViewSpaceWarningName"
+                app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningName"
                 app:layout_constraintStart_toEndOf="@id/imageViewNotificationWarning"
-                app:layout_constraintTop_toTopOf="@id/imageViewNotificationWarning" />
+                app:layout_constraintTop_toTopOf="@id/textViewSpaceWarningName" />
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textViewSpaceWarningText"
+                android:id="@+id/textViewSpaceWarningName"
                 style="@style/AppTheme.AppTextView.RegularBlack14"
                 android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_4"
-                android:text="@string/label_inbound_packets_dropped_ratio"
-                app:layout_constraintBottom_toBottomOf="@id/imageViewNotificationWarning"
+                tools:text="@string/label_inbound_packets_dropped_ratio"
                 app:layout_constraintEnd_toEndOf="@id/constraintTop"
                 app:layout_constraintStart_toEndOf="@id/textViewSpaceWarningPercent"
-                app:layout_constraintTop_toTopOf="@id/imageViewNotificationWarning" />
+                app:layout_constraintTop_toTopOf="@id/constraintTop"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewGKE"
                 style="@style/ChangeTintColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_16"
                 android:src="@drawable/ic_notification_priority_gke"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewNotificationWarning" />
+                app:layout_constraintTop_toTopOf="@id/textViewNodeId"
+                app:layout_constraintBottom_toBottomOf="@id/textViewNodeId"/>
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textViewGKE"
+                android:id="@+id/textViewNodeId"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
                 android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                android:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
-                app:layout_constraintBottom_toBottomOf="@id/imageViewGKE"
+                android:layout_marginTop="@dimen/dp_4"
+                tools:text="gke-staging-streamnative-202103050938-3a4480ce-n2g1"
                 app:layout_constraintEnd_toEndOf="@id/constraintTop"
                 app:layout_constraintStart_toEndOf="@id/imageViewGKE"
-                app:layout_constraintTop_toTopOf="@id/imageViewGKE" />
+                app:layout_constraintTop_toBottomOf="@id/textViewSpaceWarningName"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewDiskSpace"
                 style="@style/ChangeTintColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
                 android:src="@drawable/ic_disk_space"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewGKE" />
+                app:layout_constraintTop_toTopOf="@id/textViewDiskSpace"
+                app:layout_constraintBottom_toBottomOf="@id/textViewDiskSpace"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewDiskSpace"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
                 android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                android:text="disk_space._boot_efi"
-                app:layout_constraintBottom_toBottomOf="@id/imageViewDiskSpace"
+                android:layout_marginTop="@dimen/dp_4"
+                tools:text="disk_space._boot_efi"
                 app:layout_constraintEnd_toEndOf="@id/constraintTop"
                 app:layout_constraintStart_toEndOf="@id/imageViewDiskSpace"
-                app:layout_constraintTop_toTopOf="@id/imageViewDiskSpace" />
+                app:layout_constraintTop_toBottomOf="@id/textViewNodeId" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewWarRoomsList"
                 style="@style/ChangeTintColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
                 android:src="@drawable/ic_war_rooms_list"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewDiskSpace" />
+                app:layout_constraintTop_toTopOf="@id/textViewWarRoomsList"
+                app:layout_constraintBottom_toBottomOf="@id/textViewWarRoomsList"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewWarRoomsList"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
                 android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                android:text="War Room 1 • War Room 2 • War Room 3 • War Rom 4 "
-                app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsList"
+                tools:text="War Room 1 • War Room 2 • War Room 3 • War Rom 4 "
+                android:layout_marginTop="@dimen/dp_4"
+                app:layout_constraintTop_toBottomOf="@id/textViewDiskSpace"
                 app:layout_constraintEnd_toEndOf="@id/constraintTop"
                 app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsList"
-                app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsList" />
+                 />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewPriority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_8"
                 android:src="@drawable/ic_high_priority"
                 app:layout_constraintStart_toStartOf="@id/constraintTop"
-                app:layout_constraintTop_toBottomOf="@id/imageViewWarRoomsList" />
+                app:layout_constraintTop_toTopOf="@id/textViewPriority"
+                app:layout_constraintBottom_toBottomOf="@id/textViewPriority"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewPriority"
                 style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
                 android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_6"
-                android:text="High  Priority"
-                app:layout_constraintBottom_toBottomOf="@id/imageViewPriority"
+                tools:text="High  Priority"
+                android:layout_marginTop="@dimen/dp_4"
+                app:layout_constraintTop_toBottomOf="@id/textViewWarRoomsList"
                 app:layout_constraintEnd_toEndOf="@id/constraintTop"
                 app:layout_constraintStart_toEndOf="@id/imageViewPriority"
-                app:layout_constraintTop_toTopOf="@id/imageViewPriority" />
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -200,7 +202,7 @@
             android:id="@+id/textViewPriorityName"
             style="@style/AppTheme.AppTextView.SemiBoldBlack16"
             android:layout_marginTop="@dimen/dp_20"
-            android:text="High Priority"
+            tools:text="High Priority"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintTop_toBottomOf="@id/imageViewBigPriority" />
@@ -370,23 +372,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/buttonChangeNotificationPriority"
-            android:layout_width="@dimen/dp_0"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_50"
-            android:background="@drawable/dw_corner_twelve_bg"
-            android:backgroundTint="@color/colorPrimary"
-            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
-            android:minHeight="@dimen/dp_0"
-            android:paddingVertical="@dimen/dp_16"
-            android:text="@string/btn_change_notification_priority"
-            android:textColor="@color/colorWhite"
-            android:textSize="@dimen/sp_18"
-            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-            app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintTop_toBottomOf="@id/constraintPriority" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintNodes"
             android:layout_width="@dimen/dp_0"
@@ -427,7 +412,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dp_10"
                     android:button="@drawable/dw_radio_button_selector"
-                    android:checked="true"
                     android:padding="@dimen/dp_6"
                     app:layout_constraintBottom_toBottomOf="@id/textViewLabelCurrentNodes"
                     app:layout_constraintEnd_toEndOf="@id/constraintCurrentNodes"
@@ -466,7 +450,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/dp_10"
                     android:button="@drawable/dw_radio_button_selector"
-                    android:checked="false"
                     android:padding="@dimen/dp_6"
                     app:layout_constraintBottom_toBottomOf="@id/textViewLabelAllNodes"
                     app:layout_constraintEnd_toEndOf="@id/constraintAllNodes"
@@ -484,6 +467,23 @@
                 app:layout_constraintTop_toBottomOf="@id/constraintAllNodes" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonChangeNotificationPriority"
+            android:layout_width="@dimen/dp_0"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_50"
+            android:background="@drawable/dw_corner_twelve_bg"
+            android:backgroundTint="@color/colorPrimary"
+            android:fontFamily="@font/font_ibm_plex_sans_semi_bold"
+            android:minHeight="@dimen/dp_0"
+            android:paddingVertical="@dimen/dp_16"
+            android:text="@string/btn_change_notification_priority"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/sp_18"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintTop_toBottomOf="@id/constraintNodes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>
