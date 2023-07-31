@@ -5,14 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.netdata.app.data.pojo.request.AlertInfoList
-import com.netdata.app.data.pojo.request.FilterList
-import com.netdata.app.databinding.RowItemAlertInfoBinding
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.RowItemFilterCheckboxBinding
-import com.netdata.app.utils.gone
-import com.netdata.app.utils.visible
 
-class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterAdapter.ViewHolder>() {
+class HomeFilterTypeCompAdapter(var list: ArrayList<HomeNotificationList.Data.Alarm>, val callBack: (View, Int, HomeNotificationList.Data.Alarm) -> Unit) : RecyclerView.Adapter<HomeFilterTypeCompAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -47,23 +43,10 @@ class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, In
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: FilterList) = with(binding) {
-            textViewFilterName.text = item.name
+        fun bind(item: HomeNotificationList.Data.Alarm) = with(binding) {
+            textViewFilterName.text = item.family
             checkBoxFilter.isChecked = item.isSelected
 
-            if(item.count.isNotEmpty()){
-                textViewFilterCount.visible()
-                textViewFilterCount.text = item.count
-            } else {
-                textViewFilterCount.gone()
-            }
-
-            if(item.isIcon){
-                imageViewPriority.visible()
-                imageViewPriority.setImageResource(item.icon!!)
-            } else {
-                imageViewPriority.gone()
-            }
         }
 
     }

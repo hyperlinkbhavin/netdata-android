@@ -130,10 +130,10 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                     "dd/MM/yyyy-HH:mm:ss"
                 )
             }"
-            textViewGKE.text = item.data!!.node!!.id
+            textViewGKE.text = item.data!!.node!!.hostname
             textViewDiskSpace.text = item.data!!.alarm!!.chart
 //            textViewWarRoomsList.text = item.warRooms
-            textViewTypeAndComponent.text = "Type & Component : ${item.data!!.alarm!!.details}"
+            textViewTypeAndComponent.text = "Type & Component : ${item.data!!.alarm!!.family} • ${item.data!!.alarm!!.classification}"
             textViewLabelWarning.text = item.data!!.alarm!!.status!!.replaceFirstChar {
                 if (it.isLowerCase()) it.titlecase(
                     Locale.getDefault()

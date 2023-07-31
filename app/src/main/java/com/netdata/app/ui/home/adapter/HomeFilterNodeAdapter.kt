@@ -7,16 +7,18 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.data.pojo.request.AlertInfoList
 import com.netdata.app.data.pojo.request.FilterList
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.RowItemAlertInfoBinding
 import com.netdata.app.databinding.RowItemFilterCheckboxBinding
+import com.netdata.app.databinding.RowItemNodeFilterCheckboxBinding
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible
 
-class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterAdapter.ViewHolder>() {
+class HomeFilterNodeAdapter(val list: ArrayList<HomeNotificationList.Data.Node>,val callBack: (View, Int, HomeNotificationList.Data.Node) -> Unit) : RecyclerView.Adapter<HomeFilterNodeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            RowItemFilterCheckboxBinding.inflate(
+            RowItemNodeFilterCheckboxBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false
@@ -34,7 +36,7 @@ class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, In
 
 
     @SuppressLint("NotifyDataSetChanged")
-    inner class ViewHolder(val binding: RowItemFilterCheckboxBinding) :
+    inner class ViewHolder(val binding: RowItemNodeFilterCheckboxBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {
@@ -47,23 +49,11 @@ class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, In
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: FilterList) = with(binding) {
-            textViewFilterName.text = item.name
+        fun bind(item: HomeNotificationList.Data.Node) = with(binding) {
+            textViewFilterName.text = item.hostname
             checkBoxFilter.isChecked = item.isSelected
+            textViewFilterCount.gone()
 
-            if(item.count.isNotEmpty()){
-                textViewFilterCount.visible()
-                textViewFilterCount.text = item.count
-            } else {
-                textViewFilterCount.gone()
-            }
-
-            if(item.isIcon){
-                imageViewPriority.visible()
-                imageViewPriority.setImageResource(item.icon!!)
-            } else {
-                imageViewPriority.gone()
-            }
         }
 
     }

@@ -361,14 +361,15 @@ class DatabaseHelper(context: Context) :
             put(FN_SPACE_SLUG, item.data!!.space!!.slug)
             put(FN_IS_READ, 0)
             put(FN_CREATED_AT, item.createdAt)
+            put(FN_PRIORITY, Priority.HIGH_PRIORITY.shortName)
 
-            if (item.data!!.alarm!!.status.equals("critical", true)) {
+            /*if (item.data!!.alarm!!.status.equals("critical", true)) {
                 put(FN_PRIORITY, Priority.HIGH_PRIORITY.shortName)
             } else if (item.data!!.alarm!!.status.equals("warning", true)) {
                 put(FN_PRIORITY, Priority.MEDIUM_PRIORITY.shortName)
             } else {
                 put(FN_PRIORITY, Priority.LOW_PRIORITY.shortName)
-            }
+            }*/
         }
 
         val db = writableDatabase
@@ -383,6 +384,16 @@ class DatabaseHelper(context: Context) :
 
         val db = writableDatabase
         db.update(TABLE_FETCH_NOTIFICATIONS, values, "id = ${item.id}", null)
+        db.close()
+    }
+
+    fun updateFetchNotificationDataByAllRead() {
+        val values = ContentValues().apply {
+            put(FN_IS_READ, 1)
+        }
+
+        val db = writableDatabase
+        db.update(TABLE_FETCH_NOTIFICATIONS, values, null, null)
         db.close()
     }
 
@@ -429,8 +440,11 @@ class DatabaseHelper(context: Context) :
 
     fun getAllDataFromFetchNotification(
         spaceId: String = "1", isSortBy: Boolean = false, isFilterBy: Boolean = false,
-        statusFilters: List<String>,
-        priorityFilters: List<String>
+        statusFilters: ArrayList<String> = ArrayList(),
+        priorityFilters: ArrayList<String> = ArrayList(),
+        nodesFilters: ArrayList<String> = ArrayList(),
+        classFilters: ArrayList<String> = ArrayList(),
+        typeFilters: ArrayList<String> = ArrayList(),
     ): ArrayList<HomeNotificationList> {
         val dataList = ArrayList<HomeNotificationList>()
         val db = readableDatabase
@@ -471,25 +485,67 @@ class DatabaseHelper(context: Context) :
 
             cursor = db.rawQuery(selectQuery, null)
         } else if (isFilterBy) {
+            Log.e("status", "$statusFilters $priorityFilters")
             // Define the filter criteria (critical status or high priority)
-            val statusArg = statusFilters.joinToString { "?" }
-            val priorityArg = priorityFilters.joinToString { "?" }
-            selectQuery = "$FN_ALARM_STATUS IN ($statusArg) OR $FN_PRIORITY IN ($priorityArg)"
-            val selectionArgs = statusFilters.toTypedArray() + priorityFilters.toTypedArray()
+            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceId'"
+            var statusArg = ""
+            var priorityArg = ""
+            var nodesArg = ""
+            var classArg = ""
+            var typeArg = ""
 
-            // Define the columns you want to retrieve (null returns all columns)
-            val projection = null
+            if(statusFilters.isNotEmpty()){
+                for(i in statusFilters){
+                    statusArg += "'$i',"
+                }
+                statusArg = statusArg.dropLast(1)
+            }
+            if(priorityFilters.isNotEmpty()){
+                for(i in priorityFilters){
+                    priorityArg += "'$i',"
+                }
+                priorityArg = priorityArg.dropLast(1)
+            }
+            if(nodesFilters.isNotEmpty()){
+                for(i in nodesFilters){
+                    nodesArg += "'$i',"
+                }
+                nodesArg = nodesArg.dropLast(1)
+            }
+            if(classFilters.isNotEmpty()){
+                for(i in classFilters){
+                    classArg += "'$i',"
+                }
+                classArg = classArg.dropLast(1)
+            }
+            if(typeFilters.isNotEmpty()){
+                for(i in typeFilters){
+                    typeArg += "'$i',"
+                }
+                typeArg = typeArg.dropLast(1)
+            }
+
+            if(statusFilters.isNotEmpty()){
+                selectQuery += " AND $FN_ALARM_STATUS IN ($statusArg)"
+            }
+            if(priorityFilters.isNotEmpty()){
+                selectQuery += " AND $FN_PRIORITY IN ($priorityArg)"
+            }
+            if(nodesFilters.isNotEmpty()){
+                selectQuery += " AND $FN_NODE_ID IN ($nodesArg)"
+            }
+            if(classFilters.isNotEmpty()){
+                selectQuery += " AND $FN_ALARM_CLASSIFICATION IN ($classArg)"
+            }
+            if(typeFilters.isNotEmpty()){
+                selectQuery += " AND $FN_ALARM_FAMILY IN ($typeArg)"
+            }
+
+            Log.e("query", selectQuery)
 
             // Perform the query and get the cursor
-            cursor = db.query(
-                TABLE_FETCH_NOTIFICATIONS,
-                projection,
-                selectQuery,
-                selectionArgs,
-                null,
-                null,
-                null
-            )
+            cursor = db.rawQuery(selectQuery, null)
+
         } else {
             selectQuery =
                 "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceId' " +

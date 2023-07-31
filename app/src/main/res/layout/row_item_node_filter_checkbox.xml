@@ -18,10 +18,12 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textViewFilterName"
         style="@style/AppTheme.AppTextView.RegularBlack35ToGrey8F14"
+        android:layout_width="@dimen/dp_0"
         tools:text="Text"
         android:layout_marginHorizontal="@dimen/dp_3"
         android:ellipsize="end"
         app:layout_constraintStart_toEndOf="@id/checkBoxFilter"
+        app:layout_constraintEnd_toStartOf="@id/textViewFilterCount"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 

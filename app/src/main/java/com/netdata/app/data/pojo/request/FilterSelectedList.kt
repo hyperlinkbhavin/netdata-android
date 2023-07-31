@@ -1,3 +1,3 @@
 package com.netdata.app.data.pojo.request
 
-data class FilterSelectedList(var name: String)
+data class FilterSelectedList(var name: String, var id: Int)

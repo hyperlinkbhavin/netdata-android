@@ -48,7 +48,13 @@ class FilterSelectedAdapter(val callBack: (View, Int, FilterSelectedList) -> Uni
 
         @SuppressLint("SetTextI18n")
         fun bind(item: FilterSelectedList) = with(binding) {
-            textViewFilterName.text = item.name
+            when(item.id){
+                1 -> textViewFilterName.text = "Node:${item.name}"
+                2 -> textViewFilterName.text = "Status:${item.name}"
+                3 -> textViewFilterName.text = "Priority:${item.name}"
+                4 -> textViewFilterName.text = "Class:${item.name}"
+                5 -> textViewFilterName.text = "Type:${item.name}"
+            }
         }
 
     }

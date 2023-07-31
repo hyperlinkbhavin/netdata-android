@@ -14,23 +14,17 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
-import com.netdata.app.data.pojo.HomeDataList
 import com.netdata.app.data.pojo.enumclass.AlertStatus
 import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.*
@@ -44,6 +38,11 @@ import com.netdata.app.ui.home.adapter.*
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.*
+import com.netdata.app.utils.Constant.filterClassificationList
+import com.netdata.app.utils.Constant.filterNodesList
+import com.netdata.app.utils.Constant.filterPriorityList
+import com.netdata.app.utils.Constant.filterStatusList
+import com.netdata.app.utils.Constant.filterTypeCompList
 import com.netdata.app.utils.Constant.isFilterBy
 import com.netdata.app.utils.Constant.sortByCriticalityItemPosition
 import com.netdata.app.utils.Constant.sortByNotificationPriorityItemPosition
@@ -52,7 +51,6 @@ import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.localdb.DatabaseHelper
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -69,7 +67,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var totalFilterCount = 0
 
     private var homeList = ArrayList<HomeNotificationList>()
-    private var tempHomeList = ArrayList<HomeNotificationList>()
 
     private var isCurrentNodes = true
 
@@ -106,14 +103,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         FilterSelectedAdapter() { view, position, item ->
             when (view.id) {
                 R.id.imageViewClose -> {
-                    removeFilterSelected(position)
+                    removeFilterSelected(position, item)
                 }
             }
         }
     }
 
     private val nodeFilterAdapter by lazy {
-        HomeFilterAdapter() { view, position, item ->
+        HomeFilterNodeAdapter(filterNodesList) { view, position, item ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
@@ -123,7 +120,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val alertStatusFilterAdapter by lazy {
-        HomeFilterAdapter() { view, position, item ->
+        HomeFilterAdapter(filterStatusList) { view, position, item ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
@@ -133,7 +130,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val notificationPriorityFilterAdapter by lazy {
-        HomeFilterAdapter() { view, position, item ->
+        HomeFilterAdapter(filterPriorityList) { view, position, item ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
@@ -143,7 +140,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val classFilterAdapter by lazy {
-        HomeFilterAdapter() { view, position, item ->
+        HomeFilterClassAdapter(filterClassificationList) { view, position, item ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
@@ -153,7 +150,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val typeAndComponentFilterAdapter by lazy {
-        HomeFilterAdapter() { view, position, item ->
+        HomeFilterTypeCompAdapter(filterTypeCompList) { view, position, item ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     filterCount()
@@ -192,7 +189,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         binding.buttonAll.isSelected = isAllButtonSelected
         binding.buttonUnread.isSelected = !isAllButtonSelected
 
-        drawerFilter()
         editTextChanged()
     }
 
@@ -246,7 +242,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         for (d in homeList) {
             //or use .equal(text) with you want equal match
             //use .toLowerCase() for better matches
-            if (d.data!!.alarm!!.name!!.contains(text!!, true)) {
+            if (d.data!!.alarm!!.name!!.contains(text!!, true) ||
+                d.data!!.node!!.hostname!!.contains(text, true) ||
+                d.data!!.alarm!!.chart!!.contains(text, true)) {
                 temp.add(d)
             }
         }
@@ -287,14 +285,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         textViewLabelMarkAllAsRead.setOnClickListener {
-            for (item in homeList) {
-                item.isRead = true
-            }
-
-            homeAdapter.list.clear()
-            homeAdapter.list.addAll(homeList)
-
-            homeAdapter.notifyDataSetChanged()
+            dbHelper.updateFetchNotificationDataByAllRead()
+            callFetchHomeNotification()
         }
 
         includeToolbar.imageViewSetting.setOnClickListener {
@@ -336,25 +328,46 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.apply {
                 if (totalFilterCount != 0) {
                     isFilterBy = true
-                    includeToolbar.textViewFilterCount.visible()
-                    includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
                     constraintFilterSelected.visible()
-                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:High"))
-                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:Medium"))
-                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:Low"))
-                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:Medium"))
-                    filterSelectedAdapter.list.add(FilterSelectedList("Priority:High"))
+                    if(filterNodesList.isNotEmpty()){
+                        filterNodesList.forEach {
+                            if(it.isSelected){
+                                filterSelectedAdapter.list.add(FilterSelectedList(it.hostname!!,1))
+                            }
+                        }
+                    }
+                    if(filterStatusList.isNotEmpty()){
+                        filterStatusList.forEach {
+                            if(it.isSelected){
+                                filterSelectedAdapter.list.add(FilterSelectedList(it.name,2))
+                            }
+                        }
+                    }
+                    if(filterPriorityList.isNotEmpty()){
+                        filterPriorityList.forEach {
+                            if(it.isSelected){
+                                filterSelectedAdapter.list.add(FilterSelectedList(it.name,3))
+                            }
+                        }
+                    }
+                    if(filterClassificationList.isNotEmpty()){
+                        filterClassificationList.forEach {
+                            if(it.isSelected){
+                                filterSelectedAdapter.list.add(FilterSelectedList(it.classification!!,4))
+                            }
+                        }
+                    }
+                    if(filterTypeCompList.isNotEmpty()){
+                        filterTypeCompList.forEach {
+                            if(it.isSelected){
+                                filterSelectedAdapter.list.add(FilterSelectedList(it.family!!,5))
+                            }
+                        }
+                    }
                     filterSelectedAdapter.notifyDataSetChanged()
 
                     callFetchHomeNotification()
-
-                    /*addChip("Priority: High")
-                    addChip("Priority: Medium")
-                    addChip("Priority: Low")
-                    addChip("Class: High1")
-                    addChip("Class: High2")
-                    addChip("Class: High3")*/
-
+                    filterCount()
 
                 } else {
                     isFilterBy = false
@@ -472,7 +485,49 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun removeFilterSelected(position: Int) {
+    private fun removeFilterSelected(position: Int, item: FilterSelectedList) {
+
+        when(item.id){
+            1 -> {
+                for(i in filterNodesList.indices){
+                    if(filterNodesList[i].hostname.equals(item.name, true)){
+                        filterNodesList[i].isSelected = false
+                    }
+                }
+            }
+            2 -> {
+                for(i in filterStatusList.indices){
+                    if(filterStatusList[i].name.equals(item.name, true)){
+                        filterStatusList[i].isSelected = false
+                    }
+                }
+            }
+            3 -> {
+                for(i in filterPriorityList.indices){
+                    if(filterPriorityList[i].name.equals(item.name, true)){
+                        filterPriorityList[i].isSelected = false
+                    }
+                }
+            }
+            4 -> {
+                for(i in filterClassificationList.indices){
+                    if(filterClassificationList[i].name.equals(item.name, true)){
+                        filterClassificationList[i].isSelected = false
+                    }
+                }
+            }
+            5 -> {
+                for(i in filterTypeCompList.indices){
+                    if(filterTypeCompList[i].name.equals(item.name, true)){
+                        filterTypeCompList[i].isSelected = false
+                    }
+                }
+            }
+        }
+
+        filterCount()
+        notifyDrawer()
+        callFetchHomeNotification()
         filterSelectedAdapter.list.removeAt(position)
         if (filterSelectedAdapter.list.size == 0) {
             binding.constraintFilterSelected.gone()
@@ -489,82 +544,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewFilterSelected.layoutManager = flexLayoutManager
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
     }
-
-    /* @SuppressLint("NotifyDataSetChanged")
-     private fun addData() {
-         homeList.add(
-             HomeDataList(
-                 "inbound packets dropped ratio",
-                 "24 seconds ago · 04/04/2022 - 15:44:23",
-                 "gke-staging-streamnative-202103050938-3a4480ce",
-                 "disk_space._boot_efi",
-                 "War Room 1•War Room 2•War Room 3•War Room 4",
-                 "Type & Component : System • Network",
-                 true
-             )
-         )
-
-         homeList.add(
-             HomeDataList(
-                 "inbound packets dropped ratio",
-                 "24 seconds ago · 04/04/2022 - 15:44:23",
-                 "gke-staging-streamnative-202103050938-3a4480ce",
-                 "disk_space._boot_efi",
-                 "War Room 1•War Room 2•War Room 3•War Room 4",
-                 "Type & Component : System • Network",
-             )
-         )
-
-         homeList.add(
-             HomeDataList(
-                 "inbound packets dropped ratio",
-                 "24 seconds ago · 04/04/2022 - 15:44:23",
-                 "gke-staging-streamnative-202103050938-3a4480ce",
-                 "disk_space._boot_efi",
-                 "War Room 1•War Room 2•War Room 3•War Room 4",
-                 "Type & Component : System • Network",
-                 true
-             )
-         )
-
-         homeList.add(
-             HomeDataList(
-                 "inbound packets dropped ratio",
-                 "24 seconds ago · 04/04/2022 - 15:44:23",
-                 "gke-staging-streamnative-202103050938-3a4480ce",
-                 "disk_space._boot_efi",
-                 "War Room 1•War Room 2•War Room 3•War Room 4",
-                 "Type & Component : System • Network",
-             )
-         )
-
-         homeList.add(
-             HomeDataList(
-                 "inbound packets dropped ratio",
-                 "24 seconds ago · 04/04/2022 - 15:44:23",
-                 "gke-staging-streamnative-202103050938-3a4480ce",
-                 "disk_space._boot_efi",
-                 "War Room 1•War Room 2•War Room 3•War Room 4",
-                 "Type & Component : System • Network",
-                 true
-             )
-         )
-
-         homeList.add(
-             HomeDataList(
-                 "inbound packets dropped ratio",
-                 "24 seconds ago · 04/04/2022 - 15:44:23",
-                 "gke-staging-streamnative-202103050938-3a4480ce",
-                 "disk_space._boot_efi",
-                 "War Room 1•War Room 2•War Room 3•War Room 4",
-                 "Type & Component : System • Network",
-             )
-         )
-
-         homeAdapter.list.addAll(homeList)
-
-         homeAdapter.notifyDataSetChanged()
-     }*/
 
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun leftSwipeManage(position: Int, item: HomeNotificationList) {
@@ -904,7 +883,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                         sortByCriticalityItemPosition = -1
                         sortByNotificationPriorityAdapter.selectedItemPosition = -1
                         sortByCriticalityAdapter.selectedItemPosition = -1
-                        Log.e("item 1", sortByTimeItemPosition.toString())
+
                         sortByNotificationPriorityAdapter.notifyDataSetChanged()
                         sortByCriticalityAdapter.notifyDataSetChanged()
                     }
@@ -921,7 +900,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                         sortByCriticalityItemPosition = -1
                         sortByTimeAdapter.selectedItemPosition = -1
                         sortByCriticalityAdapter.selectedItemPosition = -1
-                        Log.e("item 2", sortByNotificationPriorityItemPosition.toString())
+
                         sortByTimeAdapter.notifyDataSetChanged()
                         sortByCriticalityAdapter.notifyDataSetChanged()
                     }
@@ -937,7 +916,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                         sortByNotificationPriorityItemPosition = -1
                         sortByTimeAdapter.selectedItemPosition = -1
                         sortByNotificationPriorityAdapter.selectedItemPosition = -1
-                        Log.e("item 3", sortByCriticalityItemPosition.toString())
+
                         sortByTimeAdapter.notifyDataSetChanged()
                         sortByNotificationPriorityAdapter.notifyDataSetChanged()
                     }
@@ -1028,71 +1007,74 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewClass.adapter = classFilterAdapter
         recyclerViewTypeAndComponent.adapter = typeAndComponentFilterAdapter
 
-        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1-2", "2"))
-        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1", "1"))
-        nodeFilterAdapter.list.add(FilterList("debian-2gb", "1"))
-        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1-23442", "1"))
-        nodeFilterAdapter.list.add(FilterList("debian-2gb-n", "1"))
-        nodeFilterAdapter.list.add(FilterList("debian-2gb-nbg1", ""))
-        nodeFilterAdapter.notifyDataSetChanged()
+        if(filterStatusList.isEmpty()){
+            filterStatusList.add(FilterList(AlertStatus.CRITICAL.type, "4"))
+            filterStatusList.add(FilterList(AlertStatus.WARNING.type, "3"))
+            filterStatusList.add(FilterList(AlertStatus.CLEAR.type, ""))
+        }
 
-        alertStatusFilterAdapter.list.add(FilterList(AlertStatus.CRITICAL.type, "4"))
-        alertStatusFilterAdapter.list.add(FilterList(AlertStatus.WARNING.type, "3"))
-        alertStatusFilterAdapter.list.add(FilterList(AlertStatus.CLEAR.type, ""))
-        alertStatusFilterAdapter.notifyDataSetChanged()
-
-        notificationPriorityFilterAdapter.list.add(
-            FilterList(
-                "High",
-                "3",
-                icon = R.drawable.ic_high_priority,
-                isIcon = true
+        if(filterPriorityList.isEmpty()){
+            filterPriorityList.add(
+                FilterList(
+                    "High",
+                    "3",
+                    icon = R.drawable.ic_high_priority,
+                    isIcon = true
+                )
             )
-        )
-        notificationPriorityFilterAdapter.list.add(
-            FilterList(
-                "Medium",
-                "2",
-                icon = R.drawable.ic_medium_priority,
-                isIcon = true
+            filterPriorityList.add(
+                FilterList(
+                    "Medium",
+                    "2",
+                    icon = R.drawable.ic_medium_priority,
+                    isIcon = true
+                )
             )
-        )
-        notificationPriorityFilterAdapter.list.add(
-            FilterList(
-                "Low",
-                "",
-                icon = R.drawable.ic_low_priority,
-                isIcon = true
+            filterPriorityList.add(
+                FilterList(
+                    "Low",
+                    "",
+                    icon = R.drawable.ic_low_priority,
+                    isIcon = true
+                )
             )
-        )
-        notificationPriorityFilterAdapter.notifyDataSetChanged()
+        }
 
-        classFilterAdapter.list.add(FilterList("Errors", "4"))
-        classFilterAdapter.list.add(FilterList("Latency", "3"))
-        classFilterAdapter.list.add(FilterList("Utilization", ""))
-        classFilterAdapter.list.add(FilterList("Workload", ""))
-        classFilterAdapter.notifyDataSetChanged()
+        notifyDrawer()
 
-        typeAndComponentFilterAdapter.list.add(FilterList("System", "1"))
-        typeAndComponentFilterAdapter.list.add(FilterList("Other", "1"))
-        typeAndComponentFilterAdapter.notifyDataSetChanged()
     }
 
-    private fun filterCount() {
-        val nodeCount = nodeFilterAdapter.list.filter { it.isSelected }
-        val alertStatusCount = alertStatusFilterAdapter.list.filter { it.isSelected }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun notifyDrawer() = with(binding){
+        nodeFilterAdapter.notifyDataSetChanged()
+        alertStatusFilterAdapter.notifyDataSetChanged()
+        classFilterAdapter.notifyDataSetChanged()
+        typeAndComponentFilterAdapter.notifyDataSetChanged()
+        notificationPriorityFilterAdapter.notifyDataSetChanged()
+    }
+
+    private fun filterCount() = with(binding) {
+        val nodeCount = filterNodesList.filter { it.isSelected }
+        val alertStatusCount = filterStatusList.filter { it.isSelected }
         val notificationPriorityCount =
-            notificationPriorityFilterAdapter.list.filter { it.isSelected }
-        val classCount = classFilterAdapter.list.filter { it.isSelected }
-        val typAndComponentCount = typeAndComponentFilterAdapter.list.filter { it.isSelected }
+            filterPriorityList.filter { it.isSelected }
+        val classCount = filterClassificationList.filter { it.isSelected }
+        val typAndComponentCount = filterTypeCompList.filter { it.isSelected }
 
         totalFilterCount =
             nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
 
+        Log.e("count", "node:${nodeCount.size}, status:${alertStatusCount.size}, " +
+                "priority:${notificationPriorityCount.size}, " +
+                "class:${classCount.size}, type:${typAndComponentCount.size}, total:$totalFilterCount")
+
         if (totalFilterCount != 0) {
-            binding.buttonApplyFilter.text = "Apply ($totalFilterCount) Filters"
+            includeToolbar.textViewFilterCount.visible()
+            includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
+            buttonApplyFilter.text = "Apply ($totalFilterCount) Filters"
         } else {
-            binding.buttonApplyFilter.text = "Apply Filters"
+            includeToolbar.textViewFilterCount.gone()
+            buttonApplyFilter.text = "Apply Filters"
         }
 
 
@@ -1144,21 +1126,63 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     dbHelper.insertFetchNotificationData(lastId, item)
                 }*/
 //                Log.e("current", getCurrentUTCTime())
-        Log.e("db data", dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), statusFilters = listOf(), priorityFilters = listOf()).toString())
-
         homeList.clear()
         homeAdapter.list.clear()
-        Log.e("posi", "$sortByTimeItemPosition $sortByNotificationPriorityItemPosition $sortByCriticalityItemPosition")
 
         if(sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1){
-            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), isSortBy = true, statusFilters = listOf(), priorityFilters = listOf()))
+            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
             homeAdapter.list.addAll(homeList)
         } else if(isFilterBy){
-            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), isFilterBy = true, statusFilters = listOf("critical"), priorityFilters = listOf("high")))
+            var tempNodeList = ArrayList<String>()
+            var tempClassList = ArrayList<String>()
+            var tempStatusList = ArrayList<String>()
+            var tempPriorityList = ArrayList<String>()
+            var tempTypeList = ArrayList<String>()
+            if(filterNodesList.isNotEmpty()){
+                tempNodeList = filterNodesList.filter { it.isSelected }.map { it.id } as ArrayList<String>
+            }
+            if(filterClassificationList.isNotEmpty()){
+                tempClassList = filterClassificationList.filter { it.isSelected }.map { it.classification } as ArrayList<String>
+            }
+            if(filterStatusList.isNotEmpty()){
+                tempStatusList = filterStatusList.filter { it.isSelected }.map { it.name } as ArrayList<String>
+            }
+            if(filterPriorityList.isNotEmpty()){
+                tempPriorityList = filterPriorityList.filter { it.isSelected }.map { it.name } as ArrayList<String>
+            }
+            if(filterTypeCompList.isNotEmpty()){
+                tempTypeList = filterTypeCompList.filter { it.isSelected }.map { it.family } as ArrayList<String>
+            }
+
+            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), isFilterBy = true,
+                statusFilters = tempStatusList, priorityFilters = tempPriorityList, nodesFilters = tempNodeList, classFilters = tempClassList, typeFilters = tempTypeList))
             homeAdapter.list.addAll(homeList)
         } else {
-            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), statusFilters = listOf(), priorityFilters = listOf()))
+            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
             homeAdapter.list.addAll(homeList)
+        }
+
+        val tempNodeList = ArrayList<HomeNotificationList.Data.Node>()
+        val tempClassList = ArrayList<HomeNotificationList.Data.Alarm>()
+        val tempTypeCompList = ArrayList<HomeNotificationList.Data.Alarm>()
+
+        if(filterNodesList.isEmpty()){
+            homeList.forEach {
+                tempNodeList.add(it.data!!.node!!)
+            }
+            filterNodesList = tempNodeList.distinctBy { it.id } as ArrayList<HomeNotificationList.Data.Node>
+        }
+        if(filterClassificationList.isEmpty()){
+            homeList.forEach {
+                tempClassList.add(it.data!!.alarm!!)
+            }
+            filterClassificationList = tempClassList.distinctBy { it.classification } as ArrayList<HomeNotificationList.Data.Alarm>
+        }
+        if(filterTypeCompList.isEmpty()){
+            homeList.forEach {
+                tempTypeCompList.add(it.data!!.alarm!!)
+            }
+            filterTypeCompList = tempTypeCompList.distinctBy { it.family } as ArrayList<HomeNotificationList.Data.Alarm>
         }
 
         val unreadItem = homeList.filter { !it.isRead }
@@ -1167,6 +1191,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
 
         homeAdapter.notifyDataSetChanged()
+        drawerFilter()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -1174,7 +1199,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         apiViewModel.fetchHomeNotificationLiveData.observe(this) {
             hideLoader()
             if (!it.isError || it.responseCode == 200) {
-                Log.e("home data", it.data.toString())
                 homeAdapter.list.addAll(it.data!!)
                 homeAdapter.notifyDataSetChanged()
             }

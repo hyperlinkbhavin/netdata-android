@@ -25,7 +25,8 @@ data class HomeNotificationList(
         data class Node(
             @SerializedName("id") var id: String? = null,
             @SerializedName("hostname") var hostname: String? = null,
-            @SerializedName("reachable") var reachable: Boolean? = null
+            @SerializedName("reachable") var reachable: Boolean? = null,
+            var isSelected: Boolean = false
         )
 
         data class User(
@@ -80,7 +81,8 @@ data class HomeNotificationList(
             @SerializedName("critical_count") var criticalCount: Long? = null,
             @SerializedName("conf_file") var confFile: String? = null,
             @SerializedName("calc_expr") var calcExpr: String? = null,
-            @SerializedName("log") var log: ArrayList<Log> = arrayListOf()
+            @SerializedName("log") var log: ArrayList<Log> = arrayListOf(),
+            var isSelected: Boolean = false
         ) {
             data class Log(
                 @SerializedName("alarm_name") var alarmName: String? = null,

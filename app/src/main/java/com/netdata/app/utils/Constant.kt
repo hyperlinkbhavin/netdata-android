@@ -1,6 +1,8 @@
 package com.netdata.app.utils
 
+import com.netdata.app.data.pojo.request.FilterList
 import com.netdata.app.data.pojo.request.WarRoomsList
+import com.netdata.app.data.pojo.response.HomeNotificationList
 
 object Constant {
     var COOKIE_SI = ""
@@ -11,6 +13,12 @@ object Constant {
     var sortByTimeItemPosition = -1
     var sortByNotificationPriorityItemPosition = -1
     var sortByCriticalityItemPosition = -1
+
+    var filterStatusList = ArrayList<FilterList>()
+    var filterPriorityList = ArrayList<FilterList>()
+    var filterNodesList = ArrayList<HomeNotificationList.Data.Node>()
+    var filterClassificationList = ArrayList<HomeNotificationList.Data.Alarm>()
+    var filterTypeCompList = ArrayList<HomeNotificationList.Data.Alarm>()
 
     const val APP_PREF_IS_LOGIN = "APP_PREF_IS_LOGIN"
     const val APP_PREF_SPACE_NAME = "APP_PREF_SPACE_NAME"
