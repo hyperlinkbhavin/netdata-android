@@ -63,7 +63,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/textViewLabelAllWarRooms"
                     style="@style/AppTheme.AppTextView.SemiBoldBlack14"
-                    android:text="@string/label_all_war_rooms"
+                    android:text="@string/label_all_nodes"
                     android:layout_marginStart="@dimen/dp_8"
                     app:layout_constraintStart_toEndOf="@id/imageViewAllWarRooms"
                     app:layout_constraintTop_toTopOf="@id/constraintAllWarRooms"
@@ -520,9 +520,17 @@
                         android:orientation="vertical"
                         app:layout_constraintStart_toStartOf="@id/constraintTypeAndComponent"
                         app:layout_constraintEnd_toEndOf="@id/constraintTypeAndComponent"
-                        app:layout_constraintTop_toBottomOf="@id/textViewLabelTypeAndComponent"/>
+                        app:layout_constraintTop_toBottomOf="@id/textViewLabelTypeAndComponent" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/viewTypeAndComponent"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="@dimen/dp_1"
+                            app:layout_constraintEnd_toEndOf="@id/constraintTypeAndComponent"
+                            app:layout_constraintStart_toStartOf="@id/constraintTypeAndComponent"
+                            app:layout_constraintTop_toBottomOf="@id/constraintTypeAndComponent" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.core.widget.NestedScrollView>

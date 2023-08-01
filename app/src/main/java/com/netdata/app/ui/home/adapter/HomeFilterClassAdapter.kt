@@ -13,7 +13,7 @@ import com.netdata.app.databinding.RowItemFilterCheckboxBinding
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible
 
-class HomeFilterClassAdapter(val list: ArrayList<HomeNotificationList.Data.Alarm>, val callBack: (View, Int, HomeNotificationList.Data.Alarm) -> Unit) : RecyclerView.Adapter<HomeFilterClassAdapter.ViewHolder>() {
+class HomeFilterClassAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterClassAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -41,20 +41,27 @@ class HomeFilterClassAdapter(val list: ArrayList<HomeNotificationList.Data.Alarm
         init {
             binding.apply {
                 checkBoxFilter.setOnClickListener {
-                    list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    /*list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    notifyItemChanged(absoluteAdapterPosition)*/
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: HomeNotificationList.Data.Alarm) = with(binding) {
-            textViewFilterName.text = item.classification
+        fun bind(item: FilterList) = with(binding) {
+            textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
             textViewFilterCount.gone()
 
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(filterList: ArrayList<FilterList>) {
+        list = filterList
+        notifyDataSetChanged()
     }
 
 }

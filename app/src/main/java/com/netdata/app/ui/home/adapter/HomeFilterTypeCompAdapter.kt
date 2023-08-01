@@ -5,10 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.netdata.app.data.pojo.request.FilterList
 import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.RowItemFilterCheckboxBinding
 
-class HomeFilterTypeCompAdapter(var list: ArrayList<HomeNotificationList.Data.Alarm>, val callBack: (View, Int, HomeNotificationList.Data.Alarm) -> Unit) : RecyclerView.Adapter<HomeFilterTypeCompAdapter.ViewHolder>() {
+class HomeFilterTypeCompAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterTypeCompAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -36,19 +37,23 @@ class HomeFilterTypeCompAdapter(var list: ArrayList<HomeNotificationList.Data.Al
         init {
             binding.apply {
                 checkBoxFilter.setOnClickListener {
-                    list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    /*list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    notifyItemChanged(absoluteAdapterPosition)*/
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: HomeNotificationList.Data.Alarm) = with(binding) {
-            textViewFilterName.text = item.family
+        fun bind(item: FilterList) = with(binding) {
+            textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
-
         }
-
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(filterList: ArrayList<FilterList>) {
+        list = filterList
+        notifyDataSetChanged()
+    }
 }

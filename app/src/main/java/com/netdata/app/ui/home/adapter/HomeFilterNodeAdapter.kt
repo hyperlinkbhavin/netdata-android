@@ -14,7 +14,7 @@ import com.netdata.app.databinding.RowItemNodeFilterCheckboxBinding
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible
 
-class HomeFilterNodeAdapter(val list: ArrayList<HomeNotificationList.Data.Node>,val callBack: (View, Int, HomeNotificationList.Data.Node) -> Unit) : RecyclerView.Adapter<HomeFilterNodeAdapter.ViewHolder>() {
+class HomeFilterNodeAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterNodeAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -43,19 +43,26 @@ class HomeFilterNodeAdapter(val list: ArrayList<HomeNotificationList.Data.Node>,
             binding.apply {
                 checkBoxFilter.setOnClickListener {
                     list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    notifyItemChanged(absoluteAdapterPosition)
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: HomeNotificationList.Data.Node) = with(binding) {
-            textViewFilterName.text = item.hostname
+        fun bind(item: FilterList) = with(binding) {
+            textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
             textViewFilterCount.gone()
 
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(filterList: ArrayList<FilterList>) {
+        list = filterList
+        notifyDataSetChanged()
     }
 
 }

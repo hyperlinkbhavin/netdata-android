@@ -18,6 +18,29 @@ object ConvertDateTimeFormat {
         return "$convertDate-$convertTime"
     }
 
+    fun getDaysBeforeDate(numDays: Int): String {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSS'Z'", Locale.getDefault())
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        val currentDate = dateFormat.format(Date())
+
+        val utcDateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSS'Z'", Locale.getDefault())
+        utcDateFormat.timeZone = TimeZone.getTimeZone("UTC")
+
+        try {
+            val date = utcDateFormat.parse(currentDate)
+
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            calendar.time = date!!
+            calendar.add(Calendar.DAY_OF_YEAR, -numDays)
+
+            return utcDateFormat.format(calendar.time)
+        } catch (e: Exception) {
+            println("Error parsing date: $e")
+        }
+
+        return ""
+    }
+
     private fun convertTo12Hours(militaryTime: String): String {
         //in => "14:00:00"
         //out => "02:00 PM"

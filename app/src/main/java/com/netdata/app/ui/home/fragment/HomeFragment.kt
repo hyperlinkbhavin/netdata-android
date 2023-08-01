@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -21,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.chip.Chip
+import com.google.gson.Gson
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
@@ -29,6 +30,7 @@ import com.netdata.app.data.pojo.enumclass.AlertStatus
 import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.*
 import com.netdata.app.data.pojo.response.HomeNotificationList
+import com.netdata.app.data.pojo.response.RoomList
 import com.netdata.app.databinding.HomeFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.auth.AuthActivity
@@ -62,13 +64,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     lateinit var flexLayoutManager: FlexboxLayoutManager
     lateinit var dbHelper: DatabaseHelper
 
-    private var warRoomsItemPosition = 0
+    private var roomsItemPosition = 0
 
     private var totalFilterCount = 0
 
     private var homeList = ArrayList<HomeNotificationList>()
+    private var roomList = ArrayList<RoomList>()
 
     private var isCurrentNodes = true
+    private var isApplyFilter = false
 
     private val homeAdapter by lazy {
         HomeAdapter() { view, position, item ->
@@ -100,7 +104,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val filterSelectedAdapter by lazy {
-        FilterSelectedAdapter() { view, position, item ->
+        FilterSelectedAdapter { view, position, item ->
             when (view.id) {
                 R.id.imageViewClose -> {
                     removeFilterSelected(position, item)
@@ -110,53 +114,66 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val nodeFilterAdapter by lazy {
-        HomeFilterNodeAdapter(filterNodesList) { view, position, item ->
+        HomeFilterNodeAdapter(filterNodesList) { view, _, _ ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
-                    filterCount()
+                    tempCount()
                 }
             }
         }
     }
 
     private val alertStatusFilterAdapter by lazy {
-        HomeFilterAdapter(filterStatusList) { view, position, item ->
+        HomeFilterAdapter(filterStatusList) { view, _, _ ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
-                    filterCount()
+                    tempCount()
                 }
             }
         }
     }
 
     private val notificationPriorityFilterAdapter by lazy {
-        HomeFilterAdapter(filterPriorityList) { view, position, item ->
+        HomeFilterAdapter(filterPriorityList) { view, _, _ ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
-                    filterCount()
+                    tempCount()
                 }
             }
         }
     }
 
     private val classFilterAdapter by lazy {
-        HomeFilterClassAdapter(filterClassificationList) { view, position, item ->
+        HomeFilterClassAdapter(filterClassificationList) { view, pos, item ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
-                    filterCount()
+                    updateTypeOrClass(pos, true)
+                    tempCount()
                 }
             }
         }
     }
 
     private val typeAndComponentFilterAdapter by lazy {
-        HomeFilterTypeCompAdapter(filterTypeCompList) { view, position, item ->
+        HomeFilterTypeCompAdapter(filterTypeCompList) { view, pos, item ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
-                    filterCount()
+                    updateTypeOrClass(pos, false)
+                    tempCount()
                 }
             }
         }
+    }
+
+    private fun updateTypeOrClass(pos: Int, isClass: Boolean) {
+        if (isClass) {
+            filterClassificationList[pos].isSelected = !filterClassificationList[pos].isSelected
+            classFilterAdapter.notifyItemChanged(pos)
+        } else {
+            filterTypeCompList[pos].isSelected = !filterTypeCompList[pos].isSelected
+            typeAndComponentFilterAdapter.notifyItemChanged(pos)
+        }
+
     }
 
     private var isAllButtonSelected = true
@@ -169,6 +186,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         super.onCreate(savedInstanceState)
         observeLinkDevice()
         observeFetchHomeNotification()
+        observeRoomList()
     }
 
     override fun createViewBinding(
@@ -189,12 +207,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         binding.buttonAll.isSelected = isAllButtonSelected
         binding.buttonUnread.isSelected = !isAllButtonSelected
 
-        editTextChanged()
+        editTextHomeChanged()
+        editTextFilterChanged()
+
+//        Log.e("getDate", ConvertDateTimeFormat.getDaysBeforeDate(17))
+//        dbHelper.deleteFetchNotificationOlderThanWeek(ConvertDateTimeFormat.getDaysBeforeDate(17))
     }
 
     override fun onResume() {
         super.onResume()
         callLinkDevice()
+        callRoomList()
         if (appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)) {
             showMessage("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}")
             appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, false)
@@ -218,19 +241,27 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
-    private fun editTextChanged() {
+    private fun editTextHomeChanged() {
         binding.editTextSearchServices.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 filter(s.toString())
-//                callSearchCity(s.toString())
+            }
+
+        })
+    }
+
+    private fun editTextFilterChanged() {
+        binding.editTextSearchHere.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                filterSearch(s.toString())
             }
 
         })
@@ -244,7 +275,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             //use .toLowerCase() for better matches
             if (d.data!!.alarm!!.name!!.contains(text!!, true) ||
                 d.data!!.node!!.hostname!!.contains(text, true) ||
-                d.data!!.alarm!!.chart!!.contains(text, true)) {
+                d.data!!.alarm!!.chart!!.contains(text, true)
+            ) {
                 temp.add(d)
             }
         }
@@ -253,12 +285,62 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         binding.buttonAll.text = "${getString(R.string.btn_all)} (${temp.size})"
         binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
-        if(!isAllButtonSelected){
+        if (!isAllButtonSelected) {
             homeAdapter.updateList(temp.filter { !it.isRead } as ArrayList<HomeNotificationList>)
         } else {
             homeAdapter.updateList(temp)
         }
 
+    }
+
+    fun filterSearch(text: String?) = with(binding) {
+        val tsNode = ArrayList<FilterList>()
+        val tsStatus = ArrayList<FilterList>()
+        val tsPriority = ArrayList<FilterList>()
+        val tsClass = ArrayList<FilterList>()
+        val tsType = ArrayList<FilterList>()
+
+        nodeFilterAdapter.updateList(getFilterResult(filterNodesList, tsNode, text))
+        alertStatusFilterAdapter.updateList(getFilterResult(filterStatusList, tsStatus, text))
+        notificationPriorityFilterAdapter.updateList(
+            getFilterResult(
+                filterPriorityList,
+                tsPriority,
+                text
+            )
+        )
+        classFilterAdapter.updateList(getFilterResult(filterClassificationList, tsClass, text))
+        typeAndComponentFilterAdapter.updateList(getFilterResult(filterTypeCompList, tsType, text))
+
+        getFilterCondition(tsNode, constraintNode, viewNode)
+        getFilterCondition(tsStatus, constraintAlertStatus, viewAlertStatus)
+        getFilterCondition(tsPriority, constraintNotificationPriority, viewNotificationPriority)
+        getFilterCondition(tsClass, constraintClass, viewClass)
+        getFilterCondition(tsType, constraintTypeAndComponent, viewTypeAndComponent)
+
+    }
+
+    private fun getFilterResult(
+        list1: ArrayList<FilterList>,
+        list2: ArrayList<FilterList>,
+        text: String?
+    ): ArrayList<FilterList> {
+        for (item in list1) {
+            if (item.name.contains(text!!, true)) {
+                list2.add(item)
+            }
+        }
+        return list2
+    }
+
+    private fun getFilterCondition(list: ArrayList<FilterList>, view1: View, view2: View) {
+        if (list.isEmpty()) {
+            view1.gone()
+            view2.gone()
+        } else {
+            view1.visible()
+            view2.visible()
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -279,7 +361,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.buttonUnread.isSelected = !isAllButtonSelected
 
             homeAdapter.list.clear()
-            homeAdapter.list.addAll(getUnreadData())
+            homeAdapter.list.addAll(getAllData(isUnread = true))
 
             homeAdapter.notifyDataSetChanged()
         }
@@ -328,46 +410,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.apply {
                 if (totalFilterCount != 0) {
                     isFilterBy = true
+                    isApplyFilter = true
                     constraintFilterSelected.visible()
-                    if(filterNodesList.isNotEmpty()){
-                        filterNodesList.forEach {
-                            if(it.isSelected){
-                                filterSelectedAdapter.list.add(FilterSelectedList(it.hostname!!,1))
-                            }
-                        }
-                    }
-                    if(filterStatusList.isNotEmpty()){
-                        filterStatusList.forEach {
-                            if(it.isSelected){
-                                filterSelectedAdapter.list.add(FilterSelectedList(it.name,2))
-                            }
-                        }
-                    }
-                    if(filterPriorityList.isNotEmpty()){
-                        filterPriorityList.forEach {
-                            if(it.isSelected){
-                                filterSelectedAdapter.list.add(FilterSelectedList(it.name,3))
-                            }
-                        }
-                    }
-                    if(filterClassificationList.isNotEmpty()){
-                        filterClassificationList.forEach {
-                            if(it.isSelected){
-                                filterSelectedAdapter.list.add(FilterSelectedList(it.classification!!,4))
-                            }
-                        }
-                    }
-                    if(filterTypeCompList.isNotEmpty()){
-                        filterTypeCompList.forEach {
-                            if(it.isSelected){
-                                filterSelectedAdapter.list.add(FilterSelectedList(it.family!!,5))
-                            }
-                        }
-                    }
+                    filterSelectedAdapter.list.clear()
+                    setFilterSelectedData(filterNodesList, 1)
+                    setFilterSelectedData(filterStatusList, 2)
+                    setFilterSelectedData(filterPriorityList, 3)
+                    setFilterSelectedData(filterClassificationList, 4)
+                    setFilterSelectedData(filterTypeCompList, 5)
+
                     filterSelectedAdapter.notifyDataSetChanged()
 
                     callFetchHomeNotification()
-                    filterCount()
+                    applyFilterCount()
 
                 } else {
                     isFilterBy = false
@@ -380,57 +435,50 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         imageViewNodeDown.setOnClickListener {
-            if (imageViewNodeDown.rotation == 0.0F) {
-                imageViewNodeDown.rotation = 180.0F
-                recyclerViewNode.gone()
-            } else {
-                imageViewNodeDown.rotation = 0.0F
-                recyclerViewNode.visible()
-            }
+            changeFilterRotation(imageViewNodeDown, recyclerViewNode)
         }
 
         imageViewAlertStatusDown.setOnClickListener {
-            if (imageViewAlertStatusDown.rotation == 0.0F) {
-                imageViewAlertStatusDown.rotation = 180.0F
-                recyclerViewAlertStatus.gone()
-            } else {
-                imageViewAlertStatusDown.rotation = 0.0F
-                recyclerViewAlertStatus.visible()
-            }
+            changeFilterRotation(imageViewAlertStatusDown, recyclerViewAlertStatus)
         }
 
         imageViewNotificationPriorityDown.setOnClickListener {
-            if (imageViewNotificationPriorityDown.rotation == 0.0F) {
-                imageViewNotificationPriorityDown.rotation = 180.0F
-                recyclerViewNotificationPriority.gone()
-            } else {
-                imageViewNotificationPriorityDown.rotation = 0.0F
-                recyclerViewNotificationPriority.visible()
-            }
+            changeFilterRotation(
+                imageViewNotificationPriorityDown,
+                recyclerViewNotificationPriority
+            )
         }
 
         imageViewClassDown.setOnClickListener {
-            if (imageViewClassDown.rotation == 0.0F) {
-                imageViewClassDown.rotation = 180.0F
-                recyclerViewClass.gone()
-            } else {
-                imageViewClassDown.rotation = 0.0F
-                recyclerViewClass.visible()
-            }
+            changeFilterRotation(imageViewClassDown, recyclerViewClass)
         }
 
         imageViewTypeAndComponentDown.setOnClickListener {
-            if (imageViewTypeAndComponentDown.rotation == 0.0F) {
-                imageViewTypeAndComponentDown.rotation = 180.0F
-                recyclerViewTypeAndComponent.gone()
-            } else {
-                imageViewTypeAndComponentDown.rotation = 0.0F
-                recyclerViewTypeAndComponent.visible()
+            changeFilterRotation(imageViewTypeAndComponentDown, recyclerViewTypeAndComponent)
+        }
+    }
+
+    private fun setFilterSelectedData(list1: ArrayList<FilterList>, id: Int) {
+        if (list1.isNotEmpty()) {
+            list1.forEach {
+                if (it.isSelected) {
+                    filterSelectedAdapter.list.add(FilterSelectedList(it.name, id))
+                }
             }
         }
     }
 
-    private fun getAllData(): ArrayList<HomeNotificationList> {
+    private fun changeFilterRotation(arrowView: View, recyclerView: View) {
+        if (arrowView.rotation == 0.0F) {
+            arrowView.rotation = 180.0F
+            recyclerView.gone()
+        } else {
+            arrowView.rotation = 0.0F
+            recyclerView.visible()
+        }
+    }
+
+    private fun getAllData(isUnread: Boolean = false): ArrayList<HomeNotificationList> {
         val data = ArrayList<HomeNotificationList>()
         if (binding.editTextSearchServices.text!!.trim().isNotEmpty()) {
             for (d in homeList) {
@@ -448,31 +496,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             data.addAll(homeList)
         }
 
-        return data
+        return if (isUnread) data.filter { !it.isRead } as ArrayList<HomeNotificationList>
+        else data
     }
 
-    private fun getUnreadData() : ArrayList<HomeNotificationList>{
-        val data = ArrayList<HomeNotificationList>()
-        if (binding.editTextSearchServices.text!!.trim().isNotEmpty()) {
-            for (d in homeList) {
-                //or use .equal(text) with you want equal match
-                //use .toLowerCase() for better matches
-                if (d.data!!.alarm!!.name!!.contains(
-                        binding.editTextSearchServices.text!!.trim(),
-                        true
-                    )
-                ) {
-                    data.add(d)
-                }
-            }
-        } else {
-            data.addAll(homeList)
-        }
-
-        return data.filter { !it.isRead } as ArrayList<HomeNotificationList>
-    }
-
-    private fun addChip(text: String) {
+    /*private fun addChip(text: String) {
         val chip = Chip(binding.chipGroupFilterSelected.context)
         chip.text = text
         chip.isCloseIconVisible = true
@@ -482,50 +510,21 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         binding.chipGroupFilterSelected.addView(chip)
-    }
+    }*/
 
     @SuppressLint("NotifyDataSetChanged")
     private fun removeFilterSelected(position: Int, item: FilterSelectedList) {
 
-        when(item.id){
-            1 -> {
-                for(i in filterNodesList.indices){
-                    if(filterNodesList[i].hostname.equals(item.name, true)){
-                        filterNodesList[i].isSelected = false
-                    }
-                }
-            }
-            2 -> {
-                for(i in filterStatusList.indices){
-                    if(filterStatusList[i].name.equals(item.name, true)){
-                        filterStatusList[i].isSelected = false
-                    }
-                }
-            }
-            3 -> {
-                for(i in filterPriorityList.indices){
-                    if(filterPriorityList[i].name.equals(item.name, true)){
-                        filterPriorityList[i].isSelected = false
-                    }
-                }
-            }
-            4 -> {
-                for(i in filterClassificationList.indices){
-                    if(filterClassificationList[i].name.equals(item.name, true)){
-                        filterClassificationList[i].isSelected = false
-                    }
-                }
-            }
-            5 -> {
-                for(i in filterTypeCompList.indices){
-                    if(filterTypeCompList[i].name.equals(item.name, true)){
-                        filterTypeCompList[i].isSelected = false
-                    }
-                }
-            }
+        when (item.id) {
+            1 -> changeRemoveFilterData(filterNodesList, item)
+            2 -> changeRemoveFilterData(filterStatusList, item)
+            3 -> changeRemoveFilterData(filterPriorityList, item)
+            4 -> changeRemoveFilterData(filterClassificationList, item)
+            5 -> changeRemoveFilterData(filterTypeCompList, item)
         }
 
-        filterCount()
+        tempCount()
+        applyFilterCount()
         notifyDrawer()
         callFetchHomeNotification()
         filterSelectedAdapter.list.removeAt(position)
@@ -534,6 +533,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         filterSelectedAdapter.notifyDataSetChanged()
+    }
+
+    private fun changeRemoveFilterData(list: ArrayList<FilterList>, item: FilterSelectedList) {
+        for (i in list.indices) {
+            if (list[i].name.equals(item.name, true)) {
+                list[i].isSelected = false
+            }
+        }
     }
 
     private fun setAdapter() = with(binding) {
@@ -557,7 +564,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             homeAdapter.notifyDataSetChanged()
         }
         binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
-        binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${getUnreadData().size})"
+        binding.buttonUnread.text =
+            "${getString(R.string.btn_unread)} (${getAllData(isUnread = true).size})"
     }
 
     @SuppressLint("SetTextI18n")
@@ -568,9 +576,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         var priority = item.priority
 
-        val imageViewNotificationWarning = view.findViewById<AppCompatImageView>(R.id.imageViewNotificationWarning)
-        val textViewSpaceWarningPercent = view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningPercent)
-        val textViewSpaceWarningName = view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningName)
+        val imageViewNotificationWarning =
+            view.findViewById<AppCompatImageView>(R.id.imageViewNotificationWarning)
+        val textViewSpaceWarningPercent =
+            view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningPercent)
+        val textViewSpaceWarningName =
+            view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningName)
         val textViewNodeId = view.findViewById<AppCompatTextView>(R.id.textViewNodeId)
         val textViewDiskSpace = view.findViewById<AppCompatTextView>(R.id.textViewDiskSpace)
         val textViewWarRoomsList = view.findViewById<AppCompatTextView>(R.id.textViewWarRoomsList)
@@ -599,22 +610,25 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         /*radioButtonCurrentNodes.isChecked = isCurrentNodes
         radioButtonAllNodes.isChecked = !isCurrentNodes*/
 
-        if(item.data!!.alarm!!.status.equals(AlertStatus.CRITICAL.type, true)){
+        if (item.data!!.alarm!!.status.equals(AlertStatus.CRITICAL.type, true)) {
             imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorRedFF))
-        } else if(item.data!!.alarm!!.status.equals(AlertStatus.WARNING.type, true)){
+                ContextCompat.getColor(requireContext(), R.color.colorRedFF)
+            )
+        } else if (item.data!!.alarm!!.status.equals(AlertStatus.WARNING.type, true)) {
             imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorYellowF9))
+                ContextCompat.getColor(requireContext(), R.color.colorYellowF9)
+            )
         } else {
             imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorPrimary))
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            )
         }
 
-        if(item.priority.equals(Priority.HIGH_PRIORITY.shortName, true)){
+        if (item.priority.equals(Priority.HIGH_PRIORITY.shortName, true)) {
             imageViewPriority.setImageResource(R.drawable.ic_high_priority)
             imageViewBigPriority.setImageResource(R.drawable.ic_high_priority)
             seekBar.setProgress(75f)
-        } else if(item.priority.equals(Priority.MEDIUM_PRIORITY.shortName, true)){
+        } else if (item.priority.equals(Priority.MEDIUM_PRIORITY.shortName, true)) {
             imageViewPriority.setImageResource(R.drawable.ic_medium_priority)
             imageViewBigPriority.setImageResource(R.drawable.ic_medium_priority)
             seekBar.setProgress(45f)
@@ -716,9 +730,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {}
 
-            override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
-
-            }
+            override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {}
         })
 
         dialog.setCancelable(false)
@@ -746,28 +758,24 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             AllWarRoomsAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        warRoomsItemPosition = position
+                        roomsItemPosition = position
                         binding.textViewLabelAllWarRooms.text = item.name
+                        callFetchHomeNotification()
                         dialog.dismiss()
                     }
                 }
             }
         }
 
-        allWarRoomsAdapter.list.add(WarRoomsList("All War Rooms"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 1"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 2"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 3"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 4"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 5"))
+        allWarRoomsAdapter.list.addAll(roomList)
 
         val recyclerViewSelectWarRooms =
             view.findViewById<RecyclerView>(R.id.recyclerViewSelectWarRooms)
         val textViewLabelClose = view.findViewById<AppCompatTextView>(R.id.textViewLabelClose)
         recyclerViewSelectWarRooms.adapter = allWarRoomsAdapter
 
-        if (warRoomsItemPosition != -1) {
-            allWarRoomsAdapter.selectionPosition = warRoomsItemPosition
+        if (roomsItemPosition != -1) {
+            allWarRoomsAdapter.selectionPosition = roomsItemPosition
         }
 
         allWarRoomsAdapter.notifyDataSetChanged()
@@ -800,7 +808,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             ExistisWarRoomsAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        warRoomsItemPosition = position
+                        roomsItemPosition = position
                         binding.textViewLabelAllWarRooms.text = item.name
                         dialog.dismiss()
                     }
@@ -1007,13 +1015,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewClass.adapter = classFilterAdapter
         recyclerViewTypeAndComponent.adapter = typeAndComponentFilterAdapter
 
-        if(filterStatusList.isEmpty()){
+        if (filterStatusList.isEmpty()) {
             filterStatusList.add(FilterList(AlertStatus.CRITICAL.type, "4"))
             filterStatusList.add(FilterList(AlertStatus.WARNING.type, "3"))
             filterStatusList.add(FilterList(AlertStatus.CLEAR.type, ""))
         }
 
-        if(filterPriorityList.isEmpty()){
+        if (filterPriorityList.isEmpty()) {
             filterPriorityList.add(
                 FilterList(
                     "High",
@@ -1045,7 +1053,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun notifyDrawer() = with(binding){
+    private fun notifyDrawer() = with(binding) {
         nodeFilterAdapter.notifyDataSetChanged()
         alertStatusFilterAdapter.notifyDataSetChanged()
         classFilterAdapter.notifyDataSetChanged()
@@ -1053,31 +1061,49 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         notificationPriorityFilterAdapter.notifyDataSetChanged()
     }
 
-    private fun filterCount() = with(binding) {
+    private fun filterCount() {
         val nodeCount = filterNodesList.filter { it.isSelected }
         val alertStatusCount = filterStatusList.filter { it.isSelected }
-        val notificationPriorityCount =
-            filterPriorityList.filter { it.isSelected }
+        val notificationPriorityCount = filterPriorityList.filter { it.isSelected }
         val classCount = filterClassificationList.filter { it.isSelected }
         val typAndComponentCount = filterTypeCompList.filter { it.isSelected }
 
         totalFilterCount =
             nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
+        Log.e(
+            "count", "node:${nodeCount.size}, status:${alertStatusCount.size}, " +
+                    "priority:${notificationPriorityCount.size}, " +
+                    "class:${classCount.size}, type:${typAndComponentCount.size}, total:$totalFilterCount"
+        )
+    }
 
-        Log.e("count", "node:${nodeCount.size}, status:${alertStatusCount.size}, " +
-                "priority:${notificationPriorityCount.size}, " +
-                "class:${classCount.size}, type:${typAndComponentCount.size}, total:$totalFilterCount")
+    private fun tempCount() = with(binding) {
+        filterCount()
 
         if (totalFilterCount != 0) {
-            includeToolbar.textViewFilterCount.visible()
-            includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
             buttonApplyFilter.text = "Apply ($totalFilterCount) Filters"
         } else {
-            includeToolbar.textViewFilterCount.gone()
             buttonApplyFilter.text = "Apply Filters"
+            isFilterBy = false
         }
 
+        isApplyFilter = false
+    }
 
+    private fun applyFilterCount() = with(binding) {
+        filterCount()
+        if (totalFilterCount != 0) {
+            if (isFilterBy) {
+                includeToolbar.textViewFilterCount.visible()
+                includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
+            } else {
+                includeToolbar.textViewFilterCount.gone()
+            }
+
+        } else {
+            includeToolbar.textViewFilterCount.gone()
+            isFilterBy = false
+        }
     }
 
     private fun callLinkDevice() {
@@ -1129,36 +1155,45 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         homeList.clear()
         homeAdapter.list.clear()
 
-        if(sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1){
-            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+        if (sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1) {
+            homeList.addAll(
+                dbHelper.getAllDataFromFetchNotification(
+                    spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                    roomID = roomList[roomsItemPosition].id!!
+                )
+            )
             homeAdapter.list.addAll(homeList)
-        } else if(isFilterBy){
+        } else if (isFilterBy) {
             var tempNodeList = ArrayList<String>()
-            var tempClassList = ArrayList<String>()
-            var tempStatusList = ArrayList<String>()
-            var tempPriorityList = ArrayList<String>()
-            var tempTypeList = ArrayList<String>()
-            if(filterNodesList.isNotEmpty()){
-                tempNodeList = filterNodesList.filter { it.isSelected }.map { it.id } as ArrayList<String>
-            }
-            if(filterClassificationList.isNotEmpty()){
-                tempClassList = filterClassificationList.filter { it.isSelected }.map { it.classification } as ArrayList<String>
-            }
-            if(filterStatusList.isNotEmpty()){
-                tempStatusList = filterStatusList.filter { it.isSelected }.map { it.name } as ArrayList<String>
-            }
-            if(filterPriorityList.isNotEmpty()){
-                tempPriorityList = filterPriorityList.filter { it.isSelected }.map { it.name } as ArrayList<String>
-            }
-            if(filterTypeCompList.isNotEmpty()){
-                tempTypeList = filterTypeCompList.filter { it.isSelected }.map { it.family } as ArrayList<String>
+            if (filterNodesList.isNotEmpty()) {
+                tempNodeList = filterNodesList.filter { it.isSelected }
+                    .map { it.otherName } as ArrayList<String>
             }
 
-            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID), isFilterBy = true,
-                statusFilters = tempStatusList, priorityFilters = tempPriorityList, nodesFilters = tempNodeList, classFilters = tempClassList, typeFilters = tempTypeList))
+            val tempClassList: ArrayList<String> = getFilterTempList(filterClassificationList)
+            val tempStatusList: ArrayList<String> = getFilterTempList(filterStatusList)
+            val tempPriorityList: ArrayList<String> = getFilterTempList(filterPriorityList)
+            val tempTypeList: ArrayList<String> = getFilterTempList(filterTypeCompList)
+
+            homeList.addAll(
+                dbHelper.getAllDataFromFetchNotification(
+                    spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                    roomID = roomList[roomsItemPosition].id!!,
+                    isFilterBy = true,
+                    statusFilters = tempStatusList,
+                    priorityFilters = tempPriorityList,
+                    nodesFilters = tempNodeList,
+                    classFilters = tempClassList,
+                    typeFilters = tempTypeList
+                )
+            )
             homeAdapter.list.addAll(homeList)
         } else {
-            homeList.addAll(dbHelper.getAllDataFromFetchNotification(appPreferences.getString(Constant.APP_PREF_SPACE_ID)))
+            homeList.addAll(
+                dbHelper.getAllDataFromFetchNotification(
+                    spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                    roomID = roomList[roomsItemPosition].id!!)
+            )
             homeAdapter.list.addAll(homeList)
         }
 
@@ -1166,24 +1201,44 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val tempClassList = ArrayList<HomeNotificationList.Data.Alarm>()
         val tempTypeCompList = ArrayList<HomeNotificationList.Data.Alarm>()
 
-        if(filterNodesList.isEmpty()){
+        if (filterNodesList.isEmpty()) {
             homeList.forEach {
                 tempNodeList.add(it.data!!.node!!)
             }
-            filterNodesList = tempNodeList.distinctBy { it.id } as ArrayList<HomeNotificationList.Data.Node>
+            val tempList = tempNodeList.distinctBy { it.hostname }
+            for (item in tempList) {
+                filterNodesList.add(
+                    FilterList(
+                        item.hostname!!,
+                        otherName = item.id,
+                        isSelected = false
+                    )
+                )
+            }
         }
-        if(filterClassificationList.isEmpty()){
+        if (filterClassificationList.isEmpty()) {
             homeList.forEach {
                 tempClassList.add(it.data!!.alarm!!)
             }
-            filterClassificationList = tempClassList.distinctBy { it.classification } as ArrayList<HomeNotificationList.Data.Alarm>
+            val tempList = tempClassList.distinctBy { it.classification }.map { it.classification }
+            for (item in tempList) {
+                filterClassificationList.add(FilterList(item!!, isSelected = false))
+            }
         }
-        if(filterTypeCompList.isEmpty()){
+        if (filterTypeCompList.isEmpty()) {
             homeList.forEach {
                 tempTypeCompList.add(it.data!!.alarm!!)
             }
-            filterTypeCompList = tempTypeCompList.distinctBy { it.family } as ArrayList<HomeNotificationList.Data.Alarm>
+            val tempList = tempTypeCompList.distinctBy { it.family }.map { it.family }
+            for (item in tempList) {
+                filterTypeCompList.add(FilterList(item!!, isSelected = false))
+            }
+
         }
+
+        Log.e("class", Gson().toJson(filterClassificationList))
+        Log.e("type", Gson().toJson(filterTypeCompList))
+
 
         val unreadItem = homeList.filter { !it.isRead }
 
@@ -1202,6 +1257,40 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 homeAdapter.list.addAll(it.data!!)
                 homeAdapter.notifyDataSetChanged()
             }
+        }
+    }
+
+    private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {
+        var list2 = ArrayList<String>()
+        if (list1.isNotEmpty()) {
+            list2 = list1.filter { it.isSelected }
+                .map { it.name } as ArrayList<String>
+        }
+        return list2
+    }
+
+    private fun callRoomList() {
+        showLoader()
+        apiViewModel.callGetRoomsList(appPreferences.getString(Constant.APP_PREF_SPACE_ID))
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeRoomList() {
+        apiViewModel.roomListLiveData.observe(this) {
+            hideLoader()
+            if (!it.isError && it.responseCode == 200) {
+                roomList.addAll(it.data!!)
+                binding.textViewLabelAllWarRooms.text = roomList[0].name
+            }
+        }
+    }
+
+    override fun onBackActionPerform(): Boolean {
+        return if (binding.drawerLayout.isDrawerOpen(GravityCompat.END)) {
+            binding.drawerLayout.closeDrawer(GravityCompat.END)
+            false
+        } else {
+            super.onBackActionPerform()
         }
     }
 }

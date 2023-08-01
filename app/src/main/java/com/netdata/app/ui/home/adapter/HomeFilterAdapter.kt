@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.data.pojo.request.AlertInfoList
 import com.netdata.app.data.pojo.request.FilterList
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.RowItemAlertInfoBinding
 import com.netdata.app.databinding.RowItemFilterCheckboxBinding
 import com.netdata.app.utils.gone
@@ -41,6 +42,7 @@ class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, In
             binding.apply {
                 checkBoxFilter.setOnClickListener {
                     list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    notifyItemChanged(absoluteAdapterPosition)
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }
@@ -51,12 +53,12 @@ class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, In
             textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
 
-            if(item.count.isNotEmpty()){
+            /*if(item.count!!.isNotEmpty()){
                 textViewFilterCount.visible()
                 textViewFilterCount.text = item.count
             } else {
                 textViewFilterCount.gone()
-            }
+            }*/
 
             if(item.isIcon){
                 imageViewPriority.visible()
@@ -66,6 +68,12 @@ class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, In
             }
         }
 
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun updateList(filterList: ArrayList<FilterList>) {
+        list = filterList
+        notifyDataSetChanged()
     }
 
 }

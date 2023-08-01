@@ -6,13 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.data.pojo.request.WarRoomsList
+import com.netdata.app.data.pojo.response.RoomList
 import com.netdata.app.databinding.RowItemSelectWarRoomsBinding
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible
 
-class AllWarRoomsAdapter(val callBack: (View, Int, WarRoomsList) -> Unit) : RecyclerView.Adapter<AllWarRoomsAdapter.ViewHolder>() {
+class AllWarRoomsAdapter(val callBack: (View, Int, RoomList) -> Unit) : RecyclerView.Adapter<AllWarRoomsAdapter.ViewHolder>() {
 
-    var list = ArrayList<WarRoomsList>()
+    var list = ArrayList<RoomList>()
     var selectionPosition = -1
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -41,18 +42,19 @@ class AllWarRoomsAdapter(val callBack: (View, Int, WarRoomsList) -> Unit) : Recy
         init {
             binding.apply {
                 constraintMain.setOnClickListener {
-                    selectionPosition = adapterPosition
-                    callBack.invoke(it, adapterPosition, list[adapterPosition])
-                    notifyDataSetChanged()
+                    selectionPosition = absoluteAdapterPosition
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: WarRoomsList) = with(binding) {
-            if(selectionPosition == adapterPosition){
+        fun bind(item: RoomList) = with(binding) {
+            if(selectionPosition == absoluteAdapterPosition){
+                item.isSelected = true
                 imageViewCheck.visible()
             } else {
+                item.isSelected = false
                 imageViewCheck.gone()
             }
             textViewName.text = item.name

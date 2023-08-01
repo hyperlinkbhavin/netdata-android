@@ -1,27 +1,36 @@
 package com.netdata.app.ui.notification.fragment
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.netdata.app.R
 import com.netdata.app.data.pojo.enumclass.Priority
 import com.netdata.app.data.pojo.request.NotificationsList
 import com.netdata.app.data.pojo.request.WarRoomsList
+import com.netdata.app.data.pojo.response.RoomList
 import com.netdata.app.databinding.NotificationFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.adapter.AllWarRoomsAdapter
 import com.netdata.app.ui.notification.adapter.NotificationAdapter
 import com.netdata.app.utils.Constant
+import com.netdata.app.utils.customapi.ApiViewModel
 
 class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
 
+    private val apiViewModel by lazy {
+        ViewModelProvider(this)[ApiViewModel::class.java]
+    }
+
     private var warRoomsItemPosition = 0
+    private var roomList = ArrayList<RoomList>()
 
     private val notificationsAdapter by lazy {
         NotificationAdapter() { view, position, item ->
@@ -49,6 +58,11 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
         fragmentComponent.inject(this)
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        observeRoomList()
+    }
+
     override fun createViewBinding(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -61,6 +75,11 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
         toolbar()
         manageClick()
         setAdapter()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        callRoomList()
     }
 
     private fun toolbar() = with(binding) {
@@ -135,12 +154,7 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
             }
         }
 
-        allWarRoomsAdapter.list.add(WarRoomsList("All War Rooms"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 1"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 2"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 3"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 4"))
-        allWarRoomsAdapter.list.add(WarRoomsList("War Rooms 5"))
+        allWarRoomsAdapter.list.addAll(roomList)
 
         val recyclerViewSelectWarRooms = view.findViewById<RecyclerView>(R.id.recyclerViewSelectWarRooms)
         val textViewLabelClose = view.findViewById<AppCompatTextView>(R.id.textViewLabelClose)
@@ -168,5 +182,21 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
         }
 
         dialog.show()
+    }
+
+    private fun callRoomList() {
+        showLoader()
+        apiViewModel.callGetRoomsList(appPreferences.getString(Constant.APP_PREF_SPACE_ID))
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeRoomList() {
+        apiViewModel.roomListLiveData.observe(this) {
+            hideLoader()
+            if (!it.isError && it.responseCode == 200) {
+                roomList.addAll(it.data!!)
+                binding.textViewLabelAllWarRooms.text = roomList[0].name
+            }
+        }
     }
 }

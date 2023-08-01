@@ -2,6 +2,7 @@ package com.netdata.app.utils.customapi
 
 import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.data.pojo.response.HomeNotificationList
+import com.netdata.app.data.pojo.response.RoomList
 import com.netdata.app.data.pojo.response.SpaceList
 import retrofit2.Call
 import retrofit2.http.*
@@ -25,6 +26,9 @@ interface MainApi {
 
     @GET("api/v1/notifications/NetdataMobileApp")
     fun fetchHomeNotification(@Header("Cookie") cookie: String): Call<ArrayList<HomeNotificationList>>
+
+    @GET("api/v2/spaces/{spaceID}/rooms?show_all=true")
+    fun getRoomsList(@Header("Cookie") cookie: String, @Path("spaceID") spaceID: String): Call<ArrayList<RoomList>>
 
     @GET("api/v2/spaces/{spaceID}/alarms")
     fun listSpaceAlertCount(@Header("Cookie") cookie: String, @Path("spaceID") spaceID: String): Call<Any>

@@ -16,9 +16,9 @@ object Constant {
 
     var filterStatusList = ArrayList<FilterList>()
     var filterPriorityList = ArrayList<FilterList>()
-    var filterNodesList = ArrayList<HomeNotificationList.Data.Node>()
-    var filterClassificationList = ArrayList<HomeNotificationList.Data.Alarm>()
-    var filterTypeCompList = ArrayList<HomeNotificationList.Data.Alarm>()
+    var filterNodesList = ArrayList<FilterList>()
+    var filterClassificationList = ArrayList<FilterList>()
+    var filterTypeCompList = ArrayList<FilterList>()
 
     const val APP_PREF_IS_LOGIN = "APP_PREF_IS_LOGIN"
     const val APP_PREF_SPACE_NAME = "APP_PREF_SPACE_NAME"

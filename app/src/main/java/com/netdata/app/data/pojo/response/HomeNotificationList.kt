@@ -82,7 +82,8 @@ data class HomeNotificationList(
             @SerializedName("conf_file") var confFile: String? = null,
             @SerializedName("calc_expr") var calcExpr: String? = null,
             @SerializedName("log") var log: ArrayList<Log> = arrayListOf(),
-            var isSelected: Boolean = false
+            var isClassSelected: Boolean = false,
+            var isTypeSelected: Boolean = false
         ) {
             data class Log(
                 @SerializedName("alarm_name") var alarmName: String? = null,

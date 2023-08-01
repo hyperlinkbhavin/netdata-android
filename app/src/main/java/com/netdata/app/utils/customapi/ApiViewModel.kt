@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.netdata.app.data.pojo.MyResponseBody
 import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.data.pojo.response.HomeNotificationList
+import com.netdata.app.data.pojo.response.RoomList
 import com.netdata.app.data.pojo.response.SpaceList
 import com.netdata.app.utils.Constant
 import retrofit2.Call
@@ -25,6 +26,7 @@ class ApiViewModel: ViewModel() {
     val unlinkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
     val spaceListLiveData = MutableLiveData<MyResponseBody<ArrayList<SpaceList>>>()
     val fetchHomeNotificationLiveData = MutableLiveData<MyResponseBody<ArrayList<HomeNotificationList>>>()
+    val roomListLiveData = MutableLiveData<MyResponseBody<ArrayList<RoomList>>>()
     val listSpaceAlertCountLiveData = MutableLiveData<MyResponseBody<Any>>()
     val listActiveAlertPerRoomLiveData = MutableLiveData<MyResponseBody<Any>>()
     val getAlertDetailedLiveData = MutableLiveData<MyResponseBody<Any>>()
@@ -147,6 +149,31 @@ class ApiViewModel: ViewModel() {
             override fun onFailure(call: Call<ArrayList<HomeNotificationList>>, t: Throwable) {
                 fetchHomeNotificationLiveData.postValue(MyResponseBody(0, "Test", ArrayList(),isError = true, throwable = t))
                 Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callGetRoomsList(spaceID: String)
+    {
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.getRoomsList(cookie, spaceID)
+        callApi.enqueue(object: Callback<ArrayList<RoomList>>{
+
+            override fun onResponse(call: Call<ArrayList<RoomList>>, response: Response<ArrayList<RoomList>>) {
+                Log.e("roomsList code", response.code().toString())
+                roomListLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<ArrayList<RoomList>>, t: Throwable) {
+                roomListLiveData.postValue(MyResponseBody(0, "Test", ArrayList(),isError = true, throwable = t))
+                Log.e("Fail RoomList", call.toString())
             }
 
         })

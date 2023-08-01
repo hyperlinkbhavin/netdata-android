@@ -14,6 +14,9 @@ import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.data.pojo.response.NotificationPriorityList
 import com.netdata.app.data.pojo.response.SpaceList
 import com.netdata.app.utils.Constant
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -439,7 +442,8 @@ class DatabaseHelper(context: Context) :
     }
 
     fun getAllDataFromFetchNotification(
-        spaceId: String = "1", isSortBy: Boolean = false, isFilterBy: Boolean = false,
+        spaceID: String = "1", roomID: String = "1",
+        isSortBy: Boolean = false, isFilterBy: Boolean = false,
         statusFilters: ArrayList<String> = ArrayList(),
         priorityFilters: ArrayList<String> = ArrayList(),
         nodesFilters: ArrayList<String> = ArrayList(),
@@ -455,7 +459,7 @@ class DatabaseHelper(context: Context) :
         val gson = Gson()
 
         if (isSortBy) {
-            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceId'"
+            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
 
             if (Constant.sortByCriticalityItemPosition != -1) {
                 orderByQuery = """
@@ -487,7 +491,7 @@ class DatabaseHelper(context: Context) :
         } else if (isFilterBy) {
             Log.e("status", "$statusFilters $priorityFilters")
             // Define the filter criteria (critical status or high priority)
-            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceId'"
+            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
             var statusArg = ""
             var priorityArg = ""
             var nodesArg = ""
@@ -496,50 +500,52 @@ class DatabaseHelper(context: Context) :
 
             if(statusFilters.isNotEmpty()){
                 for(i in statusFilters){
-                    statusArg += "'$i',"
+                    statusArg += "$FN_ALARM_STATUS LIKE ('$i') OR "
                 }
-                statusArg = statusArg.dropLast(1)
+                statusArg = statusArg.dropLast(4)
             }
             if(priorityFilters.isNotEmpty()){
                 for(i in priorityFilters){
-                    priorityArg += "'$i',"
+                    priorityArg += "$FN_PRIORITY LIKE ('$i') OR "
                 }
-                priorityArg = priorityArg.dropLast(1)
+                priorityArg = priorityArg.dropLast(4)
             }
             if(nodesFilters.isNotEmpty()){
                 for(i in nodesFilters){
-                    nodesArg += "'$i',"
+                    nodesArg += "$FN_NODE_ID LIKE ('$i') OR "
                 }
-                nodesArg = nodesArg.dropLast(1)
+                nodesArg = nodesArg.dropLast(4)
             }
             if(classFilters.isNotEmpty()){
                 for(i in classFilters){
-                    classArg += "'$i',"
+                    classArg += "$FN_ALARM_CLASSIFICATION LIKE ('$i') OR "
                 }
-                classArg = classArg.dropLast(1)
+                classArg = classArg.dropLast(4)
             }
             if(typeFilters.isNotEmpty()){
                 for(i in typeFilters){
-                    typeArg += "'$i',"
+                    typeArg += "$FN_ALARM_FAMILY LIKE ('$i') OR "
                 }
-                typeArg = typeArg.dropLast(1)
+                typeArg = typeArg.dropLast(4)
             }
 
             if(statusFilters.isNotEmpty()){
-                selectQuery += " AND $FN_ALARM_STATUS IN ($statusArg)"
+                selectQuery += " AND ($statusArg)"
             }
             if(priorityFilters.isNotEmpty()){
-                selectQuery += " AND $FN_PRIORITY IN ($priorityArg)"
+                selectQuery += " AND ($priorityArg)"
             }
             if(nodesFilters.isNotEmpty()){
-                selectQuery += " AND $FN_NODE_ID IN ($nodesArg)"
+                selectQuery += " AND ($nodesArg)"
             }
             if(classFilters.isNotEmpty()){
-                selectQuery += " AND $FN_ALARM_CLASSIFICATION IN ($classArg)"
+                selectQuery += " AND ($classArg)"
             }
             if(typeFilters.isNotEmpty()){
-                selectQuery += " AND $FN_ALARM_FAMILY IN ($typeArg)"
+                selectQuery += " AND ($typeArg)"
             }
+
+            selectQuery += " ORDER BY $FN_CREATED_AT DESC"
 
             Log.e("query", selectQuery)
 
@@ -548,7 +554,7 @@ class DatabaseHelper(context: Context) :
 
         } else {
             selectQuery =
-                "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceId' " +
+                "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID' " +
                         "ORDER BY $FN_CREATED_AT DESC"
             cursor = db.rawQuery(selectQuery, null)
         }
@@ -653,6 +659,22 @@ class DatabaseHelper(context: Context) :
 
         db.close()
         return dataList
+    }
+
+    fun deleteFetchNotificationOlderThanWeek(date: String){
+        val db = writableDatabase
+
+        try {
+            val deleteQuery = "DELETE FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_CREATED_AT < ?;"
+            db.execSQL(deleteQuery, arrayOf(date))
+
+            val numRowsDeleted = db.compileStatement("SELECT changes()").simpleQueryForLong()
+            Log.e("deleted", "$numRowsDeleted deleted")
+        } catch (e: Exception) {
+            Log.e("delete Error", "$e Error")
+        } finally {
+            db.close()
+        }
     }
 
 }
