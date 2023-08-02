@@ -156,6 +156,7 @@
             android:textColor="@color/colorPrimary"
             android:fontFamily="@font/font_ibm_plex_sans_bold"
             android:padding="@dimen/dp_5"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/textViewWarRoomsList"
             app:layout_constraintTop_toTopOf="@id/textViewWarRoomsList"
             app:layout_constraintBottom_toBottomOf="@id/textViewWarRoomsList"

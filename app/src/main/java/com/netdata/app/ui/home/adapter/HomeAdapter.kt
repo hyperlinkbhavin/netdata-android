@@ -132,7 +132,12 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
             }"
             textViewGKE.text = item.data!!.node!!.hostname
             textViewDiskSpace.text = item.data!!.alarm!!.chart
-//            textViewWarRoomsList.text = item.warRooms
+
+            var roomList = ""
+            for(i in item.data!!.rooms){
+                roomList += "${i.name} • "
+            }
+            textViewWarRoomsList.text = roomList.dropLast(3)
             textViewTypeAndComponent.text = "Type & Component : ${item.data!!.alarm!!.family} • ${item.data!!.alarm!!.classification}"
             textViewLabelWarning.text = item.data!!.alarm!!.status!!.replaceFirstChar {
                 if (it.isLowerCase()) it.titlecase(

@@ -3,6 +3,8 @@ package com.netdata.app.ui.home.fragment
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -18,11 +20,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
@@ -210,14 +214,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         editTextHomeChanged()
         editTextFilterChanged()
 
-//        Log.e("getDate", ConvertDateTimeFormat.getDaysBeforeDate(17))
 //        dbHelper.deleteFetchNotificationOlderThanWeek(ConvertDateTimeFormat.getDaysBeforeDate(17))
     }
 
     override fun onResume() {
         super.onResume()
         callLinkDevice()
-        callRoomList()
         if (appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)) {
             showMessage("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}")
             appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, false)
@@ -229,6 +231,22 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
+    private fun insertDataIfEmpty() {
+        if(dbHelper.getAllDataFromFetchNotification(
+                spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                roomID = roomList[roomsItemPosition].id!!
+            ).isEmpty()){
+            val gson = Gson()
+            val type = object : TypeToken<List<HomeNotificationList>>() {}.type
+            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
+            var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
+            for (item in alarmDataList) {
+                lastId++
+                dbHelper.insertFetchNotificationData(lastId, item)
+            }
+        }
+    }
+
     private fun toolbar() = with(binding) {
         includeToolbar.apply {
             textViewSpace.visible()
@@ -236,8 +254,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             imageViewFilter.visible()
             imageViewNotification.visible()
 
-            textViewNotificationCount.visible()
-            textViewNotificationCount.text = "3"
+            /*textViewNotificationCount.visible()
+            textViewNotificationCount.text = "3"*/
         }
     }
 
@@ -544,11 +562,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun setAdapter() = with(binding) {
-        flexLayoutManager = FlexboxLayoutManager(context)
-        flexLayoutManager.flexDirection = FlexDirection.ROW
+        /*flexLayoutManager = FlexboxLayoutManager(context)
+        flexLayoutManager.flexDirection = FlexDirection.ROW*/
 
         recyclerViewHome.adapter = homeAdapter
-        recyclerViewFilterSelected.layoutManager = flexLayoutManager
+//        recyclerViewFilterSelected.layoutManager = flexLayoutManager
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
     }
 
@@ -1123,7 +1141,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
 
             } else {
-                callFetchHomeNotification()
+                callRoomList()
             }
         }
 //            Log.e("link device", it.toString())
@@ -1141,50 +1159,56 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun callFetchHomeNotification() {
 //        showLoader()
 //        apiViewModel.callFetchHomeNotification()
-
-        /*val gson = Gson()
-                val type = object : TypeToken<List<HomeNotificationList>>() {}.type
-                val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
-                var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
-                for(item in alarmDataList){
-                    lastId++
-                    Log.e("id",lastId.toString())
-                    dbHelper.insertFetchNotificationData(lastId, item)
-                }*/
-//                Log.e("current", getCurrentUTCTime())
         homeList.clear()
         homeAdapter.list.clear()
 
-        if (sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1) {
-            homeList.addAll(
-                dbHelper.getAllDataFromFetchNotification(
-                    spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
-                    roomID = roomList[roomsItemPosition].id!!
-                )
-            )
-            homeAdapter.list.addAll(homeList)
-        } else if (isFilterBy) {
-            var tempNodeList = ArrayList<String>()
-            if (filterNodesList.isNotEmpty()) {
-                tempNodeList = filterNodesList.filter { it.isSelected }
-                    .map { it.otherName } as ArrayList<String>
-            }
+         if (isFilterBy) {
+                var tempNodeList = ArrayList<String>()
+                if (filterNodesList.isNotEmpty()) {
+                    tempNodeList = filterNodesList.filter { it.isSelected }
+                        .map { it.otherName } as ArrayList<String>
+                }
 
-            val tempClassList: ArrayList<String> = getFilterTempList(filterClassificationList)
-            val tempStatusList: ArrayList<String> = getFilterTempList(filterStatusList)
-            val tempPriorityList: ArrayList<String> = getFilterTempList(filterPriorityList)
-            val tempTypeList: ArrayList<String> = getFilterTempList(filterTypeCompList)
+                val tempClassList: ArrayList<String> = getFilterTempList(filterClassificationList)
+                val tempStatusList: ArrayList<String> = getFilterTempList(filterStatusList)
+                val tempPriorityList: ArrayList<String> = getFilterTempList(filterPriorityList)
+                val tempTypeList: ArrayList<String> = getFilterTempList(filterTypeCompList)
 
+             if(sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1){
+                 homeList.addAll(
+                     dbHelper.getAllDataFromFetchNotification(
+                         spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                         roomID = roomList[roomsItemPosition].id!!,
+                         isFilterBy = true,
+                         isSortBy = true,
+                         statusFilters = tempStatusList,
+                         priorityFilters = tempPriorityList,
+                         nodesFilters = tempNodeList,
+                         classFilters = tempClassList,
+                         typeFilters = tempTypeList
+                     )
+                 )
+             } else {
+                 homeList.addAll(
+                     dbHelper.getAllDataFromFetchNotification(
+                         spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                         roomID = roomList[roomsItemPosition].id!!,
+                         isFilterBy = true,
+                         statusFilters = tempStatusList,
+                         priorityFilters = tempPriorityList,
+                         nodesFilters = tempNodeList,
+                         classFilters = tempClassList,
+                         typeFilters = tempTypeList
+                     )
+                 )
+             }
+                homeAdapter.list.addAll(homeList)
+        } else if (sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1) {
             homeList.addAll(
                 dbHelper.getAllDataFromFetchNotification(
                     spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
                     roomID = roomList[roomsItemPosition].id!!,
-                    isFilterBy = true,
-                    statusFilters = tempStatusList,
-                    priorityFilters = tempPriorityList,
-                    nodesFilters = tempNodeList,
-                    classFilters = tempClassList,
-                    typeFilters = tempTypeList
+                    isSortBy = true
                 )
             )
             homeAdapter.list.addAll(homeList)
@@ -1192,7 +1216,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             homeList.addAll(
                 dbHelper.getAllDataFromFetchNotification(
                     spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
-                    roomID = roomList[roomsItemPosition].id!!)
+                    roomID = roomList[roomsItemPosition].id!!
+                )
             )
             homeAdapter.list.addAll(homeList)
         }
@@ -1279,8 +1304,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         apiViewModel.roomListLiveData.observe(this) {
             hideLoader()
             if (!it.isError && it.responseCode == 200) {
+                roomList.clear()
                 roomList.addAll(it.data!!)
                 binding.textViewLabelAllWarRooms.text = roomList[0].name
+                insertDataIfEmpty()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    callFetchHomeNotification()
+                },1000)
             }
         }
     }

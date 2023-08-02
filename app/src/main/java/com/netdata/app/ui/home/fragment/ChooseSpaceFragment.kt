@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
+import com.google.gson.Gson
 import com.netdata.app.R
 import com.netdata.app.data.pojo.request.ChooseSpaceList
 import com.netdata.app.data.pojo.response.SpaceList
@@ -184,6 +185,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     spaceList.clear()
                     chooseSpaceAdapter.list.clear()
                     spaceList.addAll(it.data)
+                    appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
                     chooseSpaceAdapter.list.addAll(it.data)
                     chooseSpaceAdapter.notifyDataSetChanged()
                 }

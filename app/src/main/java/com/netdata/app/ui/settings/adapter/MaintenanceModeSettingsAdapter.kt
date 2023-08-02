@@ -9,15 +9,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.data.pojo.request.WarRoomsList
+import com.netdata.app.data.pojo.response.SpaceList
 import com.netdata.app.databinding.RowItemMaintenanceModeSettingsBinding
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
+class MaintenanceModeSettingsAdapter(val callBack: (View, Int, SpaceList) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
 
-    var list = ArrayList<WarRoomsList>()
+    var list = ArrayList<SpaceList>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -45,10 +46,7 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
         init {
             binding.apply {
                 switchDisableAllNotifications.setOnClickListener {
-                    Log.e("click", list[absoluteAdapterPosition].isSelected.toString())
-                    list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
-                    callBack.invoke(constraintDisableNotifications, absoluteAdapterPosition, list[absoluteAdapterPosition])
-                    notifyDataSetChanged()
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
                 textViewUntilDate.setOnClickListener {
                     datePicker()
@@ -57,6 +55,7 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
                 radioButtonForever.setOnCheckedChangeListener { buttonView, isChecked ->
                     if(isChecked){
                         textViewUntilDate.text = "DD/MM/YY, HH:MM"
+                        callBack.invoke(radioButtonForever, absoluteAdapterPosition, list[absoluteAdapterPosition])
                     }
                 }
 
@@ -64,7 +63,7 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: WarRoomsList) = with(binding) {
+        fun bind(item: SpaceList) = with(binding) {
             Log.e("isSelected", item.isSelected.toString())
             if(item.isSelected){
                 constraintDisableNotifications.isSelected = true
@@ -100,8 +99,11 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
             val mTimePicker: TimePickerDialog
             mTimePicker = TimePickerDialog( textViewDisableAllNotification.context,
                 { timePicker, selectedHour, selectedMinute ->
-                    textViewUntilDate.setText(date+", "+selectedHour.toString()+":"+selectedMinute.toString() )
+                    val fullDate = "$date, $selectedHour:$selectedMinute"
+                    textViewUntilDate.setText(fullDate)
                     radioButtonUntil.isChecked = true
+                    list[absoluteAdapterPosition].untilDate = fullDate
+                    callBack.invoke(textViewUntilDate, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 },
                 hour,
                 minute,
@@ -110,6 +112,11 @@ class MaintenanceModeSettingsAdapter(val callBack: (View, Int, WarRoomsList) -> 
             mTimePicker.setTitle("Select Time")
             mTimePicker.show()
         }
+    }
+
+    fun updateList(filterList: ArrayList<SpaceList>) {
+        list = filterList
+        notifyDataSetChanged()
     }
 
 }

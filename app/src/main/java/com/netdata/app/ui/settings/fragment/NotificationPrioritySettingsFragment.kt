@@ -1,30 +1,17 @@
 package com.netdata.app.ui.settings.fragment
 
 import android.Manifest
-import android.app.AlertDialog
-import android.content.DialogInterface
-import android.content.Intent
 import android.content.res.ColorStateList
-import android.content.res.Configuration
-import android.graphics.Color
-import android.net.Uri
 import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.annotation.RequiresApi
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.setFragmentResultListener
-import com.crazylegend.audiopicker.audios.AudioModel
-import com.crazylegend.audiopicker.pickers.SingleAudioPicker
-import com.crazylegend.core.modifiers.TitleTextModifier
 import com.fondesa.kpermissions.extension.onAccepted
 import com.fondesa.kpermissions.extension.onDenied
 import com.fondesa.kpermissions.extension.onPermanentlyDenied
@@ -40,7 +27,6 @@ import com.netdata.app.utils.gone
 import com.netdata.app.utils.invisible
 import com.netdata.app.utils.localdb.DatabaseHelper
 import com.netdata.app.utils.visible
-import kotlinx.android.synthetic.main.notification_priority_settings_fragment.*
 
 
 class NotificationPrioritySettingsFragment :
@@ -48,6 +34,10 @@ class NotificationPrioritySettingsFragment :
 
     lateinit var dbHelper: DatabaseHelper
     private var notificationPriorityList = ArrayList<NotificationPriorityList>()
+    private val AUDIO_PERMISSION_REQUEST_CODE = 123
+    private val AUDIO_REQUEST_KEY = "audio_request"
+
+    private lateinit var audioPickerLauncher: ActivityResultLauncher<String>
 
     /*private var isHighPrioritySound = false
     private var isMediumPrioritySound = false
@@ -80,83 +70,14 @@ class NotificationPrioritySettingsFragment :
         toolbar()
         manageClick()
 
-        if(dbHelper.getAllDataFromNotificationPriority().isEmpty()){
-            dbHelper.insertNotificationPriorityData(
-            NotificationPriorityList(
-                1,
-                Priority.HIGH_PRIORITY.name,
-                0,
-                "",
-                "",
-                0,
-                0
-            )
-        )
-        dbHelper.insertNotificationPriorityData(
-            NotificationPriorityList(
-                2,
-                Priority.MEDIUM_PRIORITY.name,
-                0,
-                "",
-                "",
-                0,
-                0
-            )
-        )
-        dbHelper.insertNotificationPriorityData(
-            NotificationPriorityList(
-                3,
-                Priority.LOW_PRIORITY.name,
-                0,
-                "",
-                "",
-                0,
-                0
-            )
-        )
-        }
+        getPermission()
+        audioActivityResult()
 
 //        dbHelper.updateNotificationPriorityData(1,"Test", "url",1,1,1)
 
         notificationPriorityList = dbHelper.getAllDataFromNotificationPriority()
 
-        setFragmentResultListener(SingleAudioPicker.SINGLE_AUDIO_REQUEST_KEY) { _, bundle ->
-            val loadedModel =
-                bundle.getParcelable<AudioModel>(SingleAudioPicker.ON_SINGLE_AUDIO_PICK_KEY)
-            loadedModel?.let {
-                binding.apply {
-                    dbHelper.updateNotificationPriorityData(
-                        isSound = 1,
-                        soundName = it.displayName,
-                        soundUrl = FileUtils.getRealPathFromURI(requireContext(), it.contentUri),
-                        conditionID = conditionId
-                    )
-                    if (isTempHighPrioritySound) {
-//                        isHighPrioritySound = true
-                        buttonHighPriorityApplyCustomTune.invisible()
-                        buttonHighPriorityChangeSoundTune.visible()
-                        textViewHighPrioritySoundTune.visible()
-                        textViewHighPrioritySoundTune.text = it.displayName
-                    } else if (isTempMediumPrioritySound) {
-//                        isMediumPrioritySound = true
-                        buttonMediumPriorityApplyCustomTune.invisible()
-                        buttonMediumPriorityChangeSoundTune.visible()
-                        textViewMediumPrioritySoundTune.visible()
-                        textViewMediumPrioritySoundTune.text = it.displayName
-                    } else {
-//                        isLowPrioritySound = true
-                        buttonLowPriorityApplyCustomTune.invisible()
-                        buttonLowPriorityChangeSoundTune.visible()
-                        textViewLowPrioritySoundTune.visible()
-                        textViewLowPrioritySoundTune.text = it.displayName
-                    }
-                }
-
-            }
-        }
-
         setData()
-
         /*dbHelper.getAllDataFromNotificationPriority()*/
     }
 
@@ -171,6 +92,42 @@ class NotificationPrioritySettingsFragment :
     }
 
     private fun setData() = with(binding) {
+        if(dbHelper.getAllDataFromNotificationPriority().isEmpty()){
+            dbHelper.insertNotificationPriorityData(
+                NotificationPriorityList(
+                    1,
+                    Priority.HIGH_PRIORITY.name,
+                    0,
+                    "",
+                    "",
+                    0,
+                    0
+                )
+            )
+            dbHelper.insertNotificationPriorityData(
+                NotificationPriorityList(
+                    2,
+                    Priority.MEDIUM_PRIORITY.name,
+                    0,
+                    "",
+                    "",
+                    0,
+                    0
+                )
+            )
+            dbHelper.insertNotificationPriorityData(
+                NotificationPriorityList(
+                    3,
+                    Priority.LOW_PRIORITY.name,
+                    0,
+                    "",
+                    "",
+                    0,
+                    0
+                )
+            )
+        }
+
         notificationCheck(
             0,
             notificationPriorityList[0],
@@ -271,13 +228,9 @@ class NotificationPrioritySettingsFragment :
             isTempMediumPrioritySound = false
             isTempLowPrioritySound = false
 
-            val nightModeFlags = requireContext().resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK
-            when (nightModeFlags) {
-                Configuration.UI_MODE_NIGHT_YES -> bottomSheetSingleAudioPicker(Color.WHITE)
-                Configuration.UI_MODE_NIGHT_NO -> bottomSheetSingleAudioPicker(Color.DKGRAY)
-            }
+            openAudioPicker()
 
+        //            manageNightModeForBottomSheet()
         }
 
         buttonMediumPriorityApplyCustomTune.setOnClickListener {
@@ -285,12 +238,8 @@ class NotificationPrioritySettingsFragment :
             isTempMediumPrioritySound = true
             isTempLowPrioritySound = false
 
-            val nightModeFlags = requireContext().resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK
-            when (nightModeFlags) {
-                Configuration.UI_MODE_NIGHT_YES -> bottomSheetSingleAudioPicker(Color.WHITE)
-                Configuration.UI_MODE_NIGHT_NO -> bottomSheetSingleAudioPicker(Color.DKGRAY)
-            }
+            openAudioPicker()
+        //            manageNightModeForBottomSheet()
         }
 
         buttonLowPriorityApplyCustomTune.setOnClickListener {
@@ -298,12 +247,9 @@ class NotificationPrioritySettingsFragment :
             isTempMediumPrioritySound = false
             isTempLowPrioritySound = true
 
-            val nightModeFlags = requireContext().resources.configuration.uiMode and
-                    Configuration.UI_MODE_NIGHT_MASK
-            when (nightModeFlags) {
-                Configuration.UI_MODE_NIGHT_YES -> bottomSheetSingleAudioPicker(Color.WHITE)
-                Configuration.UI_MODE_NIGHT_NO -> bottomSheetSingleAudioPicker(Color.DKGRAY)
-            }
+            openAudioPicker()
+
+        //            manageNightModeForBottomSheet()
         }
 
         buttonHighPriorityChangeSoundTune.setOnClickListener {
@@ -391,72 +337,48 @@ class NotificationPrioritySettingsFragment :
             .send()
     }
 
-    /*private fun showPermissionDeniedDialog() {
-        AlertDialog.Builder(this.requireContext())
-            .setTitle("Permission Denied")
-            .setMessage("Permission is denied, Please allow permissions from App Settings.")
-            .setPositiveButton("Settings",
-                DialogInterface.OnClickListener { dialogInterface, i ->
-                    // send to app settings if permission is denied permanently
-                    val intent = Intent()
-                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
-                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
-                    intent.data = uri
-                    startActivity(intent)
-                })
-            .setNegativeButton("Cancel", null)
-            .show()
-    }*/
-
-    private fun bottomSheetSingleAudioPicker(color: Int) {
-        getPermission()
-
-        SingleAudioPicker.showPicker(requireContext(), {
-            setupViewHolderTitleText {
-                textColor = color
-                textPadding = 10 // use dp or sp this is only for demonstration purposes
-            }
-            setupBaseModifier(
-                loadingIndicatorColor = R.color.minusColor,
-                titleTextModifications = {
-                    textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
-                    textStyle = TitleTextModifier.TextStyle.NORMAL
-                    textColor = color
-                    marginBottom = 30 // use dp or sp this is only for demonstration purposes
-                    textPadding = 5 // use dp or sp this is only for demonstration purposes
-                    textSize = 20f  // use sp this is only for demonstration purposes
-                    textString = "Pick a tune"
-                },
-                placeHolderModifications = {
-                    resID = R.drawable.ic_image
-                }
-            )
-        })
+    private fun openAudioPicker() {
+        audioPickerLauncher.launch("audio/*")
     }
 
-    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1) {
-                //the selected audio.
-                val uri: Uri? = data!!.data
-            Log.e("audioFile", data.data.toString())
-
-        }
-    }*/
-
-    /*private fun checkSwitch(switchView: SwitchCompat, buttonView: AppCompatButton) {
-        if (switchView.isChecked) {
-            buttonView.isClickable = true
-            buttonView.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
-            )
-        } else {
-            buttonView.isClickable = false
-            buttonView.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorGreyCF)
-            )
-        }
-    }*/
+    private fun audioActivityResult() {
+        audioPickerLauncher =
+            registerForActivityResult(ActivityResultContracts.GetContent()) { audioUri ->
+                if (audioUri != null) {
+                    val audio = FileUtils.getRealPathFromURI(requireContext(), audioUri)
+                    val audioName = audio!!.split("/").last()
+                    Log.e("name", audioName)
+                    binding.apply {
+                        dbHelper.updateNotificationPriorityData(
+                            isSound = 1,
+                            soundName = audioName,
+                            soundUrl = audio,
+                            conditionID = conditionId
+                        )
+                        if (isTempHighPrioritySound) {
+//                        isHighPrioritySound = true
+                            buttonHighPriorityApplyCustomTune.invisible()
+                            buttonHighPriorityChangeSoundTune.visible()
+                            textViewHighPrioritySoundTune.visible()
+                            textViewHighPrioritySoundTune.text = audioName
+                        } else if (isTempMediumPrioritySound) {
+//                        isMediumPrioritySound = true
+                            buttonMediumPriorityApplyCustomTune.invisible()
+                            buttonMediumPriorityChangeSoundTune.visible()
+                            textViewMediumPrioritySoundTune.visible()
+                            textViewMediumPrioritySoundTune.text = audioName
+                        } else {
+//                        isLowPrioritySound = true
+                            buttonLowPriorityApplyCustomTune.invisible()
+                            buttonLowPriorityChangeSoundTune.visible()
+                            textViewLowPrioritySoundTune.visible()
+                            textViewLowPrioritySoundTune.text = audioName
+                        }
+                    }
+                    // Handle the selected audio URI here
+                }
+            }
+    }
 
     private fun switchCheckChanged(
         isChecked: Boolean,
@@ -485,5 +407,118 @@ class NotificationPrioritySettingsFragment :
             textView.gone()
         }
     }
+
+    /*private fun showPermissionDeniedDialog() {
+        AlertDialog.Builder(this.requireContext())
+            .setTitle("Permission Denied")
+            .setMessage("Permission is denied, Please allow permissions from App Settings.")
+            .setPositiveButton("Settings",
+                DialogInterface.OnClickListener { dialogInterface, i ->
+                    // send to app settings if permission is denied permanently
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                    val uri = Uri.fromParts("package", requireActivity().packageName, null)
+                    intent.data = uri
+                    startActivity(intent)
+                })
+            .setNegativeButton("Cancel", null)
+            .show()
+    }*/
+
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1) {
+                //the selected audio.
+                val uri: Uri? = data!!.data
+            Log.e("audioFile", data.data.toString())
+
+        }
+    }*/
+
+    /*private fun checkSwitch(switchView: SwitchCompat, buttonView: AppCompatButton) {
+        if (switchView.isChecked) {
+            buttonView.isClickable = true
+            buttonView.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            )
+        } else {
+            buttonView.isClickable = false
+            buttonView.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorGreyCF)
+            )
+        }
+    }*/
+
+    /*private fun manageNightModeForBottomSheet() {
+        val nightModeFlags = requireContext().resources.configuration.uiMode and
+                Configuration.UI_MODE_NIGHT_MASK
+        when (nightModeFlags) {
+            Configuration.UI_MODE_NIGHT_YES -> bottomSheetSingleAudioPicker(Color.WHITE)
+            Configuration.UI_MODE_NIGHT_NO -> bottomSheetSingleAudioPicker(Color.DKGRAY)
+        }
+    }*/
+
+    /*private fun bottomSheetSingleAudioPicker(color: Int) {
+        getPermission()
+
+        SingleAudioPicker.showPicker(requireContext(), {
+            setupViewHolderTitleText {
+                textColor = color
+                textPadding = 10 // use dp or sp this is only for demonstration purposes
+            }
+            setupBaseModifier(
+                loadingIndicatorColor = R.color.minusColor,
+                titleTextModifications = {
+                    textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
+                    textStyle = TitleTextModifier.TextStyle.NORMAL
+                    textColor = color
+                    marginBottom = 30 // use dp or sp this is only for demonstration purposes
+                    textPadding = 5 // use dp or sp this is only for demonstration purposes
+                    textSize = 20f  // use sp this is only for demonstration purposes
+                    textString = "Pick a tune"
+                },
+                placeHolderModifications = {
+                    resID = R.drawable.ic_image
+                }
+            )
+        })
+    }*/
+
+    /*private fun audioActivityResult(){
+        setFragmentResultListener(SingleAudioPicker.SINGLE_AUDIO_REQUEST_KEY) { _, bundle ->
+            val loadedModel =
+                bundle.getParcelable<AudioModel>(SingleAudioPicker.ON_SINGLE_AUDIO_PICK_KEY)
+            loadedModel?.let {
+                binding.apply {
+                    dbHelper.updateNotificationPriorityData(
+                        isSound = 1,
+                        soundName = it.displayName,
+                        soundUrl = FileUtils.getRealPathFromURI(requireContext(), it.contentUri),
+                        conditionID = conditionId
+                    )
+                    if (isTempHighPrioritySound) {
+//                        isHighPrioritySound = true
+                        buttonHighPriorityApplyCustomTune.invisible()
+                        buttonHighPriorityChangeSoundTune.visible()
+                        textViewHighPrioritySoundTune.visible()
+                        textViewHighPrioritySoundTune.text = it.displayName
+                    } else if (isTempMediumPrioritySound) {
+//                        isMediumPrioritySound = true
+                        buttonMediumPriorityApplyCustomTune.invisible()
+                        buttonMediumPriorityChangeSoundTune.visible()
+                        textViewMediumPrioritySoundTune.visible()
+                        textViewMediumPrioritySoundTune.text = it.displayName
+                    } else {
+//                        isLowPrioritySound = true
+                        buttonLowPriorityApplyCustomTune.invisible()
+                        buttonLowPriorityChangeSoundTune.visible()
+                        textViewLowPrioritySoundTune.visible()
+                        textViewLowPrioritySoundTune.text = it.displayName
+                    }
+                }
+
+            }
+        }
+    }*/
 }
 

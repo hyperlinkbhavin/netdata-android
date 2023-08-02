@@ -2,7 +2,6 @@ package com.netdata.app.utils
 
 import com.netdata.app.data.pojo.request.FilterList
 import com.netdata.app.data.pojo.request.WarRoomsList
-import com.netdata.app.data.pojo.response.HomeNotificationList
 
 object Constant {
     var COOKIE_SI = ""
@@ -27,6 +26,7 @@ object Constant {
     const val APP_PREF_DAY_NIGHT_MODE = "APP_PREF_DAY_NIGHT_MODE"
     const val APP_PREF_COOKIE_SI = "APP_PREF_COOKIE_SI"
     const val APP_PREF_COOKIE_SV = "APP_PREF_COOKIE_SV"
+    const val APP_PREF_SPACE_LIST_MAINTAIN = "APP_PREF_SPACE_LIST_MAINTAIN"
 
 
     const val BUNDLE_DEEPLINK = "BUNDLE_DEEPLINK"
@@ -102,6 +102,11 @@ object Constant {
                     "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
                     "name": "All nodes",
                     "slug": "all-nodes"
+                },
+                {
+                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
+                    "name": "Test room 1",
+                    "slug": "test-room-1"
                 }
             ],
             "space": {
@@ -166,6 +171,11 @@ object Constant {
                     "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
                     "name": "All nodes",
                     "slug": "all-nodes"
+                },
+                {
+                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
+                    "name": "Test room 2",
+                    "slug": "test-room-2"
                 }
             ],
             "space": {

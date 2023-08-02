@@ -11,7 +11,11 @@ data class SpaceList(
     @SerializedName("createdAt"      ) var createdAt      : String?           = null,
     @SerializedName("permissions"    ) var permissions    : ArrayList<String> = arrayListOf(),
     @SerializedName("plan"           ) var plan           : String?           = null,
-    @SerializedName("planDefinition" ) var planDefinition : PlanDefinition?   = PlanDefinition()
+    @SerializedName("planDefinition" ) var planDefinition : PlanDefinition?   = PlanDefinition(),
+    var isSelected: Boolean = false,
+    var isForever: Boolean = false,
+    var isUntil: Boolean = false,
+    var untilDate: String? = null
 ){
     data class PlanDefinition (
         @SerializedName("feed"         ) var feed         : Feed?         = Feed(),
