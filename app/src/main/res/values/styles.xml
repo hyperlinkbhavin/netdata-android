@@ -305,6 +305,12 @@
         <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
     </style>
 
+    <style name="AppTheme.AppTextView.SemiBoldBlack20" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_20</item>
+        <item name="android:textColor">@color/colorBlack35</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+    </style>
+
 
     <!-- TextView Bold   -->
     <style name="AppTheme.AppTextView.BoldBlack12" parent="Widget.BaseAppTextView">

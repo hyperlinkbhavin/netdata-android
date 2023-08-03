@@ -113,4 +113,5 @@
     <string name="btn_unread_0">Unread (0)</string>
     <string name="label_priority">Priority</string>
     <string name="label_all_nodes">All nodes</string>
+    <string name="hint_search_spaces">Search spaces...</string>
 </resources>

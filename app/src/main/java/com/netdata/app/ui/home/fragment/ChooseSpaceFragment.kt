@@ -185,7 +185,9 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     spaceList.clear()
                     chooseSpaceAdapter.list.clear()
                     spaceList.addAll(it.data)
-                    appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
+                    if(appPreferences.getString(Constant.APP_PREF_SPACE_LIST_MAINTAIN).isEmpty()){
+                        appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
+                    }
                     chooseSpaceAdapter.list.addAll(it.data)
                     chooseSpaceAdapter.notifyDataSetChanged()
                 }

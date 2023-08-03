@@ -20,9 +20,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
@@ -44,15 +42,6 @@ import com.netdata.app.ui.home.adapter.*
 import com.netdata.app.ui.notification.fragment.NotificationFragment
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.*
-import com.netdata.app.utils.Constant.filterClassificationList
-import com.netdata.app.utils.Constant.filterNodesList
-import com.netdata.app.utils.Constant.filterPriorityList
-import com.netdata.app.utils.Constant.filterStatusList
-import com.netdata.app.utils.Constant.filterTypeCompList
-import com.netdata.app.utils.Constant.isFilterBy
-import com.netdata.app.utils.Constant.sortByCriticalityItemPosition
-import com.netdata.app.utils.Constant.sortByNotificationPriorityItemPosition
-import com.netdata.app.utils.Constant.sortByTimeItemPosition
 import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.localdb.DatabaseHelper
 import java.text.SimpleDateFormat
@@ -75,8 +64,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var homeList = ArrayList<HomeNotificationList>()
     private var roomList = ArrayList<RoomList>()
 
+    private var filterStatusList = ArrayList<FilterList>()
+    private var filterPriorityList = ArrayList<FilterList>()
+    private var filterNodesList = ArrayList<FilterList>()
+    private var filterClassificationList = ArrayList<FilterList>()
+    private var filterTypeCompList = ArrayList<FilterList>()
+
+    private var sortByTimeItemPosition = -1
+    private var sortByNotificationPriorityItemPosition = -1
+    private var sortByCriticalityItemPosition = -1
+
     private var isCurrentNodes = true
     private var isApplyFilter = false
+    private var isFilterBy = false
 
     private val homeAdapter by lazy {
         HomeAdapter() { view, position, item ->
@@ -232,10 +232,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun insertDataIfEmpty() {
-        if(dbHelper.getAllDataFromFetchNotification(
-                spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
-                roomID = roomList[roomsItemPosition].id!!
-            ).isEmpty()){
+        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
             val gson = Gson()
             val type = object : TypeToken<List<HomeNotificationList>>() {}.type
             val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
@@ -1114,6 +1111,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             if (isFilterBy) {
                 includeToolbar.textViewFilterCount.visible()
                 includeToolbar.textViewFilterCount.text = totalFilterCount.toString()
+                textViewLabelFilterSelected.text = "Filter Selected ($totalFilterCount)"
             } else {
                 includeToolbar.textViewFilterCount.gone()
             }
@@ -1185,7 +1183,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                          priorityFilters = tempPriorityList,
                          nodesFilters = tempNodeList,
                          classFilters = tempClassList,
-                         typeFilters = tempTypeList
+                         typeFilters = tempTypeList,
+                         sortByTimeItemPosition = sortByTimeItemPosition,
+                         sortByNotificationPriorityItemPosition = sortByNotificationPriorityItemPosition,
+                         sortByCriticalityItemPosition = sortByCriticalityItemPosition
                      )
                  )
              } else {
@@ -1208,7 +1209,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 dbHelper.getAllDataFromFetchNotification(
                     spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
                     roomID = roomList[roomsItemPosition].id!!,
-                    isSortBy = true
+                    isSortBy = true,
+                    sortByTimeItemPosition = sortByTimeItemPosition,
+                    sortByNotificationPriorityItemPosition = sortByNotificationPriorityItemPosition,
+                    sortByCriticalityItemPosition = sortByCriticalityItemPosition
                 )
             )
             homeAdapter.list.addAll(homeList)

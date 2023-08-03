@@ -33,13 +33,16 @@
         android:layout_width="@dimen/dp_0"
         app:layout_constraintStart_toEndOf="@id/imageViewLogo"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageViewSetting">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewSpace"
             style="@style/AppTheme.AppTextView.BoldBlack16Bg"
             tools:text="Space Name"
             android:paddingVertical="@dimen/dp_8"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:paddingHorizontal="@dimen/dp_12"
             android:layout_marginStart="@dimen/dp_12"
             android:visibility="gone"
@@ -56,8 +59,8 @@
         style="@style/ChangeTintColor"
         android:layout_marginEnd="@dimen/dp_12"
         android:padding="@dimen/dp_6"
-        android:src="@drawable/ic_setting"
         android:visibility="gone"
+        android:src="@drawable/ic_setting"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imageViewFilter"/>
@@ -69,8 +72,8 @@
         style="@style/ChangeTintColor"
         android:layout_marginEnd="@dimen/dp_12"
         android:padding="@dimen/dp_6"
-        android:src="@drawable/ic_filter"
         android:visibility="gone"
+        android:src="@drawable/ic_filter"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imageViewNotification"/>
@@ -84,9 +87,9 @@
         android:textColor="@color/colorWhite"
         android:paddingHorizontal="@dimen/dp_5"
         android:paddingVertical="@dimen/dp_1"
+        android:visibility="gone"
         android:background="@drawable/dw_corner_four_bg"
         android:backgroundTint="@color/colorPrimary"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/imageViewFilter"
         app:layout_constraintTop_toTopOf="@id/imageViewFilter"
         app:layout_constraintBottom_toTopOf="@id/imageViewFilter"/>
@@ -98,8 +101,8 @@
         style="@style/ChangeTintColor"
         android:layout_marginEnd="@dimen/dp_14"
         android:padding="@dimen/dp_6"
-        android:src="@drawable/ic_notification"
         android:visibility="gone"
+        android:src="@drawable/ic_notification"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
@@ -114,9 +117,9 @@
         android:paddingHorizontal="@dimen/dp_5"
         android:paddingVertical="@dimen/dp_1"
         android:layout_marginTop="-4dp"
+        android:visibility="gone"
         android:background="@drawable/dw_corner_four_bg"
         android:backgroundTint="@color/colorPrimary"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/imageViewNotification"
         app:layout_constraintTop_toTopOf="@id/imageViewNotification"/>
 

@@ -53,6 +53,8 @@ class HomeFilterAdapter(var list: ArrayList<FilterList>, val callBack: (View, In
             textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
 
+            textViewFilterCount.gone()
+
             /*if(item.count!!.isNotEmpty()){
                 textViewFilterCount.visible()
                 textViewFilterCount.text = item.count

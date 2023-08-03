@@ -444,6 +444,7 @@ class DatabaseHelper(context: Context) :
     }
 
     fun getAllDataFromFetchNotification(
+        isSimpleData: Boolean = false,
         spaceID: String = "1", roomID: String = "1",
         isSortBy: Boolean = false, isFilterBy: Boolean = false,
         statusFilters: ArrayList<String> = ArrayList(),
@@ -451,7 +452,10 @@ class DatabaseHelper(context: Context) :
         nodesFilters: ArrayList<String> = ArrayList(),
         classFilters: ArrayList<String> = ArrayList(),
         typeFilters: ArrayList<String> = ArrayList(),
-    ): ArrayList<HomeNotificationList> {
+        sortByTimeItemPosition: Int = -1,
+        sortByNotificationPriorityItemPosition: Int = -1,
+        sortByCriticalityItemPosition: Int = -1
+        ): ArrayList<HomeNotificationList> {
         val dataList = ArrayList<HomeNotificationList>()
         val db = readableDatabase
 
@@ -461,7 +465,11 @@ class DatabaseHelper(context: Context) :
         selectQuery =
             "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
 
-        if (isSortBy && isFilterBy) {
+        if (isSimpleData) {
+            selectQuery =
+                "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS"
+            cursor = db.rawQuery(selectQuery, null)
+        } else if (isSortBy && isFilterBy) {
             selectQuery += " ${
                 filterByQuery(
                     statusFilters = statusFilters,
@@ -470,14 +478,14 @@ class DatabaseHelper(context: Context) :
                     classFilters = classFilters,
                     typeFilters = typeFilters
                 )
-            } ORDER BY ${sortByQuery()}"
+            } ORDER BY ${sortByQuery(sortByTimeItemPosition, sortByNotificationPriorityItemPosition, sortByCriticalityItemPosition)}"
             Log.e("query", selectQuery)
             cursor = db.rawQuery(selectQuery, null)
         } else if (isSortBy) {
 //            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
 
-            if (sortByQuery().isNotEmpty()) {
-                selectQuery += " ORDER BY ${sortByQuery()}"
+            if (sortByQuery(sortByTimeItemPosition, sortByNotificationPriorityItemPosition, sortByCriticalityItemPosition).isNotEmpty()) {
+                selectQuery += " ORDER BY ${sortByQuery(sortByTimeItemPosition, sortByNotificationPriorityItemPosition, sortByCriticalityItemPosition)}"
             }
 
             Log.e("query", selectQuery)
@@ -611,9 +619,13 @@ class DatabaseHelper(context: Context) :
         return dataList
     }
 
-    private fun sortByQuery(): String {
+    private fun sortByQuery(
+        sortByTimeItemPosition: Int = -1,
+        sortByNotificationPriorityItemPosition: Int = -1,
+        sortByCriticalityItemPosition: Int = -1
+    ): String {
         var query = ""
-        if (Constant.sortByCriticalityItemPosition != -1) {
+        if (sortByCriticalityItemPosition != -1) {
 
             query += """
                 CASE $FN_ALARM_STATUS 
@@ -621,19 +633,19 @@ class DatabaseHelper(context: Context) :
                 WHEN 'warning' THEN 2 
                 WHEN 'clear' THEN 3 
                 ELSE 4 
-                END ${if (Constant.sortByCriticalityItemPosition == 0) "ASC" else "DESC"}
+                END ${if (sortByCriticalityItemPosition == 0) "ASC" else "DESC"}
                 """
-        } else if (Constant.sortByNotificationPriorityItemPosition != -1) {
+        } else if (sortByNotificationPriorityItemPosition != -1) {
             query += """
                 CASE $FN_PRIORITY
                 WHEN '${Priority.HIGH_PRIORITY.shortName}' THEN 1
                 WHEN '${Priority.MEDIUM_PRIORITY.shortName}' THEN 2
                 WHEN '${Priority.LOW_PRIORITY.shortName}' THEN 3
                 ELSE 4
-                END ${if (Constant.sortByNotificationPriorityItemPosition == 0) "ASC" else "DESC"}
+                END ${if (sortByNotificationPriorityItemPosition == 0) "ASC" else "DESC"}
         """
-        } else if (Constant.sortByTimeItemPosition != -1) {
-            query += " $FN_CREATED_AT ${if (Constant.sortByTimeItemPosition == 1) "ASC" else "DESC"}"
+        } else if (sortByTimeItemPosition != -1) {
+            query += " $FN_CREATED_AT ${if (sortByTimeItemPosition == 1) "ASC" else "DESC"}"
         }
 
         return query

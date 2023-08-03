@@ -276,23 +276,6 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         spaceList.addAll(arrayList)
 
-        /*for (i in item) {
-            if (!spaceList.contains(i)) {
-                spaceList.add(i)
-            }
-        }
-
-        val iterator = spaceList.iterator()
-        while (iterator.hasNext()) {
-            val element = iterator.next()
-            if (!item.contains(element)) {
-                iterator.remove()
-            }
-        }*/
-
-        Log.e("size", spaceList.size.toString())
-        Log.i("data", Gson().toJson(spaceList))
-
         maintenanceModeSettingsAdapter.list.clear()
         maintenanceModeSettingsAdapter.list.addAll(spaceList)
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
