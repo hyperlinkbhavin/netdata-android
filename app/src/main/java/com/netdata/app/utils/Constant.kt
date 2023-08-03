@@ -2,12 +2,14 @@ package com.netdata.app.utils
 
 import com.netdata.app.data.pojo.request.FilterList
 import com.netdata.app.data.pojo.request.WarRoomsList
+import com.netdata.app.data.pojo.response.NotificationPriorityList
 
 object Constant {
     var COOKIE_SI = ""
     var COOKIE_SV = ""
 
     var isSortBy = false
+    var notificationPriorityList = ArrayList<NotificationPriorityList>()
 
     const val APP_PREF_IS_LOGIN = "APP_PREF_IS_LOGIN"
     const val APP_PREF_SPACE_NAME = "APP_PREF_SPACE_NAME"
@@ -17,6 +19,7 @@ object Constant {
     const val APP_PREF_COOKIE_SI = "APP_PREF_COOKIE_SI"
     const val APP_PREF_COOKIE_SV = "APP_PREF_COOKIE_SV"
     const val APP_PREF_SPACE_LIST_MAINTAIN = "APP_PREF_SPACE_LIST_MAINTAIN"
+    const val APP_PREF_TEMP_AUDIO = "APP_PREF_TEMP_AUDIO"
 
 
     const val BUNDLE_DEEPLINK = "BUNDLE_DEEPLINK"

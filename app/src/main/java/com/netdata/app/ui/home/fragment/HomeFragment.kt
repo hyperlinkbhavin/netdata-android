@@ -497,12 +497,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val data = ArrayList<HomeNotificationList>()
         if (binding.editTextSearchServices.text!!.trim().isNotEmpty()) {
             for (d in homeList) {
+                val text = binding.editTextSearchServices.text!!.trim()
                 //or use .equal(text) with you want equal match
                 //use .toLowerCase() for better matches
-                if (d.data!!.alarm!!.name!!.contains(
-                        binding.editTextSearchServices.text!!.trim(),
-                        true
-                    )
+                if (d.data!!.alarm!!.name!!.contains(text, true) ||
+                    d.data!!.node!!.hostname!!.contains(text, true) ||
+                    d.data!!.alarm!!.chart!!.contains(text, true)
                 ) {
                     data.add(d)
                 }
@@ -572,10 +572,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         if (isAllButtonSelected) {
             dbHelper.updateFetchNotificationData(item)
 //            homeAdapter.list[position].isRead = !homeAdapter.list[position].isRead
+            homeAdapter.list.clear()
+            homeAdapter.list.addAll(getAllData())
             homeAdapter.notifyDataSetChanged()
         } else {
             dbHelper.updateFetchNotificationData(item)
-            homeAdapter.list.removeAt(position)
+            homeAdapter.list.clear()
+            homeAdapter.list.addAll(getAllData(isUnread = true))
             homeAdapter.notifyDataSetChanged()
         }
         binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
@@ -1085,11 +1088,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         totalFilterCount =
             nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
-        Log.e(
-            "count", "node:${nodeCount.size}, status:${alertStatusCount.size}, " +
-                    "priority:${notificationPriorityCount.size}, " +
-                    "class:${classCount.size}, type:${typAndComponentCount.size}, total:$totalFilterCount"
-        )
+
     }
 
     private fun tempCount() = with(binding) {
@@ -1264,10 +1263,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             }
 
         }
-
-        Log.e("class", Gson().toJson(filterClassificationList))
-        Log.e("type", Gson().toJson(filterTypeCompList))
-
 
         val unreadItem = homeList.filter { !it.isRead }
 

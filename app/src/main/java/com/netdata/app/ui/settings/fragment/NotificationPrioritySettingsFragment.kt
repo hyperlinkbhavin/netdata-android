@@ -22,18 +22,15 @@ import com.netdata.app.data.pojo.response.NotificationPriorityList
 import com.netdata.app.databinding.NotificationPrioritySettingsFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment
-import com.netdata.app.utils.FileUtils
-import com.netdata.app.utils.gone
-import com.netdata.app.utils.invisible
+import com.netdata.app.utils.*
+import com.netdata.app.utils.Constant.notificationPriorityList
 import com.netdata.app.utils.localdb.DatabaseHelper
-import com.netdata.app.utils.visible
 
 
 class NotificationPrioritySettingsFragment :
     BaseFragment<NotificationPrioritySettingsFragmentBinding>() {
 
     lateinit var dbHelper: DatabaseHelper
-    private var notificationPriorityList = ArrayList<NotificationPriorityList>()
     private val AUDIO_PERMISSION_REQUEST_CODE = 123
     private val AUDIO_REQUEST_KEY = "audio_request"
 
@@ -75,9 +72,8 @@ class NotificationPrioritySettingsFragment :
 
 //        dbHelper.updateNotificationPriorityData(1,"Test", "url",1,1,1)
 
-        notificationPriorityList = dbHelper.getAllDataFromNotificationPriority()
-
         setData()
+
         /*dbHelper.getAllDataFromNotificationPriority()*/
     }
 
@@ -127,6 +123,8 @@ class NotificationPrioritySettingsFragment :
                 )
             )
         }
+
+        notificationPriorityList = dbHelper.getAllDataFromNotificationPriority()
 
         notificationCheck(
             0,
@@ -345,6 +343,7 @@ class NotificationPrioritySettingsFragment :
         audioPickerLauncher =
             registerForActivityResult(ActivityResultContracts.GetContent()) { audioUri ->
                 if (audioUri != null) {
+                    appPreferences.putString(Constant.APP_PREF_TEMP_AUDIO, audioUri.toString())
                     val audio = FileUtils.getRealPathFromURI(requireContext(), audioUri)
                     val audioName = audio!!.split("/").last()
                     Log.e("name", audioName)
