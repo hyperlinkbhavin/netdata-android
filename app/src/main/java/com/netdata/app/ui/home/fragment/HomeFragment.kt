@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -1130,15 +1129,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun observeLinkDevice() {
         apiViewModel.linkDeviceLiveData.observe(this) {
             hideLoader()
-            if (it.isError || it.responseCode != 200) {
-
+            if (it.responseCode == 200) {
+                callRoomList()
+            } else {
                 showToast("Session expired! Please login again")
                 appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
                 appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
                 navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
-
-            } else {
-                callRoomList()
             }
         }
 //            Log.e("link device", it.toString())

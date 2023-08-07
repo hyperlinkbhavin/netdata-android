@@ -7,11 +7,14 @@ import com.netdata.app.data.pojo.response.NotificationPriorityList
 object Constant {
     var COOKIE_SI = ""
     var COOKIE_SV = ""
+    var TOKEN = ""
+    const val TOKEN_PRE_VALUE = "bearer"
 
     var isSortBy = false
     var notificationPriorityList = ArrayList<NotificationPriorityList>()
 
     const val APP_PREF_IS_LOGIN = "APP_PREF_IS_LOGIN"
+    const val APP_PREF_TOKEN = "APP_PREF_TOKEN"
     const val APP_PREF_SPACE_NAME = "APP_PREF_SPACE_NAME"
     const val APP_PREF_SPACE_ID = "APP_PREF_SPACE_ID"
     const val APP_PREF_FROM_NOTIFICATION = "APP_PREF_FROM_NOTIFICATION"

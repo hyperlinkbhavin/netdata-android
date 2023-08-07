@@ -100,7 +100,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
     }
 
     private fun callDynamicLink(link: String) {
-//        Log.e("token", link)
+        Log.e("token", link)
         showLoader()
         dynamicViewModel.callDynamicLink(link)
     }
@@ -108,24 +108,15 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
     private fun observeDynamicLink() {
         dynamicViewModel.liveData.observe(this) {
             hideLoader()
-            if (it is CookiesHandlerError) {
-                if (it.map.isNotEmpty()) {
-                    appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_i"]!!)
-                    appPreferences.putString(Constant.APP_PREF_COOKIE_SV, it.map["s_v_${it.map["s_i"]}"]!!)
-                    Constant.COOKIE_SI = it.map["s_i"]!!
-                    Constant.COOKIE_SV = it.map["s_v_${it.map["s_i"]}"]!!
-                    Log.e("cookie", Constant.COOKIE_SI)
-                    session.getFirebaseDeviceId { deviceId ->
-                        session.deviceId = deviceId
-                        callLinkDevice()
-                    }
-                } else {
-                    showMessage("Link expire! Try again")
-                    Log.e("else", "cookie")
+            if(it.responseCode == 200 && it.data!!.token!!.isNotEmpty()){
+                session.userSession = it.data.token!!
+                Constant.TOKEN = session.userSession
+                session.getFirebaseDeviceId { deviceId ->
+                    session.deviceId = deviceId
+                    callLinkDevice()
                 }
             } else {
                 showMessage("Link expire! Try again")
-                Log.e("else", "else")
             }
         }
     }
@@ -148,7 +139,6 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
             } else {
                 Log.e("failure link", "fail")
             }
-//            Log.e("link device", it.toString())
         }
     }
 }

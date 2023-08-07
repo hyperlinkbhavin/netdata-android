@@ -66,6 +66,7 @@ class SplashActivity : BaseActivity() {
 
         Constant.COOKIE_SI = appPreferences.getString(Constant.APP_PREF_COOKIE_SI)
         Constant.COOKIE_SV = appPreferences.getString(Constant.APP_PREF_COOKIE_SV)
+        Constant.TOKEN = session.userSession
 
         val data: Uri? = intent?.data
         var url = ""

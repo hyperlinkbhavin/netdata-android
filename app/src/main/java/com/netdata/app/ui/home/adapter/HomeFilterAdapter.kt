@@ -5,10 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.netdata.app.data.pojo.request.AlertInfoList
 import com.netdata.app.data.pojo.request.FilterList
-import com.netdata.app.data.pojo.response.HomeNotificationList
-import com.netdata.app.databinding.RowItemAlertInfoBinding
 import com.netdata.app.databinding.RowItemFilterCheckboxBinding
 import com.netdata.app.utils.gone
 import com.netdata.app.utils.visible

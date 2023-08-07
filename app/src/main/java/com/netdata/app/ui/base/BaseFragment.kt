@@ -94,6 +94,10 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
             }
         }
 
+        if(appPreferences.getString(Constant.TOKEN).isNotEmpty()){
+            Constant.TOKEN = appPreferences.getString(Constant.TOKEN)
+        }
+
         bindData()
     }
 

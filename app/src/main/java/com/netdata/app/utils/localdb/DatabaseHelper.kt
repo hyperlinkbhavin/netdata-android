@@ -13,7 +13,6 @@ import com.netdata.app.data.pojo.response.AppDetails
 import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.data.pojo.response.NotificationPriorityList
 import com.netdata.app.data.pojo.response.SpaceList
-import com.netdata.app.utils.Constant
 
 class DatabaseHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {

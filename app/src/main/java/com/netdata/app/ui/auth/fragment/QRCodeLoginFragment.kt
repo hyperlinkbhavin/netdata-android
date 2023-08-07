@@ -18,6 +18,7 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
 import com.budiyev.android.codescanner.DecodeCallback
 import com.netdata.app.R
+import com.netdata.app.data.pojo.request.APIRequest
 import com.netdata.app.databinding.AuthFragmentLoginBinding
 import com.netdata.app.databinding.AuthFragmentQrCodeLoginBinding
 import com.netdata.app.di.component.FragmentComponent
@@ -26,13 +27,13 @@ import com.netdata.app.ui.base.BaseFragment
 import com.netdata.app.ui.home.fragment.ChooseSpaceFragment
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.Validator
+import com.netdata.app.utils.customapi.ApiViewModel
 import javax.inject.Inject
 
 class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
 
-    private val viewModel by lazy {
-        ViewModelProvider(this,
-            viewModelFactory)[LoginViewModel::class.java]
+    private val apiViewModel by lazy {
+        ViewModelProvider(this)[ApiViewModel::class.java]
     }
 
     private lateinit var codeScanner: CodeScanner
@@ -52,7 +53,7 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        observeLinkDevice()
     }
 
     override fun bindData() {
@@ -98,12 +99,38 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
     private fun startScan(){
         codeScanner.decodeCallback = DecodeCallback {
             requireActivity().runOnUiThread {
-//                Toast.makeText(activity, it.text, Toast.LENGTH_LONG).show()
-                appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-                navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                session.userSession = it.text
+                Constant.TOKEN = session.userSession
+                session.getFirebaseDeviceId { deviceId ->
+                    session.deviceId = deviceId
+                    callLinkDevice()
+                }
             }
         }
         codeScanner.startPreview()
+    }
+
+    private fun callLinkDevice(){
+        showLoader()
+        apiViewModel.callLinkDevice(APIRequest( token = session.deviceId))
+    }
+
+    private fun observeLinkDevice(){
+        apiViewModel.linkDeviceLiveData.observe(this){
+            hideLoader()
+            if(!it.isError){
+                if(it.responseCode == 200){
+                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                } else {
+                    showMessage("Invalid QR code")
+                    startScan()
+                }
+            } else {
+                showMessage("Something wrong! Try again")
+                startScan()
+            }
+        }
     }
 
     /*private fun startCamera() {

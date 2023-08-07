@@ -192,7 +192,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     chooseSpaceAdapter.notifyDataSetChanged()
                 }
             } else {
-                showMessage("Something wrong")
+                showMessage("Something wrong! Try again")
             }
         }
     }

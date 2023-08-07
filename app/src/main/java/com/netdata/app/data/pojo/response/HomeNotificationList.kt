@@ -1,7 +1,6 @@
 package com.netdata.app.data.pojo.response
 
 import com.google.gson.annotations.SerializedName
-import org.w3c.dom.Node
 
 data class HomeNotificationList(
     var id: Long? = 0,

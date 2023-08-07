@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.netdata.app.R
+import com.netdata.app.core.Session
 import com.netdata.app.di.HasComponent
 import com.netdata.app.di.Injector
 import com.netdata.app.di.component.ActivityComponent
@@ -31,6 +32,9 @@ abstract class BaseActivity : AppCompatActivity(), HasComponent<ActivityComponen
 
     @Inject
     lateinit var navigationFactory: FragmentNavigationFactory
+
+    @Inject
+    open lateinit var session: Session
 
     @Inject
     lateinit var activityStarter: ActivityStarter
