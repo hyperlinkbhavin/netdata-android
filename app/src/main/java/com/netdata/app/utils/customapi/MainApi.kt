@@ -26,7 +26,7 @@ interface MainApi {
     @GET("api/v3/spaces")
     fun getSpaceList(@Header("Authorization") token: String): Call<ArrayList<SpaceList>>
 
-    @GET("api/v1/notifications/NetdataMobileApp")
+    @GET("api/v1/notifications/CloudMobileApp")
     fun fetchHomeNotification(@Header("Authorization") token: String): Call<ArrayList<HomeNotificationList>>
 
     @GET("api/v2/spaces/{spaceID}/rooms?show_all=true")

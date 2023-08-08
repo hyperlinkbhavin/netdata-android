@@ -1152,8 +1152,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun callFetchHomeNotification() {
 //        showLoader()
-//        apiViewModel.callFetchHomeNotification()
-        homeList.clear()
+        apiViewModel.callFetchHomeNotification()
+        /*homeList.clear()
         homeAdapter.list.clear()
 
          if (isFilterBy) {
@@ -1267,7 +1267,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
 
         homeAdapter.notifyDataSetChanged()
-        drawerFilter()
+        drawerFilter()*/
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -1275,8 +1275,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         apiViewModel.fetchHomeNotificationLiveData.observe(this) {
             hideLoader()
             if (!it.isError || it.responseCode == 200) {
-                homeAdapter.list.addAll(it.data!!)
-                homeAdapter.notifyDataSetChanged()
+                /*homeAdapter.list.addAll(it.data!!)
+                homeAdapter.notifyDataSetChanged()*/
             }
         }
     }

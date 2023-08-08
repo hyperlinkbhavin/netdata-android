@@ -15,7 +15,7 @@ import retrofit2.Response
 
 class ApiViewModel: ViewModel() {
 
-    val baseUrl = "https://testing.netdata.cloud/"
+    val baseUrl = "https://app.netdata.cloud/"
 
     init {
         NetworkClient.setBaseUrl(baseUrl)
