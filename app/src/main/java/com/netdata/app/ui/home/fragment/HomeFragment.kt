@@ -7,6 +7,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,7 @@ import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.localdb.DatabaseHelper
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -230,19 +232,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
-    private fun insertDataIfEmpty() {
-        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
-            val gson = Gson()
-            val type = object : TypeToken<List<HomeNotificationList>>() {}.type
-            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
-            var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
-            for (item in alarmDataList) {
-                lastId++
-                dbHelper.insertFetchNotificationData(lastId, item)
-            }
-        }
-    }
-
     private fun toolbar() = with(binding) {
         includeToolbar.apply {
             textViewSpace.visible()
@@ -287,10 +276,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         for (d in homeList) {
             //or use .equal(text) with you want equal match
             //use .toLowerCase() for better matches
-            if (d.data!!.alarm!!.name!!.contains(text!!, true) ||
-                d.data!!.node!!.hostname!!.contains(text, true) ||
-                d.data!!.alarm!!.chart!!.contains(text, true)
-            ) {
+            if (d.data!!.netdata!!.alert!!.name[0].contains(text!!, true) ||
+                        d.data!!.netdata!!.alert!!.type!!.contains(text, true) ||
+                d.data!!.netdata!!.alert!!.component!!.contains(text, true) ||
+                d.data!!.netdata!!.chart!!.id!!.contains(text, true)) {
                 temp.add(d)
             }
         }
@@ -499,10 +488,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 val text = binding.editTextSearchServices.text!!.trim()
                 //or use .equal(text) with you want equal match
                 //use .toLowerCase() for better matches
-                if (d.data!!.alarm!!.name!!.contains(text, true) ||
-                    d.data!!.node!!.hostname!!.contains(text, true) ||
-                    d.data!!.alarm!!.chart!!.contains(text, true)
-                ) {
+                if (d.data!!.netdata!!.alert!!.name[0].contains(text, true)) {
                     data.add(d)
                 }
             }
@@ -627,11 +613,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         /*radioButtonCurrentNodes.isChecked = isCurrentNodes
         radioButtonAllNodes.isChecked = !isCurrentNodes*/
 
-        if (item.data!!.alarm!!.status.equals(AlertStatus.CRITICAL.type, true)) {
+        if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.CRITICAL.type, true)) {
             imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.colorRedFF)
             )
-        } else if (item.data!!.alarm!!.status.equals(AlertStatus.WARNING.type, true)) {
+        } else if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.WARNING.type, true)) {
             imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.colorYellowF9)
             )
@@ -655,10 +641,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             seekBar.setProgress(15f)
         }
 
-        textViewSpaceWarningPercent.text = item.data!!.alarm!!.valueWithUnits
-        textViewSpaceWarningName.text = item.data!!.alarm!!.name
-        textViewNodeId.text = item.data!!.node!!.id
-        textViewDiskSpace.text = item.data!!.alarm!!.chart
+        textViewSpaceWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
+        textViewSpaceWarningName.text = item.data!!.netdata!!.alert!!.name[0]
+        textViewNodeId.text = item.data!!.host[0].name
+        textViewDiskSpace.text = item.data!!.netdata!!.chart!!.name
         textViewWarRoomsList.text = "War Room 1 • War Room 2 • War Room 3 • War Rom 4"
         textViewPriority.text = "${item.priority} ${getString(R.string.label_priority)}"
         textViewPriorityName.text = "${item.priority} ${getString(R.string.label_priority)}"
@@ -1151,9 +1137,44 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun callFetchHomeNotification() {
-//        showLoader()
+        showLoader()
         apiViewModel.callFetchHomeNotification()
-        /*homeList.clear()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeFetchHomeNotification() {
+        apiViewModel.fetchHomeNotificationLiveData.observe(this) {
+            hideLoader()
+            if (!it.isError || it.responseCode == 200) {
+                /*if(it.data!!.isNotEmpty()){
+                    insertDataIfEmpty(it.data)
+                } else {
+                    manageTableData()
+                }*/
+                insertDataIfEmpty(it.data!!)
+//                manageTableData()
+
+            }
+        }
+    }
+
+    private fun insertDataIfEmpty(alertDataList: ArrayList<HomeNotificationList>) {
+        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
+            val gson = Gson()
+            val type = object : TypeToken<List<HomeNotificationList>>() {}.type
+            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
+            var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
+            for (item in alarmDataList) {
+                lastId++
+                dbHelper.insertFetchNotificationData(lastId, item)
+            }
+        }
+        manageTableData()
+    }
+
+    @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
+    private fun manageTableData(){
+        homeList.clear()
         homeAdapter.list.clear()
 
          if (isFilterBy) {
@@ -1199,7 +1220,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                      )
                  )
              }
-                homeAdapter.list.addAll(homeList)
+
         } else if (sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1) {
             homeList.addAll(
                 dbHelper.getAllDataFromFetchNotification(
@@ -1211,7 +1232,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     sortByCriticalityItemPosition = sortByCriticalityItemPosition
                 )
             )
-            homeAdapter.list.addAll(homeList)
+//            homeAdapter.list.addAll(homeList)
         } else {
             homeList.addAll(
                 dbHelper.getAllDataFromFetchNotification(
@@ -1219,22 +1240,22 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     roomID = roomList[roomsItemPosition].id!!
                 )
             )
-            homeAdapter.list.addAll(homeList)
+//            homeAdapter.list.addAll(homeList)
         }
 
-        val tempNodeList = ArrayList<HomeNotificationList.Data.Node>()
-        val tempClassList = ArrayList<HomeNotificationList.Data.Alarm>()
-        val tempTypeCompList = ArrayList<HomeNotificationList.Data.Alarm>()
+        val tempNodeList = ArrayList<HomeNotificationList.Data.Host>()
+        val tempClassList = ArrayList<HomeNotificationList.Data.Netdata.Alert>()
+        val tempTypeCompList = ArrayList<HomeNotificationList.Data.Netdata.Alert>()
 
         if (filterNodesList.isEmpty()) {
             homeList.forEach {
-                tempNodeList.add(it.data!!.node!!)
+                tempNodeList.add(it.data!!.host[0])
             }
-            val tempList = tempNodeList.distinctBy { it.hostname }
+            val tempList = tempNodeList.distinctBy { it.name }
             for (item in tempList) {
                 filterNodesList.add(
                     FilterList(
-                        item.hostname!!,
+                        item.name!!,
                         otherName = item.id,
                         isSelected = false
                     )
@@ -1243,42 +1264,49 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
         if (filterClassificationList.isEmpty()) {
             homeList.forEach {
-                tempClassList.add(it.data!!.alarm!!)
+                tempClassList.add(it.data!!.netdata!!.alert!!)
             }
-            val tempList = tempClassList.distinctBy { it.classification }.map { it.classification }
+            val tempList = tempClassList.distinctBy { it.classes }.map { it.classes }
             for (item in tempList) {
                 filterClassificationList.add(FilterList(item!!, isSelected = false))
             }
         }
         if (filterTypeCompList.isEmpty()) {
             homeList.forEach {
-                tempTypeCompList.add(it.data!!.alarm!!)
+                tempTypeCompList.add(it.data!!.netdata!!.alert!!)
             }
-            val tempList = tempTypeCompList.distinctBy { it.family }.map { it.family }
+            val tempList = tempTypeCompList.distinctBy { it.type }.map { it.type }
+            val tempCompList = tempTypeCompList.distinctBy { it.component }.map { it.component }
             for (item in tempList) {
+                filterTypeCompList.add(FilterList(item!!, isSelected = false))
+            }
+            for (item in tempCompList) {
                 filterTypeCompList.add(FilterList(item!!, isSelected = false))
             }
 
         }
+        Log.e("home size", homeList.size.toString())
+        val itemsToAdd = mutableListOf<HomeNotificationList>() // Change ItemType to the actual type of your items
 
-        val unreadItem = homeList.filter { !it.isRead }
+        for (i in homeList) {
+            for (j in i.data!!.netdata!!.room) {
+                if (j.id == roomList[roomsItemPosition].id!!) {
+                    itemsToAdd.add(i)
+                    break
+                }
+            }
+        }
+//        homeAdapter.list.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
+        homeAdapter.list.addAll(itemsToAdd)
+        homeList = homeAdapter.list
+        val unreadItem = homeAdapter.list.filter { !it.isRead }
 
-        binding.buttonAll.text = "${getString(R.string.btn_all)} (${homeList.size})"
+        Log.e("home data", homeAdapter.list.size.toString())
+        binding.buttonAll.text = "${getString(R.string.btn_all)} (${homeAdapter.list.size})"
         binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
 
         homeAdapter.notifyDataSetChanged()
-        drawerFilter()*/
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    private fun observeFetchHomeNotification() {
-        apiViewModel.fetchHomeNotificationLiveData.observe(this) {
-            hideLoader()
-            if (!it.isError || it.responseCode == 200) {
-                /*homeAdapter.list.addAll(it.data!!)
-                homeAdapter.notifyDataSetChanged()*/
-            }
-        }
+        drawerFilter()
     }
 
     private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {
@@ -1302,8 +1330,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             if (!it.isError && it.responseCode == 200) {
                 roomList.clear()
                 roomList.addAll(it.data!!)
-                binding.textViewLabelAllWarRooms.text = roomList[0].name
-                insertDataIfEmpty()
+                var position = 0
+
+                for (index in roomList.indices) {
+                    val room = roomList[index]
+                    if (room.name?.contains("all node", ignoreCase = true) == true) {
+                        position = index
+                        break
+                    }
+                }
+                roomsItemPosition = position
+                binding.textViewLabelAllWarRooms.text = roomList[position].name
                 Handler(Looper.getMainLooper()).postDelayed({
                     callFetchHomeNotification()
                 },1000)

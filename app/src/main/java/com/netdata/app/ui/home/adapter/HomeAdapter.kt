@@ -112,7 +112,7 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
 //                imageViewMessage.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(imageViewMessage.context, R.color.colorPrimary))
             }
 
-            textViewName.text = item.data!!.alarm!!.name
+            textViewName.text = item.data!!.netdata!!.alert!!.name[0]
             textViewDateTime.text = "${
                 ConvertDateTimeFormat.getPrettyTime(
                     ConvertDateTimeFormat.convertUTCToLocalDate(
@@ -130,24 +130,24 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                     "dd/MM/yyyy-HH:mm:ss"
                 )
             }"
-            textViewGKE.text = item.data!!.node!!.hostname
-            textViewDiskSpace.text = item.data!!.alarm!!.chart
+            textViewGKE.text = item.data!!.host[0].name
+            textViewDiskSpace.text = item.data!!.netdata!!.chart!!.id
 
             var roomList = ""
-            for(i in item.data!!.rooms){
+            for(i in item.data!!.netdata!!.room){
                 roomList += "${i.name} • "
             }
             textViewWarRoomsList.text = roomList.dropLast(3)
-            textViewTypeAndComponent.text = "Type & Component : ${item.data!!.alarm!!.family} • ${item.data!!.alarm!!.classification}"
-            textViewLabelWarning.text = item.data!!.alarm!!.status!!.replaceFirstChar {
+            textViewTypeAndComponent.text = "Type & Component : ${item.data!!.netdata!!.alert!!.type} • ${item.data!!.netdata!!.alert!!.component}"
+            textViewLabelWarning.text = item.data!!.netdata!!.alert!!.current!!.status[0].replaceFirstChar {
                 if (it.isLowerCase()) it.titlecase(
                     Locale.getDefault()
                 ) else it.toString()
             }
-            textViewWarningPercent.text = item.data!!.alarm!!.valueWithUnits
-            textViewCriticalPercent.text = item.data!!.alarm!!.valueWithUnits
+            textViewWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
+            textViewCriticalPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
 
-            if (item.data!!.alarm!!.status.equals("critical", true)) {
+            if (item.data!!.netdata!!.alert!!.current!!.status[0].equals("critical", true)) {
                 textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
                     ContextCompat.getColor(
                         textViewLabelWarning.context,
@@ -156,7 +156,7 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                 )
                 textViewWarningPercent.gone()
                 textViewCriticalPercent.visible()
-            } else if (item.data!!.alarm!!.status.equals("warning", true)) {
+            } else if (item.data!!.netdata!!.alert!!.current!!.status[0].equals("warning", true)) {
                 textViewWarningPercent.visible()
                 textViewCriticalPercent.gone()
                 textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(

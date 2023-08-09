@@ -51,960 +51,777 @@ object Constant {
 
 
     const val dummyData = """
- [   {
-        "data": {
-            "node": {
-                "id": "ea37ca88-56f4-4075-9f44-a578ec658d7f",
-                "hostname": "shivam-raval",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "used_swap",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:57:38+05:30",
-                "chart": "system.swap",
-                "family": "swap",
-                "status": "warning",
-                "details": "swap memory utilization",
-                "duration": 9090000000000,
-                "calc_expr": "((used + free) > 0) ? (used * 100 / (used + free)) : 0",
-                "conf_file": "21@/usr/lib/netdata/conf.d/health.d/swap.conf",
-                "edit_line": 21,
-                "raised_by": "shivam-raval",
-                "prev_status": "clear",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/swap.conf",
-                "chart_context": "system.swap",
-                "transition_id": "ee7026e8-6a06-4524-8440-740c921bf1d1",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "92.02 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                },    {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca4d",
-                    "name": "test room 3",
-                    "slug": "test-room-3"
-                }
+ [
+  {
+    "data": {
+      "@timestamp": "2023-08-09T11:40:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "ram_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "critical"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 99.11388616650773,
+            "value_string": "99.113886"
+          },
+          "previous": {
+            "status": "clear",
+            "value": 50.8822842344764,
+            "value_string": "50.882284"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Ram",
+          "transition": {
+            "id": "c0839dba-e6cc-42a8-863a-14751324e078"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-08-01T11:28:08.50188Z"
-    },{
-        "data": {
-            "node": {
-                "id": "ea37ca88-56f4-4075-9f44-a578ec658d7f",
-                "hostname": "shivam-raval",
-                "reachable": false
-            },
-            "room": {
-                "id": "fd09bea5-664b-40a1-ac8a-10cc102f4b66",
-               "name": "test room 1",
-                "slug": "test-room-1"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "used_swap",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:57:38+05:30",
-                "chart": "system.swap",
-                "family": "swap",
-                "status": "warning",
-                "details": "swap memory utilization",
-                "duration": 9090000000000,
-                "calc_expr": "((used + free) > 0) ? (used * 100 / (used + free)) : 0",
-                "conf_file": "21@/usr/lib/netdata/conf.d/health.d/swap.conf",
-                "edit_line": 21,
-                "raised_by": "shivam-raval",
-                "prev_status": "clear",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/swap.conf",
-                "chart_context": "system.swap",
-                "transition_id": "ee7026e8-6a06-4524-8440-740c921bf1d1",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "92.02 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                },    {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca4d",
-                    "name": "test room 3",
-                    "slug": "test-room-3"
-                }
-            ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
         },
-        "createdAt": "2023-08-01T11:28:08.50188Z"
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "6b7a2b89-80c4-401d-9bf5-01e5d9c68e58",
+            "name": "War Room 1"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "mailto:bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "d08b47a9-bb74-411e-9392-df54c6f5b3ed",
-                "hostname": "2021U26",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [
-                    {
-                        "when": "2023-07-20T16:40:19+05:30",
-                        "status": "warning",
-                        "alarm_name": "ram_available"
-                    },
-                    {
-                        "when": "2023-07-20T16:20:09+05:30",
-                        "status": "critical",
-                        "alarm_name": "used_swap"
-                    }
-                ],
-                "name": "ram_in_use",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:40:49+05:30",
-                "chart": "system.ram",
-                "family": "ram",
-                "status": "warning",
-                "details": "system memory utilization",
-                "duration": 19150000000000,
-                "calc_expr": "used * 100 / (used + cached + free + buffers)",
-                "conf_file": "4@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 4,
-                "raised_by": "2021U26",
-                "prev_status": "clear",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "system.ram",
-                "transition_id": "d2cf124e-7c16-4f8f-ba1f-9a4a9b8a3489",
-                "warning_count": 1,
-                "classification": "Utilization",
-                "critical_count": 1,
-                "value_with_units": "90.28 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-09T06:11:58.102616Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-08T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "network_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "warning",
+            "value": 85.1212,
+            "value_string": "85.1212"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Network",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-08-02T11:10:49.919713Z"
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "6b7a2b89-80c4-401d-9bf5-01e5d9c68e58",
+            "name": "War Room 1"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "d08b47a9-bb74-411e-9392-df54c6f5b3ed",
-                "hostname": "2021U26",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [
-                    {
-                        "when": "2023-07-29T16:20:09+05:30",
-                        "status": "critical",
-                        "alarm_name": "used_swap"
-                    }
-                ],
-                "name": "ram_available",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:40:19+05:30",
-                "chart": "mem.available",
-                "family": "system",
-                "status": "warning",
-                "details": "percentage of estimated amount of RAM available for userspace processes, without causing swapping",
-                "duration": 19120000000000,
-                "calc_expr": "avail * 100 / (system.ram.used + system.ram.cached + system.ram.free + system.ram.buffers)",
-                "conf_file": "20@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 20,
-                "raised_by": "2021U26",
-                "prev_status": "clear",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "mem.available",
-                "transition_id": "71ecd3d8-df5c-4fa1-9ae6-91af5d5a391e",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 1,
-                "value_with_units": "9.13 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-08T06:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-08T09:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "clear",
+            "value": 52.2323,
+            "value_string": "52.2323"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-20T11:10:20.953019Z"
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "97c1bdee-481b-4743-885c-16c5747da6d2",
+          "name": "My space 1"
+        },
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "ff064169-c563-4b8c-9a06-48aafe986c43",
-                "hostname": "2021U30",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "used_swap",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:26:37+05:30",
-                "chart": "system.swap",
-                "family": "swap",
-                "status": "clear",
-                "details": "swap memory utilization",
-                "duration": 0,
-                "calc_expr": "((used + free) > 0) ? (used * 100 / (used + free)) : 0",
-                "conf_file": "21@/usr/lib/netdata/conf.d/health.d/swap.conf",
-                "edit_line": 21,
-                "raised_by": "2021U30",
-                "prev_status": "critical",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/swap.conf",
-                "chart_context": "system.swap",
-                "transition_id": "777be8c2-d4b6-40cf-aaf3-b115995880d2",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "0 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-08T04:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-09T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "critical",
+            "value": 99.11577934805341,
+            "value_string": "99.115779"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-20T11:01:38.116631Z"
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "6b7a2b89-80c4-401d-9bf5-01e5d9c68e58",
+            "name": "War Room 1"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "ff064169-c563-4b8c-9a06-48aafe986c43",
-                "hostname": "2021U30",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "ram_available",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:26:37+05:30",
-                "chart": "mem.available",
-                "family": "system",
-                "status": "clear",
-                "details": "percentage of estimated amount of RAM available for userspace processes, without causing swapping",
-                "duration": 0,
-                "calc_expr": "avail * 100 / (system.ram.used + system.ram.cached + system.ram.free + system.ram.buffers)",
-                "conf_file": "20@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 20,
-                "raised_by": "2021U30",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "mem.available",
-                "transition_id": "1ea7a905-236d-4531-987d-4c317c64e128",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "82.95 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-09T06:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-09T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "critical",
+            "value": 99.11577934805341,
+            "value_string": "99.115779"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-20T11:01:38.107206Z"
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "6b7a2b89-80c4-401d-9bf5-01e5d9c68e58",
+            "name": "War Room 1"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "ff064169-c563-4b8c-9a06-48aafe986c43",
-                "hostname": "2021U30",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [
-                    {
-                        "when": "2023-07-20T15:51:31+05:30",
-                        "status": "warning",
-                        "alarm_name": "ram_available"
-                    }
-                ],
-                "name": "ram_in_use",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:26:37+05:30",
-                "chart": "system.ram",
-                "family": "ram",
-                "status": "clear",
-                "details": "system memory utilization",
-                "duration": 0,
-                "calc_expr": "used * 100 / (used + cached + free + buffers)",
-                "conf_file": "4@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 4,
-                "raised_by": "2021U30",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "system.ram",
-                "transition_id": "514afe89-25f5-4835-8a72-1f72d613269e",
-                "warning_count": 1,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "14.79 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-09T06:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-09T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "critical",
+            "value": 99.11577934805341,
+            "value_string": "99.115779"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-20T11:01:38.09433Z"
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "d08b47a9-bb74-411e-9392-df54c6f5b3ed",
-                "hostname": "2021U26",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "used_swap",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:20:09+05:30",
-                "chart": "system.swap",
-                "family": "swap",
-                "status": "critical",
-                "details": "swap memory utilization",
-                "duration": 160000000000,
-                "calc_expr": "((used + free) > 0) ? (used * 100 / (used + free)) : 0",
-                "conf_file": "21@/usr/lib/netdata/conf.d/health.d/swap.conf",
-                "edit_line": 21,
-                "raised_by": "2021U26",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/swap.conf",
-                "chart_context": "system.swap",
-                "transition_id": "3dce451e-d423-47f7-8350-ece2508c48ec",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "98.02 %",
-                "non_clear_duration": 160000000000
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-09T06:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-09T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "critical",
+            "value": 99.11577934805341,
+            "value_string": "99.115779"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-20T10:50:39.496405Z"
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "d08b47a9-bb74-411e-9392-df54c6f5b3ed",
-                "hostname": "2021U26",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "used_swap",
-                "role": "sysadmin",
-                "when": "2023-07-20T16:17:29+05:30",
-                "chart": "system.swap",
-                "family": "swap",
-                "status": "warning",
-                "details": "swap memory utilization",
-                "duration": 17750000000000,
-                "calc_expr": "((used + free) > 0) ? (used * 100 / (used + free)) : 0",
-                "conf_file": "21@/usr/lib/netdata/conf.d/health.d/swap.conf",
-                "edit_line": 21,
-                "raised_by": "2021U26",
-                "prev_status": "clear",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/swap.conf",
-                "chart_context": "system.swap",
-                "transition_id": "24bbf022-d526-4f18-bf87-89da1410146a",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "91.4 %",
-                "non_clear_duration": 0
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-09T06:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-09T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "critical",
+            "value": 99.11577934805341,
+            "value_string": "99.115779"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-20T10:47:59.521796Z"
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
     },
-    {
-        "data": {
-            "node": {
-                "id": "1f4ac1ba-69ea-4a35-86c6-80cf872ce29e",
-                "hostname": "2021U39",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "ram_available",
-                "role": "sysadmin",
-                "when": "2023-07-20T15:44:00+05:30",
-                "chart": "mem.available",
-                "family": "system",
-                "status": "clear",
-                "details": "percentage of estimated amount of RAM available for userspace processes, without causing swapping",
-                "duration": 5320000000000,
-                "calc_expr": "avail * 100 / (system.ram.used + system.ram.cached + system.ram.free + system.ram.buffers)",
-                "conf_file": "20@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 20,
-                "raised_by": "2021U39",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "mem.available",
-                "transition_id": "ab3cd395-c53f-4773-ab60-11f9ee7aaa9c",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "70.42 %",
-                "non_clear_duration": 5320000000000
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+    "createdAt": "2023-08-09T06:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-09T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "critical",
+            "value": 99.11577934805341,
+            "value_string": "99.115779"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-20T10:29:00.495216Z"
-    },{
-        "data": {
-            "node": {
-                "id": "1f4ac1ba-69ea-4a35-86c6-80cf872ce29e",
-                "hostname": "2021U39",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "ram_available",
-                "role": "sysadmin",
-                "when": "2023-07-20T15:44:00+05:30",
-                "chart": "mem.available",
-                "family": "system",
-                "status": "critical",
-                "details": "percentage of estimated amount of RAM available for userspace processes, without causing swapping",
-                "duration": 5320000000000,
-                "calc_expr": "avail * 100 / (system.ram.used + system.ram.cached + system.ram.free + system.ram.buffers)",
-                "conf_file": "20@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 20,
-                "raised_by": "2021U39",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "mem.available",
-                "transition_id": "ab3cd395-c53f-4773-ab60-11f9ee7aaa9c",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "70.42 %",
-                "non_clear_duration": 5320000000000
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
+        },
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
+        },
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
+    },
+    "createdAt": "2023-08-09T06:28:58.117371Z"
+  },
+{
+    "data": {
+      "@timestamp": "2023-08-09T11:43:59+05:30",
+      "host": [
+        {
+          "id": "62a1da9c-5f61-41d0-8a7d-2e971cf300e3",
+          "name": "2021u39"
+        }
+      ],
+      "Netdata": {
+        "alert": {
+          "name": [
+            "disk_space_usage"
+          ],
+          "role": [
+            "sysadmin"
+          ],
+          "config_hash": "52f85de1-4543-57c0-d8f0-2194144e65da",
+          "current": {
+            "status": [
+              "clear"
             ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+            "value": 50.886333692767984,
+            "value_string": "50.886334"
+          },
+          "previous": {
+            "status": "critical",
+            "value": 99.11577934805341,
+            "value_string": "99.115779"
+          },
+          "class": "Utilization",
+          "type": "System",
+          "component": "Disk",
+          "transition": {
+            "id": "7177f08d-e2e3-47c7-a8c8-3cc567f3dee9"
+          },
+          "annotations": {
+            "calc_expr": "used * 100 / (avail + used)",
+            "conf_source": "12@/usr/lib/netdata/conf.d/health.d/disks.conf",
+            "edit_command": "sudo /etc/netdata/edit-config health.d/disks.conf",
+            "edit_line": "12",
+            "info": "disk / space utilization"
+          }
         },
-        "createdAt": "2023-07-27T10:29:00.495216Z"
-    },{
-        "data": {
-            "node": {
-                "id": "1f4ac1ba-69ea-4a35-86c6-80cf872ce29e",
-                "hostname": "2021U39",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "ram_available",
-                "role": "sysadmin",
-                "when": "2023-07-20T15:44:00+05:30",
-                "chart": "mem.available",
-                "family": "system",
-                "status": "clear",
-                "details": "percentage of estimated amount of RAM available for userspace processes, without causing swapping",
-                "duration": 5320000000000,
-                "calc_expr": "avail * 100 / (system.ram.used + system.ram.cached + system.ram.free + system.ram.buffers)",
-                "conf_file": "20@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 20,
-                "raised_by": "2021U39",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "mem.available",
-                "transition_id": "ab3cd395-c53f-4773-ab60-11f9ee7aaa9c",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "70.42 %",
-                "non_clear_duration": 5320000000000
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
-            ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+        "chart": {
+          "id": "disk_space._",
+          "family": "/",
+          "name": "disk_space._"
         },
-        "createdAt": "2023-07-27T10:29:00.495216Z"
-    },{
-        "data": {
-            "node": {
-                "id": "1f4ac1ba-69ea-4a35-86c6-80cf872ce29e",
-                "hostname": "2021U39",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "ram_available",
-                "role": "sysadmin",
-                "when": "2023-07-20T15:44:00+05:30",
-                "chart": "mem.available",
-                "family": "system",
-                "status": "clear",
-                "details": "percentage of estimated amount of RAM available for userspace processes, without causing swapping",
-                "duration": 5320000000000,
-                "calc_expr": "avail * 100 / (system.ram.used + system.ram.cached + system.ram.free + system.ram.buffers)",
-                "conf_file": "20@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 20,
-                "raised_by": "2021U39",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "mem.available",
-                "transition_id": "ab3cd395-c53f-4773-ab60-11f9ee7aaa9c",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "70.42 %",
-                "non_clear_duration": 5320000000000
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                }
-            ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
+        "space": {
+          "id": "22628414-b404-497e-a1a8-48f5356a53c9",
+          "name": "Bhaveshprajapa space"
         },
-        "createdAt": "2023-05-27T10:29:00.495216Z"
-    },{
-        "data": {
-            "node": {
-                "id": "1f4ac1ba-69ea-4a35-86c6-80cf872ce29e",
-                "hostname": "2021U39",
-                "reachable": false
-            },
-            "room": {
-                "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                "name": "All nodes",
-                "slug": "all-nodes"
-            },
-            "user": {
-                "id": "f51767d6-5c03-4783-991c-9403ea9df4ac",
-                "name": "bhaveshprajapati.hyperlink",
-                "email": "bhaveshprajapati.hyperlink@gmail.com",
-                "MobileAppToken": "6ef3a0ee-c2e4-4f25-a9cc-1619948f7236"
-            },
-            "alarm": {
-                "log": [],
-                "name": "ram_available",
-                "role": "sysadmin",
-                "when": "2023-07-20T15:44:00+05:30",
-                "chart": "mem.available",
-                "family": "system",
-                "status": "clear",
-                "details": "percentage of estimated amount of RAM available for userspace processes, without causing swapping",
-                "duration": 5320000000000,
-                "calc_expr": "avail * 100 / (system.ram.used + system.ram.cached + system.ram.free + system.ram.buffers)",
-                "conf_file": "20@/usr/lib/netdata/conf.d/health.d/ram.conf",
-                "edit_line": 20,
-                "raised_by": "2021U39",
-                "prev_status": "warning",
-                "edit_command": "sudo /etc/netdata/edit-config health.d/ram.conf",
-                "chart_context": "mem.available",
-                "transition_id": "ab3cd395-c53f-4773-ab60-11f9ee7aaa9c",
-                "warning_count": 0,
-                "classification": "Utilization",
-                "critical_count": 0,
-                "value_with_units": "70.42 %",
-                "non_clear_duration": 5320000000000
-            },
-            "rooms": [
-                {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "All nodes",
-                    "slug": "all-nodes"
-                },  {
-                    "id": "29ffc3cb-174a-430e-9f55-2d3c4c0fca3d",
-                    "name": "Test Room 1",
-                    "slug": "Test-Room-1"
-                }
-            ],
-            "space": {
-                "id": "8a571b80-fd97-4ded-a166-9aacc2e84acb",
-                "name": "Bhaveshprajapa space",
-                "slug": "bhaveshprajapa-space"
-            },
-            "issuer": null,
-            "rate_limit": {
-                "window": 0,
-                "threshold": 0
-            },
-            "passwordless": null,
-            "channel_disabled": null,
-            "file_attachments": null,
-            "cloud_install_summary": null
-        },
-        "createdAt": "2023-07-28T10:29:00.495216Z"
-    }
+        "room": [
+          {
+            "id": "ebd6b50d-d4a6-45f2-a54c-2e461b9bb2fb",
+            "name": "War Room 2"
+          },
+          {
+            "id": "897a964f-55aa-4f3b-bda6-ce89704dff5d",
+            "name": "All nodes"
+          }
+        ],
+        "context": {
+          "name": [
+            "disk.space"
+          ]
+        }
+      },
+      "user": {
+        "id": "ceec6556-321f-4494-bfd7-c165d4818651",
+        "name": "bhaveshprajapati.hyperlink",
+        "email": "bhaveshprajapati.hyperlink@gmail.com"
+      }
+    },
+    "createdAt": "2023-08-09T06:28:58.117371Z"
+  }
 ]
 """
 }

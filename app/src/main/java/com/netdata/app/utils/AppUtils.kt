@@ -2,6 +2,7 @@ package com.netdata.app.utils
 
 import android.os.SystemClock
 import android.text.format.DateUtils
+import java.text.DecimalFormat
 import java.util.*
 import java.text.SimpleDateFormat
 
@@ -29,5 +30,14 @@ object AppUtils {
         }
 
         return "N/A"
+    }
+
+    fun convertTwoDecimal(value: Double, isPercent: Boolean = false): String {
+        val decimalFormat = DecimalFormat("#.0")
+        return if(isPercent){
+            "${decimalFormat.format(value)}%"
+        } else {
+            decimalFormat.format(value)
+        }
     }
 }

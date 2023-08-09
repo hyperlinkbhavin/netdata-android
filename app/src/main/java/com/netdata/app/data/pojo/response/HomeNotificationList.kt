@@ -4,91 +4,92 @@ import com.google.gson.annotations.SerializedName
 
 data class HomeNotificationList(
     var id: Long? = 0,
-    @SerializedName("data") var data: Data? = Data(),
-    @SerializedName("createdAt") var createdAt: String? = null,
+    @SerializedName("data"      ) var data      : Data?   = Data(),
+    @SerializedName("createdAt" ) var createdAt : String? = null,
+    @SerializedName("@timestamp" ) var timestamp  : String? = null,
     var isRead: Boolean = false,
     var priority: String?= null
 ) {
     data class Data(
-        @SerializedName("node") var node: Node? = Node(),
-        @SerializedName("room") var room: Room? = Room(),
-        @SerializedName("user") var user: User? = User(),
-        @SerializedName("alarm") var alarm: Alarm? = Alarm(),
-        @SerializedName("rooms") var rooms: ArrayList<Rooms> = arrayListOf(),
-        @SerializedName("space") var space: Space? = Space(),
-        @SerializedName("issuer") var issuer: String? = null,
-        @SerializedName("rate_limit") var rateLimit: RateLimit? = RateLimit(),
-        @SerializedName("passwordless") var passwordless: String? = null,
-        @SerializedName("channel_disabled") var channelDisabled: String? = null
-    ) {
-        data class Node(
-            @SerializedName("id") var id: String? = null,
-            @SerializedName("hostname") var hostname: String? = null,
-            @SerializedName("reachable") var reachable: Boolean? = null,
+        @SerializedName("@timestamp" ) var timestamp : String?         = null,
+        @SerializedName("host"       ) var host       : ArrayList<Host> = arrayListOf(),
+        @SerializedName("Netdata"    ) var netdata    : Netdata?        = Netdata(),
+        @SerializedName("user"       ) var user       : User?           = User()
+    ){
+        data class Host (
+            @SerializedName("id"   ) var id   : String? = null,
+            @SerializedName("name" ) var name : String? = null,
             var isSelected: Boolean = false
         )
 
-        data class User(
-            @SerializedName("id") var id: String? = null,
-            @SerializedName("email") var email: String? = null,
-            @SerializedName("name") var name: String? = null,
-            @SerializedName("MobileAppToken") var MobileAppToken: String? = null
-        )
-
-        data class Space(
-            @SerializedName("id") var id: String? = null,
-            @SerializedName("slug") var slug: String? = null,
-            @SerializedName("name") var name: String? = null
-        )
-
-        data class Room(
-            @SerializedName("id") var id: String? = null,
-            @SerializedName("slug") var slug: String? = null,
-            @SerializedName("name") var name: String? = null
-        )
-
-        data class Rooms(
-            @SerializedName("id") var id: String? = null,
-            @SerializedName("slug") var slug: String? = null,
-            @SerializedName("name") var name: String? = null
-        )
-
-        data class RateLimit(
-            @SerializedName("threshold") var threshold: Long? = null,
-            @SerializedName("window") var window: Long? = null
-        )
-
-        data class Alarm(
-            @SerializedName("name") var name: String? = null,
-            @SerializedName("chart") var chart: String? = null,
-            @SerializedName("transition_id") var transitionId: String? = null,
-            @SerializedName("chart_context") var chartContext: String? = null,
-            @SerializedName("family") var family: String? = null,
-            @SerializedName("status") var status: String? = null,
-            @SerializedName("prev_status") var prevStatus: String? = null,
-            @SerializedName("value_with_units") var valueWithUnits: String? = null,
-            @SerializedName("details") var details: String? = null,
-            @SerializedName("when") var whenData: String? = null,
-            @SerializedName("duration") var duration: Long? = null,
-            @SerializedName("non_clear_duration") var nonClearDuration: Long? = null,
-            @SerializedName("classification") var classification: String? = null,
-            @SerializedName("role") var role: String? = null,
-            @SerializedName("raised_by") var raisedBy: String? = null,
-            @SerializedName("edit_command") var editCommand: String? = null,
-            @SerializedName("edit_line") var editLine: Long? = null,
-            @SerializedName("warning_count") var warningCount: Long? = null,
-            @SerializedName("critical_count") var criticalCount: Long? = null,
-            @SerializedName("conf_file") var confFile: String? = null,
-            @SerializedName("calc_expr") var calcExpr: String? = null,
-            @SerializedName("log") var log: ArrayList<Log> = arrayListOf(),
-            var isClassSelected: Boolean = false,
-            var isTypeSelected: Boolean = false
+        data class Netdata (
+            @SerializedName("alert"   ) var alert   : Alert?          = Alert(),
+            @SerializedName("chart"   ) var chart   : Chart?          = Chart(),
+            @SerializedName("space"   ) var space   : Space?          = Space(),
+            @SerializedName("room"    ) var room    : ArrayList<Room> = arrayListOf(),
+            @SerializedName("context" ) var context : Context?        = Context()
         ) {
-            data class Log(
-                @SerializedName("alarm_name") var alarmName: String? = null,
-                @SerializedName("status") var status: String? = null,
-                @SerializedName("when") var whenData: String? = null
+            data class Alert (
+                @SerializedName("name"        ) var name        : ArrayList<String> = arrayListOf(),
+                @SerializedName("role"        ) var role        : ArrayList<String> = arrayListOf(),
+                @SerializedName("config_hash" ) var configHash  : String?           = null,
+                @SerializedName("current"     ) var current     : Current?          = Current(),
+                @SerializedName("previous"    ) var previous    : Previous?         = Previous(),
+                @SerializedName("class"       ) var classes       : String?           = null,
+                @SerializedName("type"        ) var type        : String?           = null,
+                @SerializedName("component"   ) var component   : String?           = null,
+                @SerializedName("transition"  ) var transition  : Transition?       = Transition(),
+                @SerializedName("annotations" ) var annotations : Annotations?      = Annotations()
+            ){
+                data class Current (
+                    @SerializedName("status"       ) var status      : ArrayList<String> = arrayListOf(),
+                    @SerializedName("value"        ) var value       : Double?              = null,
+                    @SerializedName("value_string" ) var valueString : String?           = null
+                )
+
+                data class Previous (
+                    @SerializedName("status"       ) var status      : String? = null,
+                    @SerializedName("value"        ) var value       : Double?    = null,
+                    @SerializedName("value_string" ) var valueString : String? = null
+                )
+
+                data class Transition (
+                    @SerializedName("id" ) var id : String? = null
+                )
+
+                data class Annotations (
+                    @SerializedName("info"         ) var info        : String? = null,
+                    @SerializedName("conf_source"  ) var confSource  : String? = null,
+                    @SerializedName("calc_expr"    ) var calcExpr    : String? = null,
+                    @SerializedName("edit_command" ) var editCommand : String? = null,
+                    @SerializedName("edit_line"    ) var editLine    : String? = null
+                )
+            }
+
+            data class Chart (
+                @SerializedName("id"   ) var id   : String? = null,
+                @SerializedName("name" ) var name : String? = null
+            )
+
+            data class Space (
+                @SerializedName("id"   ) var id   : String? = null,
+                @SerializedName("name" ) var name : String? = null
+            )
+
+            data class Room (
+                @SerializedName("id"   ) var id   : String? = null,
+                @SerializedName("name" ) var name : String? = null
+            )
+
+            data class Context (
+                @SerializedName("name" ) var name : ArrayList<String> = arrayListOf()
             )
         }
+
+        data class User (
+            @SerializedName("id"    ) var id    : String? = null,
+            @SerializedName("name"  ) var name  : String? = null,
+            @SerializedName("email" ) var email : String? = null
+        )
     }
 }

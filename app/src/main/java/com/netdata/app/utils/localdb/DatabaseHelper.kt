@@ -26,6 +26,7 @@ class DatabaseHelper(context: Context) :
         private const val TABLE_NOTIFICATION_PRIORITY = "notificationPriority"
         private const val TABLE_APP_DETAILS = "appDetails"
         private const val TABLE_FETCH_NOTIFICATIONS = "fetchNotifications"
+        private const val TABLE_ROOMS_DATA = "roomsData"
 
         // Define column names for TABLE_SPACE
         private const val ID = "id"
@@ -56,45 +57,43 @@ class DatabaseHelper(context: Context) :
 
         // Define column names for TABLE_FETCH_NOTIFICATIONS
         private const val FN_ID = "id"
-        private const val FN_NODE_ID = "nodeId"
-        private const val FN_HOSTNAME = "hostname"
-        private const val FN_REACHABLE = "reachable"
-        private const val FN_ROOM_ID = "roomId"
-        private const val FN_ROOM_NAME = "roomName"
-        private const val FN_ROOM_SLUG = "roomSlug"
+        private const val FN_HOST_ID = "hostId"
+        private const val FN_HOST_NAME = "hostName"
+        private const val FN_ALERT_NAME = "alertName"
+        private const val FN_ALERT_ROLE = "alertRole"
+        private const val FN_ALERT_CONFIG_HASH = "alertConfigHash"
+        private const val FN_ALERT_CLASS = "alertClass"
+        private const val FN_ALERT_TYPE = "alertType"
+        private const val FN_ALERT_COMPONENT = "alertComponent"
+        private const val FN_ALERT_CURRENT_STATUS = "alertCurrentStatus"
+        private const val FN_ALERT_CURRENT_VALUE = "alertCurrentValue"
+        private const val FN_ALERT_PREVIOUS_STATUS = "alertPreviousStatus"
+        private const val FN_ALERT_PREVIOUS_VALUE = "alertPreviousValue"
+        private const val FN_ALERT_TRANSITION_ID = "alertTransitionId"
+        private const val FN_ALERT_ANNOTATION_INFO = "alertAnnotationInfo"
+        private const val FN_ALERT_CONF_SOURCE = "alertConfSource"
+        private const val FN_ALERT_CALC_EXPR = "alertCalcExpr"
+        private const val FN_ALERT_EDIT_COMMAND = "alertEditCommand"
+        private const val FN_ALERT_EDIT_LINE = "alertEditLine"
+        private const val FN_ROOMS = "rooms"
+        private const val FN_CHART_ID = "chartId"
+        private const val FN_CHART_NAME = "chartName"
+        private const val FN_SPACE_ID = "spaceId"
+        private const val FN_SPACE_NAME = "spaceName"
+        private const val FN_CONTEXT_NAME = "contextName"
         private const val FN_USER_ID = "userId"
         private const val FN_USER_NAME = "userName"
         private const val FN_USER_EMAIL = "userEmail"
-        private const val FN_USER_MOBILE_APP_TOKEN = "userMobileAppToken"
-        private const val FN_ALARM_LOG = "alarmLog"
-        private const val FN_ALARM_NAME = "alarmName"
-        private const val FN_ALARM_ROLE = "alarmRole"
-        private const val FN_ALARM_WHEN = "alarmWhen"
-        private const val FN_ALARM_CHART = "alarmChart"
-        private const val FN_ALARM_FAMILY = "alarmFamily"
-        private const val FN_ALARM_STATUS = "alarmStatus"
-        private const val FN_ALARM_DETAILS = "alarmDetails"
-        private const val FN_ALARM_DURATION = "alarmDuration"
-        private const val FN_ALARM_CALC_EXPR = "alarmCalcExpr"
-        private const val FN_ALARM_CONF_FILE = "alarmConfFile"
-        private const val FN_ALARM_EDIT_LINE = "alarmEditLine"
-        private const val FN_ALARM_RAISED_BY = "alarmRaisedBy"
-        private const val FN_ALARM_PREV_STATUS = "alarmPrevStatus"
-        private const val FN_ALARM_EDIT_COMMAND = "alarmEditCommand"
-        private const val FN_ALARM_CHART_CONTEXT = "alarmChartContext"
-        private const val FN_ALARM_TRANSACTION_ID = "alarmTransactionId"
-        private const val FN_ALARM_WARNING_COUNT = "alarmWarningCount"
-        private const val FN_ALARM_CLASSIFICATION = "alarmClassification"
-        private const val FN_ALARM_CRITICAL_COUNT = "alarmCriticalCount"
-        private const val FN_ALARM_VALUE_WITH_UNITS = "alarmValueWithUnits"
-        private const val FN_ALARM_NON_CLEAR_DURATION = "alarmNonClearDuration"
-        private const val FN_ROOMS = "rooms"
-        private const val FN_SPACE_ID = "spaceId"
-        private const val FN_SPACE_NAME = "spaceName"
-        private const val FN_SPACE_SLUG = "spaceSlug"
+
         private const val FN_IS_READ = "isRead"
         private const val FN_CREATED_AT = "createdAt"
+        private const val FN_TIMESTAMP = "timestamp"
         private const val FN_PRIORITY = "priority"
+
+        // Define column names for TABLE_ROOMS_DATA
+        private const val RD_ID = "id"
+        private const val RD_NAME = "roomName"
+        private const val RD_DATA_ID = "dataId"
 
     }
 
@@ -113,16 +112,20 @@ class DatabaseHelper(context: Context) :
         db.execSQL(createTableAppDetailsQuery)
 
         val createTableFetchNotificationsQuery =
-            "CREATE TABLE $TABLE_FETCH_NOTIFICATIONS ($FN_ID LONG, $FN_NODE_ID TEXT, $FN_HOSTNAME TEXT, $FN_REACHABLE INTEGER, $FN_ROOM_ID TEXT, $FN_ROOM_NAME TEXT, $FN_ROOM_SLUG TEXT, $FN_USER_ID TEXT, $FN_USER_NAME TEXT, " +
-                    "$FN_USER_EMAIL TEXT, $FN_USER_MOBILE_APP_TOKEN TEXT, $FN_ALARM_LOG TEXT, $FN_ALARM_NAME TEXT, " +
-                    "$FN_ALARM_ROLE TEXT, $FN_ALARM_WHEN TEXT, $FN_ALARM_CHART TEXT, $FN_ALARM_FAMILY TEXT, " +
-                    "$FN_ALARM_STATUS TEXT, $FN_ALARM_DETAILS TEXT, $FN_ALARM_DURATION LONG, $FN_ALARM_CALC_EXPR TEXT," +
-                    "$FN_ALARM_CONF_FILE TEXT, $FN_ALARM_EDIT_LINE INTEGER, $FN_ALARM_RAISED_BY TEXT, $FN_ALARM_PREV_STATUS TEXT, " +
-                    "$FN_ALARM_EDIT_COMMAND TEXT, $FN_ALARM_CHART_CONTEXT TEXT, $FN_ALARM_TRANSACTION_ID TEXT, $FN_ALARM_WARNING_COUNT INTEGER, " +
-                    "$FN_ALARM_CLASSIFICATION TEXT, $FN_ALARM_CRITICAL_COUNT INTEGER, $FN_ALARM_VALUE_WITH_UNITS TEXT, " +
-                    "$FN_ALARM_NON_CLEAR_DURATION LONG, $FN_ROOMS TEXT, $FN_SPACE_ID TEXT, $FN_SPACE_NAME TEXT, $FN_SPACE_SLUG TEXT, " +
-                    "$FN_IS_READ INTEGER, $FN_CREATED_AT TEXT, $FN_PRIORITY TEXT )"
+            "CREATE TABLE $TABLE_FETCH_NOTIFICATIONS ($FN_ID LONG, $FN_HOST_ID TEXT, $FN_HOST_NAME TEXT, " +
+                    "$FN_ALERT_NAME TEXT, $FN_ALERT_ROLE TEXT, $FN_ALERT_CONFIG_HASH TEXT, $FN_ALERT_CLASS TEXT, " +
+                    "$FN_ALERT_TYPE TEXT, $FN_ALERT_COMPONENT TEXT, $FN_ALERT_CURRENT_STATUS TEXT, $FN_ALERT_CURRENT_VALUE DOUBLE, " +
+                    "$FN_ALERT_PREVIOUS_STATUS TEXT, $FN_ALERT_PREVIOUS_VALUE DOUBLE, $FN_ALERT_TRANSITION_ID TEXT, " +
+                    "$FN_ALERT_ANNOTATION_INFO TEXT, $FN_ALERT_CONF_SOURCE TEXT, $FN_ALERT_CALC_EXPR TEXT, " +
+                    "$FN_ALERT_EDIT_COMMAND TEXT, $FN_ALERT_EDIT_LINE TEXT, $FN_ROOMS TEXT, $FN_CHART_ID TEXT, $FN_CHART_NAME TEXT, " +
+                    "$FN_SPACE_ID TEXT, $FN_SPACE_NAME TEXT, $FN_CONTEXT_NAME TEXT, $FN_USER_ID TEXT, " +
+                    "$FN_USER_NAME TEXT, $FN_USER_EMAIL TEXT, $FN_IS_READ INTEGER, $FN_CREATED_AT TEXT, " +
+                    "$FN_TIMESTAMP TEXT, $FN_PRIORITY TEXT )"
         db.execSQL(createTableFetchNotificationsQuery)
+
+        val createTableRoomsData =
+            "CREATE TABLE $TABLE_ROOMS_DATA ($RD_ID TEXT, $RD_NAME TEXT, $RD_DATA_ID LONG )"
+        db.execSQL(createTableRoomsData)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -131,6 +134,7 @@ class DatabaseHelper(context: Context) :
         db.execSQL("DROP TABLE IF EXISTS $TABLE_NOTIFICATION_PRIORITY")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_APP_DETAILS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_FETCH_NOTIFICATIONS")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_ROOMS_DATA")
         onCreate(db)
     }
 
@@ -316,60 +320,44 @@ class DatabaseHelper(context: Context) :
     fun insertFetchNotificationData(id: Long, item: HomeNotificationList) {
         val values = ContentValues().apply {
             put(FN_ID, id)
-            put(FN_NODE_ID, item.data!!.node!!.id)
-            put(FN_HOSTNAME, item.data!!.node!!.hostname)
+            put(FN_HOST_ID, item.data!!.host[0].id)
+            put(FN_HOST_NAME, item.data!!.host[0].name)
 
-            if(item.data!!.node!!.reachable!!){
-                put(FN_REACHABLE, 1)
-            } else {
-                put(FN_REACHABLE, 0)
-            }
-
-            put(FN_ROOM_ID, item.data!!.room!!.id)
-            put(FN_ROOM_NAME, item.data!!.room!!.name)
-            put(FN_ROOM_SLUG, item.data!!.room!!.slug)
+            put(FN_ALERT_NAME, item.data!!.netdata!!.alert!!.name[0])
+            put(FN_ALERT_ROLE, item.data!!.netdata!!.alert!!.role[0])
+            put(FN_ALERT_CONFIG_HASH, item.data!!.netdata!!.alert!!.configHash)
+            put(FN_ALERT_CLASS, item.data!!.netdata!!.alert!!.classes)
+            put(FN_ALERT_TYPE, item.data!!.netdata!!.alert!!.type)
+            put(FN_ALERT_COMPONENT, item.data!!.netdata!!.alert!!.component)
+            put(FN_ALERT_CURRENT_STATUS, item.data!!.netdata!!.alert!!.current!!.status[0])
+            put(FN_ALERT_CURRENT_VALUE, item.data!!.netdata!!.alert!!.current!!.value)
+            put(FN_ALERT_PREVIOUS_STATUS, item.data!!.netdata!!.alert!!.previous!!.status)
+            put(FN_ALERT_PREVIOUS_VALUE, item.data!!.netdata!!.alert!!.previous!!.value)
+            put(FN_ALERT_TRANSITION_ID, item.data!!.netdata!!.alert!!.transition!!.id)
+            put(FN_ALERT_ANNOTATION_INFO, item.data!!.netdata!!.alert!!.annotations!!.info)
+            put(FN_ALERT_CONF_SOURCE, item.data!!.netdata!!.alert!!.annotations!!.confSource)
+            put(FN_ALERT_CALC_EXPR, item.data!!.netdata!!.alert!!.annotations!!.calcExpr)
+            put(FN_ALERT_EDIT_COMMAND, item.data!!.netdata!!.alert!!.annotations!!.editCommand)
+            put(FN_ALERT_EDIT_LINE, item.data!!.netdata!!.alert!!.annotations!!.editLine)
+            put(FN_ROOMS, Gson().toJson(item.data!!.netdata!!.room))
+            put(FN_CHART_ID, item.data!!.netdata!!.chart!!.id)
+            put(FN_CHART_NAME, item.data!!.netdata!!.chart!!.name)
+            put(FN_SPACE_ID, item.data!!.netdata!!.space!!.id)
+            put(FN_SPACE_NAME, item.data!!.netdata!!.space!!.name)
+            put(FN_CONTEXT_NAME, item.data!!.netdata!!.context!!.name[0])
             put(FN_USER_ID, item.data!!.user!!.id)
             put(FN_USER_NAME, item.data!!.user!!.name)
             put(FN_USER_EMAIL, item.data!!.user!!.email)
-            put(FN_USER_MOBILE_APP_TOKEN, item.data!!.user!!.MobileAppToken)
-            put(FN_ALARM_LOG, Gson().toJson(item.data!!.alarm!!.log))
-            put(FN_ALARM_NAME, item.data!!.alarm!!.name)
-            put(FN_ALARM_ROLE, item.data!!.alarm!!.role)
-            put(FN_ALARM_WHEN, item.data!!.alarm!!.whenData)
-            put(FN_ALARM_CHART, item.data!!.alarm!!.chart)
-            put(FN_ALARM_FAMILY, item.data!!.alarm!!.family)
-            put(FN_ALARM_STATUS, item.data!!.alarm!!.status)
-            put(FN_ALARM_DETAILS, item.data!!.alarm!!.details)
-            put(FN_ALARM_DURATION, item.data!!.alarm!!.duration)
-            put(FN_ALARM_CALC_EXPR, item.data!!.alarm!!.calcExpr)
-            put(FN_ALARM_CONF_FILE, item.data!!.alarm!!.confFile)
-            put(FN_ALARM_EDIT_LINE, item.data!!.alarm!!.editLine)
-            put(FN_ALARM_RAISED_BY, item.data!!.alarm!!.raisedBy)
-            put(FN_ALARM_PREV_STATUS, item.data!!.alarm!!.prevStatus)
-            put(FN_ALARM_EDIT_COMMAND, item.data!!.alarm!!.editCommand)
-            put(FN_ALARM_CHART_CONTEXT, item.data!!.alarm!!.chartContext)
-            put(FN_ALARM_TRANSACTION_ID, item.data!!.alarm!!.transitionId)
-            put(FN_ALARM_WARNING_COUNT, item.data!!.alarm!!.warningCount)
-            put(FN_ALARM_CLASSIFICATION, item.data!!.alarm!!.classification)
-            put(FN_ALARM_CRITICAL_COUNT, item.data!!.alarm!!.criticalCount)
-            put(FN_ALARM_VALUE_WITH_UNITS, item.data!!.alarm!!.valueWithUnits)
-            put(FN_ALARM_NON_CLEAR_DURATION, item.data!!.alarm!!.nonClearDuration)
-            put(FN_ROOMS, Gson().toJson(item.data!!.rooms))
-            put(FN_SPACE_ID, item.data!!.space!!.id)
-            put(FN_SPACE_NAME, item.data!!.space!!.name)
-            put(FN_SPACE_SLUG, item.data!!.space!!.slug)
+
             put(FN_IS_READ, 0)
             put(FN_CREATED_AT, item.createdAt)
+            put(FN_TIMESTAMP, item.timestamp)
             put(FN_PRIORITY, Priority.HIGH_PRIORITY.shortName)
-
-            /*if (item.data!!.alarm!!.status.equals("critical", true)) {
-                put(FN_PRIORITY, Priority.HIGH_PRIORITY.shortName)
-            } else if (item.data!!.alarm!!.status.equals("warning", true)) {
-                put(FN_PRIORITY, Priority.MEDIUM_PRIORITY.shortName)
-            } else {
-                put(FN_PRIORITY, Priority.LOW_PRIORITY.shortName)
-            }*/
         }
+
+        /*for(data in item.data!!.netdata!!.room){
+            insertRoomsData(data, id)
+        }*/
 
         val db = writableDatabase
         db.insert(TABLE_FETCH_NOTIFICATIONS, null, values)
@@ -418,7 +406,7 @@ class DatabaseHelper(context: Context) :
             db.update(
                 TABLE_FETCH_NOTIFICATIONS,
                 values,
-                "nodeId = '${item.data!!.node!!.id}'",
+                "nodeId = '${item.data!!.host[0].id}'",
                 null
             )
         }
@@ -462,7 +450,8 @@ class DatabaseHelper(context: Context) :
         lateinit var cursor: Cursor
         val gson = Gson()
         selectQuery =
-            "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
+            "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID'"
+//            "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
 
         if (isSimpleData) {
             selectQuery =
@@ -478,7 +467,7 @@ class DatabaseHelper(context: Context) :
                     typeFilters = typeFilters
                 )
             } ORDER BY ${sortByQuery(sortByTimeItemPosition, sortByNotificationPriorityItemPosition, sortByCriticalityItemPosition)}"
-            Log.e("query", selectQuery)
+
             cursor = db.rawQuery(selectQuery, null)
         } else if (isSortBy) {
 //            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
@@ -487,11 +476,8 @@ class DatabaseHelper(context: Context) :
                 selectQuery += " ORDER BY ${sortByQuery(sortByTimeItemPosition, sortByNotificationPriorityItemPosition, sortByCriticalityItemPosition)}"
             }
 
-            Log.e("query", selectQuery)
-
             cursor = db.rawQuery(selectQuery, null)
         } else if (isFilterBy) {
-            Log.e("status", "$statusFilters $priorityFilters")
             // Define the filter criteria (critical status or high priority)
 //            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
             selectQuery += " ${
@@ -504,8 +490,6 @@ class DatabaseHelper(context: Context) :
                 )
             } ORDER BY $FN_CREATED_AT DESC"
 
-            Log.e("query", selectQuery)
-
             // Perform the query and get the cursor
             cursor = db.rawQuery(selectQuery, null)
 
@@ -516,99 +500,89 @@ class DatabaseHelper(context: Context) :
             cursor = db.rawQuery(selectQuery, null)
         }
 
+        Log.e("query", selectQuery)
+
 
         cursor.use {
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(cursor.getColumnIndexOrThrow(FN_ID))
-                val nodeId = cursor.getString(cursor.getColumnIndexOrThrow(FN_NODE_ID))
-                val hostname = cursor.getString(cursor.getColumnIndexOrThrow(FN_HOSTNAME))
-                val reachable = cursor.getInt(cursor.getColumnIndexOrThrow(FN_REACHABLE))
-                val roomId = cursor.getString(cursor.getColumnIndexOrThrow(FN_ROOM_ID))
-                val roomName = cursor.getString(cursor.getColumnIndexOrThrow(FN_ROOM_NAME))
-                val roomSlug = cursor.getString(cursor.getColumnIndexOrThrow(FN_ROOM_SLUG))
+                val hostId = cursor.getString(cursor.getColumnIndexOrThrow(FN_HOST_ID))
+                val hostName = cursor.getString(cursor.getColumnIndexOrThrow(FN_HOST_NAME))
+                val alertName = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_NAME))
+                val alertRole = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_ROLE))
+                val alertConfigHash = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_CONFIG_HASH))
+                val alertClass = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_CLASS))
+                val alertType = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_TYPE))
+                val alertComponent = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_COMPONENT))
+                val alertCurrentStatus = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_CURRENT_STATUS))
+                val alertCurrentValue = cursor.getDouble(cursor.getColumnIndexOrThrow(FN_ALERT_CURRENT_VALUE))
+                val alertPreviousStatus = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_PREVIOUS_STATUS))
+                val alertPreviousValue = cursor.getDouble(cursor.getColumnIndexOrThrow(FN_ALERT_PREVIOUS_VALUE))
+                val alertTransitionId = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_TRANSITION_ID))
+                val alertAnnotationInfo = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_ANNOTATION_INFO))
+                val alertConfSource = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_CONF_SOURCE))
+                val alertCalcExpr = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_CALC_EXPR))
+                val alertEditCommand = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_EDIT_COMMAND))
+                val alertEditLine = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_EDIT_LINE))
+                val rooms = cursor.getString(cursor.getColumnIndexOrThrow(FN_ROOMS))
+                val chartId = cursor.getString(cursor.getColumnIndexOrThrow(FN_CHART_ID))
+                val chartName = cursor.getString(cursor.getColumnIndexOrThrow(FN_CHART_NAME))
+                val spaceId = cursor.getString(cursor.getColumnIndexOrThrow(FN_SPACE_ID))
+                val spaceName = cursor.getString(cursor.getColumnIndexOrThrow(FN_SPACE_NAME))
+                val contextName = cursor.getString(cursor.getColumnIndexOrThrow(FN_CONTEXT_NAME))
                 val userId = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_ID))
                 val userName = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_NAME))
                 val userEmail = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_EMAIL))
-                val userMobileAppToken = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_MOBILE_APP_TOKEN))
-                val alarmLog = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_LOG))
-                val alarmName = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_NAME))
-                val alarmRole = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_ROLE))
-                val alarmWhen = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_WHEN))
-                val alarmChart = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_CHART))
-                val alarmFamily = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_FAMILY))
-                val alarmStatus = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_STATUS))
-                val alarmDetails = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_DETAILS))
-                val alarmDuration = cursor.getLong(cursor.getColumnIndexOrThrow(FN_ALARM_DURATION))
-                val alarmCalcExpr = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_CALC_EXPR))
-                val alarmConfFile = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_CONF_FILE))
-                val alarmEditLine = cursor.getLong(cursor.getColumnIndexOrThrow(FN_ALARM_EDIT_LINE))
-                val alarmRaisedBy = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_RAISED_BY))
-                val alarmPrevStatus = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_PREV_STATUS))
-                val alarmEditCommand = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_EDIT_COMMAND))
-                val alarmChartContext = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_CHART_CONTEXT))
-                val alarmTransactionId = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_TRANSACTION_ID))
-                val alarmWarningCount = cursor.getLong(cursor.getColumnIndexOrThrow(FN_ALARM_WARNING_COUNT))
-                val alarmClassification = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_CLASSIFICATION))
-                val alarmCriticalCount = cursor.getLong(cursor.getColumnIndexOrThrow(FN_ALARM_CRITICAL_COUNT))
-                val alarmValueWithUnits = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALARM_VALUE_WITH_UNITS))
-                val alarmNonClearDuration = cursor.getLong(cursor.getColumnIndexOrThrow(FN_ALARM_NON_CLEAR_DURATION))
-                val rooms = cursor.getString(cursor.getColumnIndexOrThrow(FN_ROOMS))
-                val spaceId = cursor.getString(cursor.getColumnIndexOrThrow(FN_SPACE_ID))
-                val spaceName = cursor.getString(cursor.getColumnIndexOrThrow(FN_SPACE_NAME))
-                val spaceSlug = cursor.getString(cursor.getColumnIndexOrThrow(FN_SPACE_SLUG))
+
                 val isRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_READ))
                 val createdAt = cursor.getString(cursor.getColumnIndexOrThrow(FN_CREATED_AT))
+                val timestamp = cursor.getString(cursor.getColumnIndexOrThrow(FN_TIMESTAMP))
                 val priority = cursor.getString(cursor.getColumnIndexOrThrow(FN_PRIORITY))
 
-                val allData = HomeNotificationList().data!!
+                val allData = HomeNotificationList().data
 
-                allData.node!!.id = nodeId
-                allData.node!!.hostname = hostname
-                allData.node!!.reachable = reachable == 1
-                allData.room!!.id = roomId
-                allData.room!!.name = roomName
-                allData.room!!.slug = roomSlug
+                allData!!.host.add(HomeNotificationList.Data.Host(hostId,hostName))
+                allData.netdata!!.alert!!.name.add(alertName)
+                allData.netdata!!.alert!!.role.add(alertRole)
+                allData.netdata!!.alert!!.configHash = alertConfigHash
+                allData.netdata!!.alert!!.classes = alertClass
+                allData.netdata!!.alert!!.type = alertType
+                allData.netdata!!.alert!!.component = alertComponent
+                allData.netdata!!.alert!!.current!!.status.add(alertCurrentStatus)
+                allData.netdata!!.alert!!.current!!.value = alertCurrentValue
+                allData.netdata!!.alert!!.previous!!.status = alertPreviousStatus
+                allData.netdata!!.alert!!.previous!!.value = alertPreviousValue
+                allData.netdata!!.alert!!.transition!!.id = alertTransitionId
+                allData.netdata!!.alert!!.annotations!!.info = alertAnnotationInfo
+                allData.netdata!!.alert!!.annotations!!.confSource = alertConfSource
+                allData.netdata!!.alert!!.annotations!!.calcExpr = alertCalcExpr
+                allData.netdata!!.alert!!.annotations!!.editCommand = alertEditCommand
+                allData.netdata!!.alert!!.annotations!!.editLine = alertEditLine
+                allData.netdata!!.chart!!.id = chartId
+                allData.netdata!!.chart!!.name = chartName
+                allData.netdata!!.space!!.id = spaceId
+                allData.netdata!!.space!!.name = spaceName
+                allData.netdata!!.context!!.name.add(contextName)
                 allData.user!!.id = userId
                 allData.user!!.name = userName
                 allData.user!!.email = userEmail
-                allData.user!!.MobileAppToken = userMobileAppToken
 
-                val alarmLogType = object : TypeToken<ArrayList<HomeNotificationList.Data.Alarm.Log>>() {}.type
+                val roomsType = object : TypeToken<ArrayList<HomeNotificationList.Data.Netdata.Room>>() {}.type
+                val roomsList: ArrayList<HomeNotificationList.Data.Netdata.Room> = gson.fromJson(rooms, roomsType)
+                allData.netdata!!.room = roomsList
+//                allData.netdata!!.room.addAll(getRoomsData(id))
+
+                /*val alarmLogType = object : TypeToken<ArrayList<HomeNotificationList.Data.Alarm.Log>>() {}.type
                 val alarmLogList: ArrayList<HomeNotificationList.Data.Alarm.Log> = gson.fromJson(alarmLog, alarmLogType)
                 allData.alarm!!.log = alarmLogList
 
-                allData.alarm!!.name = alarmName
-                allData.alarm!!.role = alarmRole
-                allData.alarm!!.whenData = alarmWhen
-                allData.alarm!!.chart = alarmChart
-                allData.alarm!!.family = alarmFamily
-                allData.alarm!!.status = alarmStatus
-                allData.alarm!!.details = alarmDetails
-                allData.alarm!!.duration = alarmDuration
-                allData.alarm!!.calcExpr = alarmCalcExpr
-                allData.alarm!!.confFile = alarmConfFile
-                allData.alarm!!.editLine = alarmEditLine
-                allData.alarm!!.raisedBy = alarmRaisedBy
-                allData.alarm!!.prevStatus = alarmPrevStatus
-                allData.alarm!!.editCommand = alarmEditCommand
-                allData.alarm!!.chartContext = alarmChartContext
-                allData.alarm!!.transitionId = alarmTransactionId
-                allData.alarm!!.warningCount = alarmWarningCount
-                allData.alarm!!.classification = alarmClassification
-                allData.alarm!!.criticalCount = alarmCriticalCount
-                allData.alarm!!.valueWithUnits = alarmValueWithUnits
-                allData.alarm!!.nonClearDuration = alarmNonClearDuration
 
                 val roomsType = object : TypeToken<ArrayList<HomeNotificationList.Data.Rooms>>() {}.type
                 val roomsList: ArrayList<HomeNotificationList.Data.Rooms> = gson.fromJson(rooms, roomsType)
-                allData.rooms = roomsList
+                allData.rooms = roomsList*/
 
-                allData.space!!.id = spaceId
-                allData.space!!.name = spaceName
-                allData.space!!.slug = spaceSlug
+                val data = HomeNotificationList(id, allData, createdAt, timestamp, isRead == 1, priority)
 
-
-                val data = HomeNotificationList(id, allData, createdAt, isRead == 1, priority)
                 dataList.add(data)
             }
 //            cursor.close()
@@ -627,7 +601,7 @@ class DatabaseHelper(context: Context) :
         if (sortByCriticalityItemPosition != -1) {
 
             query += """
-                CASE $FN_ALARM_STATUS 
+                CASE $FN_ALERT_CURRENT_STATUS 
                 WHEN 'critical' THEN 1 
                 WHEN 'warning' THEN 2 
                 WHEN 'clear' THEN 3 
@@ -663,10 +637,11 @@ class DatabaseHelper(context: Context) :
         var nodesArg = ""
         var classArg = ""
         var typeArg = ""
+        var compArg = ""
 
         if (statusFilters.isNotEmpty()) {
             for (i in statusFilters) {
-                statusArg += "$FN_ALARM_STATUS LIKE ('$i') OR "
+                statusArg += "$FN_ALERT_CURRENT_STATUS LIKE ('$i') OR "
             }
             statusArg = statusArg.dropLast(4)
         }
@@ -678,21 +653,26 @@ class DatabaseHelper(context: Context) :
         }
         if (nodesFilters.isNotEmpty()) {
             for (i in nodesFilters) {
-                nodesArg += "$FN_NODE_ID LIKE ('$i') OR "
+                nodesArg += "$FN_HOST_ID LIKE ('$i') OR "
             }
             nodesArg = nodesArg.dropLast(4)
         }
         if (classFilters.isNotEmpty()) {
             for (i in classFilters) {
-                classArg += "$FN_ALARM_CLASSIFICATION LIKE ('$i') OR "
+                classArg += "$FN_ALERT_CLASS LIKE ('$i') OR "
             }
             classArg = classArg.dropLast(4)
         }
         if (typeFilters.isNotEmpty()) {
             for (i in typeFilters) {
-                typeArg += "$FN_ALARM_FAMILY LIKE ('$i') OR "
+                typeArg += "$FN_ALERT_TYPE LIKE ('$i') OR "
             }
             typeArg = typeArg.dropLast(4)
+
+            for (i in typeFilters) {
+                compArg += "$FN_ALERT_COMPONENT LIKE ('$i') OR "
+            }
+            compArg = compArg.dropLast(4)
         }
 
         if (statusFilters.isNotEmpty()) {
@@ -709,9 +689,41 @@ class DatabaseHelper(context: Context) :
         }
         if (typeFilters.isNotEmpty()) {
             query += " AND ($typeArg)"
+            query += " AND ($compArg)"
         }
 
         return query
+    }
+
+    private fun insertRoomsData(item: HomeNotificationList.Data.Netdata.Room, dataID: Long) {
+        val values = ContentValues().apply {
+            put(RD_ID, item.id)
+            put(RD_NAME, item.name)
+            put(RD_DATA_ID, dataID)
+        }
+
+        val db = writableDatabase
+        db.insert(TABLE_ROOMS_DATA, null, values)
+        db.close()
+    }
+
+    private fun getRoomsData(id: Long): ArrayList<HomeNotificationList.Data.Netdata.Room> {
+        val dataList = ArrayList<HomeNotificationList.Data.Netdata.Room>()
+        val db = readableDatabase
+        val selectQuery = "SELECT * FROM $TABLE_ROOMS_DATA WHERE $RD_DATA_ID = $id"
+
+        val cursor = db.rawQuery(selectQuery, null)
+        cursor.use {
+            while (cursor.moveToNext()) {
+                val roomId = cursor.getString(cursor.getColumnIndexOrThrow(RD_ID))
+                val roomName = cursor.getString(cursor.getColumnIndexOrThrow(RD_NAME))
+                val data = HomeNotificationList.Data.Netdata.Room(roomId, roomName)
+                dataList.add(data)
+            }
+        }
+
+        db.close()
+        return dataList
     }
 
     fun deleteFetchNotificationOlderThanWeek(date: String) {
