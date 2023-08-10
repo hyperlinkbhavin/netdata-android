@@ -137,8 +137,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 spaceList[pos].isUntil = false
             }
         }
+        appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
         maintenanceModeSettingsAdapter.notifyItemChanged(pos)
-        Log.e("change data", spaceList.toString())
     }
 
     private fun getCheckData() {
@@ -238,7 +238,6 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
     private fun callGetSpaceList() {
         showLoader()
-        Log.e("spacecall", "spacecall")
         apiViewModel.callGetSpaceList()
     }
 
@@ -272,18 +271,12 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         val dataToRemove = arrayList.filter { it.id !in idsInFirstList }
 
-        arrayList.removeAll(dataToRemove)
+        arrayList.removeAll(dataToRemove.toSet())
 
         spaceList.addAll(arrayList)
 
         maintenanceModeSettingsAdapter.list.clear()
         maintenanceModeSettingsAdapter.list.addAll(spaceList)
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
-        Log.e("on des", "on Destroy call")
     }
 }

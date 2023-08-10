@@ -24,7 +24,7 @@ import com.netdata.app.utils.visible
 
 class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 
-    private val timeValuesAdapter by lazy {
+    /*private val timeValuesAdapter by lazy {
         TimeValuesAdapter(){ view, position, item ->
 
         }
@@ -52,7 +52,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         InstanceValuesAdapter(){ view, position, item ->
 
         }
-    }
+    }*/
 
     override fun inject(fragmentComponent: FragmentComponent) {
         fragmentComponent.inject(this)
@@ -65,8 +65,6 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
     override fun bindData() {
         toolbar()
         manageClick()
-        setAdapter()
-//        setLineChartData()
     }
 
     private fun toolbar() = with(binding){
@@ -79,7 +77,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+   /* @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter() = with(binding){
         recyclerViewTimeValues.adapter = timeValuesAdapter
         recyclerViewAlertInfo.adapter = alertInfoAdapter
@@ -119,7 +117,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         instanceValuesAdapter.list.add(InstanceValuesList("parentA/rpi2b-1", "Warning", "34.0%", "Sat 10, November 2021 • 12:00:04"))
         instanceValuesAdapter.list.add(InstanceValuesList("rpi2b-1", "Warning", "43.2%", "Sat 10, November 2021 • 11:53:02"))
         instanceValuesAdapter.notifyDataSetChanged()
-    }
+    }*/
 
     /*private fun setLineChartData() = with(binding){
         val xValue = ArrayList<String>()

@@ -695,13 +695,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
 
         radioButtonCurrentNodes.setOnClickListener {
-            radioButtonCurrentNodes.isChecked = true
-            radioButtonAllNodes.isChecked = false
+            constraintCurrentNodes.performClick()
         }
 
         radioButtonAllNodes.setOnClickListener {
-            radioButtonCurrentNodes.isChecked = false
-            radioButtonAllNodes.isChecked = true
+            constraintAllNodes.performClick()
         }
 
 //        seekBar.setProgress(90f)
@@ -1146,25 +1144,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         apiViewModel.fetchHomeNotificationLiveData.observe(this) {
             hideLoader()
             if (!it.isError || it.responseCode == 200) {
-                /*if(it.data!!.isNotEmpty()){
-                    insertDataIfEmpty(it.data)
-                } else {
-                    manageTableData()
-                }*/
                 insertDataIfEmpty(it.data!!)
-//                manageTableData()
-
             }
         }
     }
 
     private fun insertDataIfEmpty(alertDataList: ArrayList<HomeNotificationList>) {
-        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
-            val gson = Gson()
+//        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
+        if(alertDataList.isNotEmpty()){
+            /*val gson = Gson()
             val type = object : TypeToken<List<HomeNotificationList>>() {}.type
-            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
+            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)*/
             var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
-            for (item in alarmDataList) {
+            for (item in alertDataList) {
                 lastId++
                 dbHelper.insertFetchNotificationData(lastId, item)
             }
@@ -1288,17 +1280,20 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         Log.e("home size", homeList.size.toString())
         val itemsToAdd = mutableListOf<HomeNotificationList>() // Change ItemType to the actual type of your items
 
-        for (i in homeList) {
+        itemsToAdd.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
+        /*for (i in homeList) {
+            var isContain = false
             for (j in i.data!!.netdata!!.room) {
                 if (j.id == roomList[roomsItemPosition].id!!) {
-                    itemsToAdd.add(i)
-                    break
+                    isContain = true
                 }
             }
-        }
+            if(isContain) itemsToAdd.add(i)
+        }*/
 //        homeAdapter.list.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
         homeAdapter.list.addAll(itemsToAdd)
-        homeList = homeAdapter.list
+        homeList.clear()
+        homeList.addAll(homeAdapter.list)
         val unreadItem = homeAdapter.list.filter { !it.isRead }
 
         Log.e("home data", homeAdapter.list.size.toString())

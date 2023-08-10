@@ -37,10 +37,8 @@ class DynamicViewModel() : ViewModel() {
             }
 
             override fun onFailure(call: Call<DynamicLink>, t: Throwable) {
-                if(t is CookiesHandlerError){
-                    liveData.postValue(MyResponseBody(0, "Test", DynamicLink(),isError = true, throwable = t))
-                }
-                Log.e("Fail Dynamic", call.toString())
+                liveData.postValue(MyResponseBody(0, "Test", DynamicLink(),isError = true, throwable = t))
+                Log.e("Fail Dynamic", t.localizedMessage.toString())
             }
 
         })

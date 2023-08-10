@@ -53,7 +53,6 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
         val deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK)
 
         if(!deeplink.isNullOrEmpty()){
-            Log.e("link", deeplink!!)
             callDynamicLink(deeplink)
         } /*else {
             val table1DataList = dbHelper.getAllDataFromSpace()
@@ -100,7 +99,6 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
     }
 
     private fun callDynamicLink(link: String) {
-        Log.e("token", link)
         showLoader()
         dynamicViewModel.callDynamicLink(link)
     }

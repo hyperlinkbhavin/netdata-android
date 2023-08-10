@@ -11,7 +11,7 @@ object Constant {
     const val TOKEN_PRE_VALUE = "bearer"
 
     var isSortBy = false
-    var notificationPriorityList = ArrayList<NotificationPriorityList>()
+//    var notificationPriorityList = ArrayList<NotificationPriorityList>()
 
     const val APP_PREF_IS_LOGIN = "APP_PREF_IS_LOGIN"
     const val APP_PREF_TOKEN = "APP_PREF_TOKEN"
@@ -23,6 +23,7 @@ object Constant {
     const val APP_PREF_COOKIE_SV = "APP_PREF_COOKIE_SV"
     const val APP_PREF_SPACE_LIST_MAINTAIN = "APP_PREF_SPACE_LIST_MAINTAIN"
     const val APP_PREF_TEMP_AUDIO = "APP_PREF_TEMP_AUDIO"
+    const val APP_PREF_NOTIFICATION_PRIORITY_LIST = "APP_PREF_NOTIFICATION_PRIORITY_LIST"
 
 
     const val BUNDLE_DEEPLINK = "BUNDLE_DEEPLINK"
