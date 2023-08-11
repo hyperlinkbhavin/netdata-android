@@ -48,7 +48,7 @@ object CookiesNetworkClient {
         OkHttpClient.Builder()
             .cookieJar(cookieHandler)
             .addInterceptor(httpLogger)
-            /*.addInterceptor(Interceptor { chain ->
+            .addInterceptor(Interceptor { chain ->
                 val request = chain.request()
                 cookieHandler.clearStoreCookies()
                 val response = chain.proceed(request)
@@ -59,7 +59,7 @@ object CookiesNetworkClient {
                     throw  CookiesHandlerError("Cookie Error", cookieHandler.storeCookies)
                 }
 
-                *//*if (!response.isSuccessful) {
+                if (!response.isSuccessful) {
                     // Get cookies from the failure response headers
                     val cookies = response.headers.values("set-cookie")
 
@@ -70,10 +70,10 @@ object CookiesNetworkClient {
                         // Example: Print the cookie value
                         println(cookie)
                     }
-                }*//*
+                }
 
                 response
-            })*/
+            })
 //            .addInterceptor(httpLogger)
             .build()
     }

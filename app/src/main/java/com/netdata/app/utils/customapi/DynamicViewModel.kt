@@ -31,7 +31,6 @@ class DynamicViewModel() : ViewModel() {
         val callApi = apiService.fetchData(dynamicLink)
         callApi.enqueue(object : Callback<DynamicLink> {
 
-
             override fun onResponse(call: Call<DynamicLink>, response: Response<DynamicLink>) {
                 liveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
             }
@@ -39,6 +38,13 @@ class DynamicViewModel() : ViewModel() {
             override fun onFailure(call: Call<DynamicLink>, t: Throwable) {
                 liveData.postValue(MyResponseBody(0, "Test", DynamicLink(),isError = true, throwable = t))
                 Log.e("Fail Dynamic", t.localizedMessage.toString())
+                /*if(t is CookiesHandlerError){
+                    *//*val si = t.map["s_i"]
+                    val sv = t.map["s_v_$si"]*//*
+                    *//*myEdit.putString(Constant.APP_PREF_COOKIE_SI, t.map["s_i"]!!)
+                    myEdit.putString(Constant.APP_PREF_COOKIE_SV, t.map["s_v_${t.map["s_i"]}"]!!)*//*
+                    liveData.postValue(t)
+                }*/
             }
 
         })

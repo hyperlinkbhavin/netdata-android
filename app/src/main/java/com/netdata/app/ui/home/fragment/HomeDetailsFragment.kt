@@ -1,9 +1,12 @@
 package com.netdata.app.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.webkit.*
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
@@ -65,6 +68,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
     override fun bindData() {
         toolbar()
         manageClick()
+        loadWebview()
     }
 
     private fun toolbar() = with(binding){
@@ -75,6 +79,54 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 
     private fun manageClick() = with(binding){
 
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun loadWebview() = with(binding){
+        showLoader()
+        val cookieManager: CookieManager = CookieManager.getInstance()
+        cookieManager.setAcceptCookie(true)
+
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+        val cookieValue = "$sessionId;$token"
+        val domain = "app.netdata.cloud"
+
+        cookieManager.setCookie(domain, cookieValue)
+        CookieManager.getInstance().flush()
+
+        // Enable JavaScript in WebView if needed
+        webview.settings.javaScriptEnabled = true
+        webview.settings.loadWithOverviewMode = true
+        webview.settings.useWideViewPort = true
+        webview.settings.builtInZoomControls = true
+        webview.webChromeClient = WebChromeClient()
+        webview.settings.domStorageEnabled = true
+        webview.settings.databaseEnabled = true
+
+        // Set a WebViewClient to handle events inside the WebView
+        webview.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                // Page has finished loading
+                hideLoader()
+            }
+
+            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
+                super.onPageStarted(view, url, favicon)
+                // Page has started loading
+            }
+
+            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                // Handle URL loading within WebView, return true to indicate it's handled here
+                view?.loadUrl(url!!)
+                return true
+            }
+        }
+
+        // Load a URL into the WebView
+        Log.e("url", arguments?.getString(Constant.BUNDLE_URL)!!)
+        webview.loadUrl(arguments?.getString(Constant.BUNDLE_URL)!!)
     }
 
    /* @SuppressLint("NotifyDataSetChanged")

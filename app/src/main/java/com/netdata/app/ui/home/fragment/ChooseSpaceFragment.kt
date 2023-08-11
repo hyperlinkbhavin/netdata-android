@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.gson.Gson
 import com.netdata.app.R
 import com.netdata.app.data.pojo.request.ChooseSpaceList
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.data.pojo.response.SpaceList
 import com.netdata.app.databinding.AuthFragmentWelcomeBinding
 import com.netdata.app.databinding.ChooseSpaceFragmentBinding
@@ -42,6 +43,8 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     lateinit var dbHelper: DatabaseHelper
 
     private var spaceList = ArrayList<SpaceList>()
+    private var notificationList = ArrayList<HomeNotificationList>()
+    val spaceIdToCountMap = mutableMapOf<String, Int>()
 
     private val apiViewModel by lazy {
         ViewModelProvider(this)[ApiViewModel::class.java]
@@ -66,6 +69,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeGetSpaceList()
+        observeFetchHomeNotification()
     }
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ChooseSpaceFragmentBinding {
@@ -77,7 +81,6 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         toolbar()
         manageClick()
         setAdapter()
-        spannableString()
         editTextChanged()
     }
 
@@ -141,9 +144,9 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         chooseSpaceAdapter.list.add(ChooseSpaceList("Space 4",""))
     }*/
 
-    private fun spannableString() {
+    private fun spannableString(count: String) {
         val spanString =
-            SpannableString(getString(R.string.label_you_have_a_total_of_3_notifications_in_your_spaces))
+            SpannableString("You have a total of $count notifications in your spaces")
         val termsAndCondition: ClickableSpan = object : ClickableSpan() {
             override fun onClick(textView: View) {
 
@@ -190,10 +193,58 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     }
                     chooseSpaceAdapter.list.addAll(it.data)
                     chooseSpaceAdapter.notifyDataSetChanged()
+                    callFetchHomeNotification()
                 }
             } else {
                 showMessage("Something wrong! Try again")
             }
         }
+    }
+
+    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
+    private fun callFetchHomeNotification() {
+        showLoader()
+        apiViewModel.callFetchHomeNotification()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeFetchHomeNotification() {
+        apiViewModel.fetchHomeNotificationLiveData.observe(this) {
+            hideLoader()
+            if (!it.isError || it.responseCode == 200) {
+                insertDataIfEmpty(it.data!!)
+            }
+        }
+    }
+
+    private fun insertDataIfEmpty(alertDataList: ArrayList<HomeNotificationList>) {
+//        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
+        if(alertDataList.isNotEmpty()){
+            /*val gson = Gson()
+            val type = object : TypeToken<List<HomeNotificationList>>() {}.type
+            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)*/
+            var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
+            for (item in alertDataList) {
+                lastId++
+                dbHelper.insertFetchNotificationData(lastId, item)
+            }
+        }
+        notificationList.addAll(dbHelper.getAllDataFromFetchNotification(isSimpleData = true))
+        countSpaceList()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun countSpaceList(){
+        var totalCount = 0
+        for (space in spaceList) {
+            val matchingDataList = notificationList.filter { it.data!!.netdata!!.space!!.id == space.id && !it.isNotificationRead }
+            space.count = matchingDataList.size
+            totalCount += matchingDataList.size
+        }
+
+        spannableString(totalCount.toString())
+        chooseSpaceAdapter.list.clear()
+        chooseSpaceAdapter.list.addAll(spaceList)
+        chooseSpaceAdapter.notifyDataSetChanged()
     }
 }

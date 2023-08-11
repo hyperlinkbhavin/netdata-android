@@ -64,7 +64,7 @@
             android:id="@+id/imageViewWarRoomsWarning"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:src="@drawable/ic_space_warning"
+            android:background="@drawable/ic_space_warning"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
             app:layout_constraintTop_toTopOf="@id/constraintTop"/>
 

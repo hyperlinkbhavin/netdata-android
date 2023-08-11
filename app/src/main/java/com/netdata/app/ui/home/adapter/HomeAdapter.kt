@@ -50,6 +50,7 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
         init {
             binding.apply {
                 constraintTop.setOnClickListener {
+                    list[absoluteAdapterPosition].isRead = !list[absoluteAdapterPosition].isRead
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
                 imageViewPriority.setOnClickListener {
@@ -134,8 +135,19 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
             textViewDiskSpace.text = item.data!!.netdata!!.chart!!.id
 
             var roomList = ""
-            for(i in item.data!!.netdata!!.room){
-                roomList += "${i.name} • "
+            if(item.data!!.netdata!!.room.size > 3){
+                textViewWarRoomsListCount.visible()
+                textViewWarRoomsListCount.text = "+${item.data!!.netdata!!.room.size-1}"
+                for((roomCount, i) in item.data!!.netdata!!.room.withIndex()){
+                    if(roomCount < 3){
+                        roomList += "${i.name} • "
+                    }
+                }
+            } else {
+                for(i in item.data!!.netdata!!.room){
+                    roomList += "${i.name} • "
+                }
+                textViewWarRoomsListCount.gone()
             }
             textViewWarRoomsList.text = roomList.dropLast(3)
             textViewTypeAndComponent.text = "Type & Component : ${item.data!!.netdata!!.alert!!.type} • ${item.data!!.netdata!!.alert!!.component}"

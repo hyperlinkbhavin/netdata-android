@@ -8,6 +8,8 @@ data class HomeNotificationList(
     @SerializedName("createdAt" ) var createdAt : String? = null,
     @SerializedName("@timestamp" ) var timestamp  : String? = null,
     var isRead: Boolean = false,
+    var isSpaceRead : Boolean = false,
+    var isNotificationRead: Boolean = false,
     var priority: String?= null
 ) {
     data class Data(
@@ -62,7 +64,8 @@ data class HomeNotificationList(
                     @SerializedName("conf_source"  ) var confSource  : String? = null,
                     @SerializedName("calc_expr"    ) var calcExpr    : String? = null,
                     @SerializedName("edit_command" ) var editCommand : String? = null,
-                    @SerializedName("edit_line"    ) var editLine    : String? = null
+                    @SerializedName("edit_line"    ) var editLine    : String? = null,
+                    @SerializedName("url"          ) var url         : String? = null
                 )
             }
 

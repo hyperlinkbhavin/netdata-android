@@ -15,7 +15,8 @@ data class SpaceList(
     var isSelected: Boolean = false,
     var isForever: Boolean = false,
     var isUntil: Boolean = false,
-    var untilDate: String? = null
+    var untilDate: String? = null,
+    var count: Int = 0
 ){
     data class PlanDefinition (
         @SerializedName("feed"         ) var feed         : Feed?         = Feed(),

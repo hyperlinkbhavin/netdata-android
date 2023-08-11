@@ -75,6 +75,7 @@ class DatabaseHelper(context: Context) :
         private const val FN_ALERT_CALC_EXPR = "alertCalcExpr"
         private const val FN_ALERT_EDIT_COMMAND = "alertEditCommand"
         private const val FN_ALERT_EDIT_LINE = "alertEditLine"
+        private const val FN_ALERT_URL = "alertUrl"
         private const val FN_ROOMS = "rooms"
         private const val FN_CHART_ID = "chartId"
         private const val FN_CHART_NAME = "chartName"
@@ -86,6 +87,8 @@ class DatabaseHelper(context: Context) :
         private const val FN_USER_EMAIL = "userEmail"
 
         private const val FN_IS_READ = "isRead"
+        private const val FN_IS_SPACE_READ = "isSpaceRead"
+        private const val FN_IS_NOTIFICATION_READ = "isNotificationRead"
         private const val FN_CREATED_AT = "createdAt"
         private const val FN_TIMESTAMP = "timestamp"
         private const val FN_PRIORITY = "priority"
@@ -116,11 +119,11 @@ class DatabaseHelper(context: Context) :
                     "$FN_ALERT_NAME TEXT, $FN_ALERT_ROLE TEXT, $FN_ALERT_CONFIG_HASH TEXT, $FN_ALERT_CLASS TEXT, " +
                     "$FN_ALERT_TYPE TEXT, $FN_ALERT_COMPONENT TEXT, $FN_ALERT_CURRENT_STATUS TEXT, $FN_ALERT_CURRENT_VALUE DOUBLE, " +
                     "$FN_ALERT_PREVIOUS_STATUS TEXT, $FN_ALERT_PREVIOUS_VALUE DOUBLE, $FN_ALERT_TRANSITION_ID TEXT, " +
-                    "$FN_ALERT_ANNOTATION_INFO TEXT, $FN_ALERT_CONF_SOURCE TEXT, $FN_ALERT_CALC_EXPR TEXT, " +
+                    "$FN_ALERT_ANNOTATION_INFO TEXT, $FN_ALERT_CONF_SOURCE TEXT, $FN_ALERT_CALC_EXPR TEXT, $FN_ALERT_URL TEXT, " +
                     "$FN_ALERT_EDIT_COMMAND TEXT, $FN_ALERT_EDIT_LINE TEXT, $FN_ROOMS TEXT, $FN_CHART_ID TEXT, $FN_CHART_NAME TEXT, " +
                     "$FN_SPACE_ID TEXT, $FN_SPACE_NAME TEXT, $FN_CONTEXT_NAME TEXT, $FN_USER_ID TEXT, " +
-                    "$FN_USER_NAME TEXT, $FN_USER_EMAIL TEXT, $FN_IS_READ INTEGER, $FN_CREATED_AT TEXT, " +
-                    "$FN_TIMESTAMP TEXT, $FN_PRIORITY TEXT )"
+                    "$FN_USER_NAME TEXT, $FN_USER_EMAIL TEXT, $FN_IS_READ INTEGER, $FN_IS_SPACE_READ INTEGER, " +
+                    "$FN_IS_NOTIFICATION_READ INTEGER, $FN_CREATED_AT TEXT, $FN_TIMESTAMP TEXT, $FN_PRIORITY TEXT )"
         db.execSQL(createTableFetchNotificationsQuery)
 
         val createTableRoomsData =
@@ -339,6 +342,7 @@ class DatabaseHelper(context: Context) :
             put(FN_ALERT_CALC_EXPR, item.data!!.netdata!!.alert!!.annotations!!.calcExpr)
             put(FN_ALERT_EDIT_COMMAND, item.data!!.netdata!!.alert!!.annotations!!.editCommand)
             put(FN_ALERT_EDIT_LINE, item.data!!.netdata!!.alert!!.annotations!!.editLine)
+            put(FN_ALERT_URL, item.data!!.netdata!!.alert!!.annotations!!.url)
             put(FN_ROOMS, Gson().toJson(item.data!!.netdata!!.room))
             put(FN_CHART_ID, item.data!!.netdata!!.chart!!.id)
             put(FN_CHART_NAME, item.data!!.netdata!!.chart!!.name)
@@ -350,6 +354,8 @@ class DatabaseHelper(context: Context) :
             put(FN_USER_EMAIL, item.data!!.user!!.email)
 
             put(FN_IS_READ, 0)
+            put(FN_IS_SPACE_READ, 0)
+            put(FN_IS_NOTIFICATION_READ, 0)
             put(FN_CREATED_AT, item.createdAt)
             put(FN_TIMESTAMP, item.timestamp)
             put(FN_PRIORITY, Priority.HIGH_PRIORITY.shortName)
@@ -364,9 +370,14 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 
-    fun updateFetchNotificationData(item: HomeNotificationList) {
+    fun updateFetchNotificationData(item: HomeNotificationList, isNotificationRead: Boolean  =false) {
         val values = ContentValues().apply {
-            put(FN_IS_READ, if (item.isRead) 1 else 0)
+            if(isNotificationRead){
+                put(FN_IS_NOTIFICATION_READ, 1)
+            } else {
+                put(FN_IS_READ, if (item.isRead) 1 else 0)
+                put(FN_IS_NOTIFICATION_READ, 1)
+            }
         }
 
         val db = writableDatabase
@@ -377,6 +388,7 @@ class DatabaseHelper(context: Context) :
     fun updateFetchNotificationDataByAllRead() {
         val values = ContentValues().apply {
             put(FN_IS_READ, 1)
+            put(FN_IS_NOTIFICATION_READ, 1)
         }
 
         val db = writableDatabase
@@ -456,7 +468,7 @@ class DatabaseHelper(context: Context) :
 
         if (isSimpleData) {
             selectQuery =
-                "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS"
+                "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS ORDER BY $FN_CREATED_AT DESC"
             cursor = db.rawQuery(selectQuery, null)
         } else if (isSortBy && isFilterBy) {
             selectQuery += " ${
@@ -525,6 +537,7 @@ class DatabaseHelper(context: Context) :
                 val alertCalcExpr = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_CALC_EXPR))
                 val alertEditCommand = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_EDIT_COMMAND))
                 val alertEditLine = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_EDIT_LINE))
+                val alertUrl = cursor.getString(cursor.getColumnIndexOrThrow(FN_ALERT_URL))
                 val rooms = cursor.getString(cursor.getColumnIndexOrThrow(FN_ROOMS))
                 val chartId = cursor.getString(cursor.getColumnIndexOrThrow(FN_CHART_ID))
                 val chartName = cursor.getString(cursor.getColumnIndexOrThrow(FN_CHART_NAME))
@@ -536,6 +549,8 @@ class DatabaseHelper(context: Context) :
                 val userEmail = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_EMAIL))
 
                 val isRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_READ))
+                val isSpaceRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_SPACE_READ))
+                val isNotificationRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_NOTIFICATION_READ))
                 val createdAt = cursor.getString(cursor.getColumnIndexOrThrow(FN_CREATED_AT))
                 val timestamp = cursor.getString(cursor.getColumnIndexOrThrow(FN_TIMESTAMP))
                 val priority = cursor.getString(cursor.getColumnIndexOrThrow(FN_PRIORITY))
@@ -559,6 +574,7 @@ class DatabaseHelper(context: Context) :
                 allData.netdata!!.alert!!.annotations!!.calcExpr = alertCalcExpr
                 allData.netdata!!.alert!!.annotations!!.editCommand = alertEditCommand
                 allData.netdata!!.alert!!.annotations!!.editLine = alertEditLine
+                allData.netdata!!.alert!!.annotations!!.url = alertUrl
                 allData.netdata!!.chart!!.id = chartId
                 allData.netdata!!.chart!!.name = chartName
                 allData.netdata!!.space!!.id = spaceId
@@ -582,7 +598,8 @@ class DatabaseHelper(context: Context) :
                 val roomsList: ArrayList<HomeNotificationList.Data.Rooms> = gson.fromJson(rooms, roomsType)
                 allData.rooms = roomsList*/
 
-                val data = HomeNotificationList(id, allData, createdAt, timestamp, isRead == 1, priority)
+                val data = HomeNotificationList(id, allData, createdAt, timestamp, isRead == 1,
+                    isSpaceRead == 1, isNotificationRead == 1, priority)
 
                 dataList.add(data)
             }

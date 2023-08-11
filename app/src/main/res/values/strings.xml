@@ -21,7 +21,7 @@
     <string name="label_from_this_menu_you_can_change_to_dark_mode">From this menu you can change to dark mode</string>
     <string name="btn_done">Done</string>
     <string name="label_choose_a_space_to_continue">Choose A Space To Continue</string>
-    <string name="label_you_have_a_total_of_3_notifications_in_your_spaces">You have a total of 3 notifications in your spaces</string>
+    <string name="label_you_have_a_total_of_3_notifications_in_your_spaces">You have a total of 0 notifications in your spaces</string>
     <string name="hint_search_services">Search services....</string>
     <string name="label_select_war_rooms">Select War rooms</string>
     <string name="label_close">Close</string>
@@ -114,4 +114,5 @@
     <string name="label_priority">Priority</string>
     <string name="label_all_nodes">All nodes</string>
     <string name="hint_search_spaces">Search spaces...</string>
+    <string name="label_all_spaces">All Spaces</string>
 </resources>

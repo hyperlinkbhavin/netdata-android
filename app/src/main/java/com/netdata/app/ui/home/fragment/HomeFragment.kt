@@ -18,13 +18,12 @@ import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import com.netdata.app.R
@@ -44,9 +43,9 @@ import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.*
 import com.netdata.app.utils.customapi.ApiViewModel
 import com.netdata.app.utils.localdb.DatabaseHelper
+import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -83,10 +82,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         HomeAdapter() { view, position, item ->
             when (view.id) {
                 R.id.constraintTop -> {
+                    readUnreadNotification(item)
                     navigator.loadActivity(
                         IsolatedFullActivity::class.java,
                         HomeDetailsFragment::class.java
-                    ).start()
+                    )
+                        .addBundle(bundleOf(Constant.BUNDLE_URL to item.data!!.netdata!!.alert!!.annotations!!.url))
+                        .start()
                 }
 
                 R.id.imageViewPriority -> {
@@ -94,7 +96,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
 
                 R.id.leftViewSwipe -> {
-                    leftSwipeManage(position, item)
+                    readUnreadNotification(item)
                 }
 
                 R.id.rightViewSwipe -> {
@@ -102,7 +104,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
 
                 R.id.textViewWarRoomsListCount -> {
-                    bottomSheetExistsInWarRooms()
+                    bottomSheetExistsInWarRooms(item)
                 }
             }
         }
@@ -346,6 +348,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
+    private fun getNotificationCount() = with(binding) {
+        val count = dbHelper.getAllDataFromFetchNotification(isSimpleData = true).filter {
+            /*it.data!!.netdata!!.space!!.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID) &&*/ !it.isNotificationRead
+        }.size
+        if (count != 0) {
+            includeToolbar.textViewNotificationCount.visible()
+            includeToolbar.textViewNotificationCount.text = count.toString()
+        } else {
+            includeToolbar.textViewNotificationCount.gone()
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun manageClick() = with(binding) {
         buttonAll.setOnClickListener {
@@ -553,22 +567,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
-    private fun leftSwipeManage(position: Int, item: HomeNotificationList) {
+    private fun readUnreadNotification(item: HomeNotificationList) {
+        dbHelper.updateFetchNotificationData(item)
+        homeAdapter.list.clear()
         if (isAllButtonSelected) {
-            dbHelper.updateFetchNotificationData(item)
-//            homeAdapter.list[position].isRead = !homeAdapter.list[position].isRead
-            homeAdapter.list.clear()
             homeAdapter.list.addAll(getAllData())
-            homeAdapter.notifyDataSetChanged()
         } else {
-            dbHelper.updateFetchNotificationData(item)
-            homeAdapter.list.clear()
             homeAdapter.list.addAll(getAllData(isUnread = true))
-            homeAdapter.notifyDataSetChanged()
         }
+        homeAdapter.notifyDataSetChanged()
         binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
         binding.buttonUnread.text =
             "${getString(R.string.btn_unread)} (${getAllData(isUnread = true).size})"
+        getNotificationCount()
     }
 
     @SuppressLint("SetTextI18n")
@@ -799,7 +810,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         dialog.show()
     }
 
-    private fun bottomSheetExistsInWarRooms() {
+    private fun bottomSheetExistsInWarRooms(item: HomeNotificationList) {
 
         val dialog = BottomSheetDialog(requireContext())
 
@@ -809,50 +820,51 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             ExistisWarRoomsAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        roomsItemPosition = position
-                        binding.textViewLabelAllWarRooms.text = item.name
+//                        binding.textViewLabelAllWarRooms.text = item.name
                         dialog.dismiss()
                     }
                 }
             }
         }
 
-        existisWarRoomsAdapter.list.add(
-            ExistisWarRoomsList(
-                "War Rooms 1",
-                R.drawable.ic_medium_priority
-            )
-        )
-        existisWarRoomsAdapter.list.add(
-            ExistisWarRoomsList(
-                "War Rooms 2",
-                R.drawable.ic_high_priority
-            )
-        )
-        existisWarRoomsAdapter.list.add(
-            ExistisWarRoomsList(
-                "War Rooms 3",
-                R.drawable.ic_medium_priority
-            )
-        )
-        existisWarRoomsAdapter.list.add(
-            ExistisWarRoomsList(
-                "War Rooms 4",
-                R.drawable.ic_low_priority
-            )
-        )
-        existisWarRoomsAdapter.list.add(
-            ExistisWarRoomsList(
-                "War Rooms 5",
-                R.drawable.ic_low_priority
-            )
-        )
+        existisWarRoomsAdapter.list.addAll(item.data!!.netdata!!.room)
 
         val recyclerViewNotificationExists =
             view.findViewById<RecyclerView>(R.id.recyclerViewNotificationExists)
         val imageViewWarRoomsBack =
             view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsBack)
         recyclerViewNotificationExists.adapter = existisWarRoomsAdapter
+
+        val imageViewWarRoomsWarning =
+            view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsWarning)
+        val textViewSpaceWarningPercent =
+            view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningPercent)
+        val textViewSpaceWarningText =
+            view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningText)
+        val textViewGKE = view.findViewById<AppCompatTextView>(R.id.textViewGKE)
+        val textViewDiskSpace = view.findViewById<AppCompatTextView>(R.id.textViewDiskSpace)
+
+        /*radioButtonCurrentNodes.isChecked = isCurrentNodes
+        radioButtonAllNodes.isChecked = !isCurrentNodes*/
+
+        if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.CRITICAL.type, true)) {
+            imageViewWarRoomsWarning.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorRedFF)
+            )
+        } else if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.WARNING.type, true)) {
+            imageViewWarRoomsWarning.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorYellowF9)
+            )
+        } else {
+            imageViewWarRoomsWarning.backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+            )
+        }
+
+        textViewSpaceWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
+        textViewSpaceWarningText.text = item.data!!.netdata!!.alert!!.name[0]
+        textViewGKE.text = item.data!!.host[0].name
+        textViewDiskSpace.text = item.data!!.netdata!!.chart!!.name
 
         imageViewWarRoomsBack.setOnClickListener {
             dialog.dismiss()
@@ -1016,39 +1028,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewClass.adapter = classFilterAdapter
         recyclerViewTypeAndComponent.adapter = typeAndComponentFilterAdapter
 
-        if (filterStatusList.isEmpty()) {
-            filterStatusList.add(FilterList(AlertStatus.CRITICAL.type, "4"))
-            filterStatusList.add(FilterList(AlertStatus.WARNING.type, "3"))
-            filterStatusList.add(FilterList(AlertStatus.CLEAR.type, ""))
-        }
-
-        if (filterPriorityList.isEmpty()) {
-            filterPriorityList.add(
-                FilterList(
-                    "High",
-                    "3",
-                    icon = R.drawable.ic_high_priority,
-                    isIcon = true
-                )
-            )
-            filterPriorityList.add(
-                FilterList(
-                    "Medium",
-                    "2",
-                    icon = R.drawable.ic_medium_priority,
-                    isIcon = true
-                )
-            )
-            filterPriorityList.add(
-                FilterList(
-                    "Low",
-                    "",
-                    icon = R.drawable.ic_low_priority,
-                    isIcon = true
-                )
-            )
-        }
-
         notifyDrawer()
 
     }
@@ -1062,7 +1041,34 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         notificationPriorityFilterAdapter.notifyDataSetChanged()
     }
 
-    private fun filterCount() {
+    private fun filterCount(){
+        for (item in filterNodesList) {
+            val matchingDataList = homeList.filter { it.data!!.host[0].id.equals(item.otherName, true)}
+            item.count = matchingDataList.size
+        }
+        for (item in filterStatusList) {
+            val matchingDataList = homeList.filter { it.data!!.netdata!!.alert!!.current!!.status[0].equals(item.name, true)}
+            item.count = matchingDataList.size
+        }
+        for (item in filterPriorityList) {
+            val matchingDataList = homeList.filter { it.priority.equals(item.name, true)}
+            Log.e("dataaaaaa", matchingDataList.size.toString())
+            item.count = matchingDataList.size
+        }
+        for (item in filterClassificationList) {
+            val matchingDataList = homeList.filter { it.data!!.netdata!!.alert!!.classes.equals(item.name, true)}
+            item.count = matchingDataList.size
+        }
+        for (item in filterTypeCompList) {
+            val matchingDataList = homeList.filter { it.data!!.netdata!!.alert!!.type.equals(item.name, true)
+                    || it.data!!.netdata!!.alert!!.component.equals(item.name, true) }
+            item.count = matchingDataList.size
+        }
+
+        notifyDrawer()
+    }
+
+    private fun filterTotalCount() {
         val nodeCount = filterNodesList.filter { it.isSelected }
         val alertStatusCount = filterStatusList.filter { it.isSelected }
         val notificationPriorityCount = filterPriorityList.filter { it.isSelected }
@@ -1071,11 +1077,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         totalFilterCount =
             nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
-
     }
 
     private fun tempCount() = with(binding) {
-        filterCount()
+        filterTotalCount()
 
         if (totalFilterCount != 0) {
             buttonApplyFilter.text = "Apply ($totalFilterCount) Filters"
@@ -1088,7 +1093,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun applyFilterCount() = with(binding) {
-        filterCount()
+        filterTotalCount()
         if (totalFilterCount != 0) {
             if (isFilterBy) {
                 includeToolbar.textViewFilterCount.visible()
@@ -1235,10 +1240,83 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 //            homeAdapter.list.addAll(homeList)
         }
 
+        addFilterListData()
+        val itemsToAdd = mutableListOf<HomeNotificationList>() // Change ItemType to the actual type of your items
+
+        itemsToAdd.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
+        /*for (i in homeList) {
+            var isContain = false
+            for (j in i.data!!.netdata!!.room) {
+                if (j.id == roomList[roomsItemPosition].id!!) {
+                    isContain = true
+                }
+            }
+            if(isContain) itemsToAdd.add(i)
+        }*/
+//        homeAdapter.list.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
+        homeAdapter.list.addAll(itemsToAdd)
+        homeList.clear()
+        homeList.addAll(homeAdapter.list)
+        val unreadItem = homeAdapter.list.filter { !it.isRead }
+
+        binding.buttonAll.text = "${getString(R.string.btn_all)} (${homeAdapter.list.size})"
+        binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
+
+        homeAdapter.notifyDataSetChanged()
+        filterCount()
+        drawerFilter()
+        getNotificationCount()
+    }
+
+    private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {
+        var list2 = ArrayList<String>()
+        if (list1.isNotEmpty()) {
+            list2 = list1.filter { it.isSelected }
+                .map { it.name } as ArrayList<String>
+        }
+        return list2
+    }
+
+    private fun addFilterListData(){
         val tempNodeList = ArrayList<HomeNotificationList.Data.Host>()
         val tempClassList = ArrayList<HomeNotificationList.Data.Netdata.Alert>()
         val tempTypeCompList = ArrayList<HomeNotificationList.Data.Netdata.Alert>()
 
+        if (filterStatusList.isEmpty()) {
+            filterStatusList.add(FilterList(AlertStatus.CRITICAL.type, "4", 0))
+            filterStatusList.add(FilterList(AlertStatus.WARNING.type, "3", 0))
+            filterStatusList.add(FilterList(AlertStatus.CLEAR.type, "", 0))
+        }
+
+        if (filterPriorityList.isEmpty()) {
+            filterPriorityList.add(
+                FilterList(
+                    Priority.HIGH_PRIORITY.shortName,
+                    "3",
+                    0,
+                    icon = R.drawable.ic_high_priority,
+                    isIcon = true
+                )
+            )
+            filterPriorityList.add(
+                FilterList(
+                    Priority.MEDIUM_PRIORITY.shortName,
+                    "2",
+                    0,
+                    icon = R.drawable.ic_medium_priority,
+                    isIcon = true
+                )
+            )
+            filterPriorityList.add(
+                FilterList(
+                    Priority.LOW_PRIORITY.shortName,
+                    "",
+                    0,
+                    icon = R.drawable.ic_low_priority,
+                    isIcon = true
+                )
+            )
+        }
         if (filterNodesList.isEmpty()) {
             homeList.forEach {
                 tempNodeList.add(it.data!!.host[0])
@@ -1277,40 +1355,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             }
 
         }
-        Log.e("home size", homeList.size.toString())
-        val itemsToAdd = mutableListOf<HomeNotificationList>() // Change ItemType to the actual type of your items
-
-        itemsToAdd.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
-        /*for (i in homeList) {
-            var isContain = false
-            for (j in i.data!!.netdata!!.room) {
-                if (j.id == roomList[roomsItemPosition].id!!) {
-                    isContain = true
-                }
-            }
-            if(isContain) itemsToAdd.add(i)
-        }*/
-//        homeAdapter.list.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
-        homeAdapter.list.addAll(itemsToAdd)
-        homeList.clear()
-        homeList.addAll(homeAdapter.list)
-        val unreadItem = homeAdapter.list.filter { !it.isRead }
-
-        Log.e("home data", homeAdapter.list.size.toString())
-        binding.buttonAll.text = "${getString(R.string.btn_all)} (${homeAdapter.list.size})"
-        binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
-
-        homeAdapter.notifyDataSetChanged()
-        drawerFilter()
-    }
-
-    private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {
-        var list2 = ArrayList<String>()
-        if (list1.isNotEmpty()) {
-            list2 = list1.filter { it.isSelected }
-                .map { it.name } as ArrayList<String>
-        }
-        return list2
     }
 
     private fun callRoomList() {

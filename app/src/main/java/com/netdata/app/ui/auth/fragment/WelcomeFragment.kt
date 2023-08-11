@@ -116,6 +116,19 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
             } else {
                 showMessage("Link expire! Try again")
             }
+            /*if (it is CookiesHandlerError) {
+                if (it.map.isNotEmpty()) {
+                    appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_i"]!!)
+                    appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_v_${it.map["s_i"]}"]!!)
+                    Constant.COOKIE_SI = it.map["s_i"]!!
+                    Constant.COOKIE_SV = it.map["s_v_${it.map["s_i"]}"]!!
+                    Log.e("cookie", Constant.COOKIE_SI)
+                } else {
+                    Log.e("else", "cookie")
+                }
+            } else {
+                Log.e("else", "else")
+            }*/
         }
     }
 

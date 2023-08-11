@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.netdata.app.data.pojo.request.FilterList
 import com.netdata.app.databinding.RowItemFilterCheckboxBinding
 import com.netdata.app.utils.gone
+import com.netdata.app.utils.visible
 
 class HomeFilterClassAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterClassAdapter.ViewHolder>() {
 
@@ -48,7 +49,8 @@ class HomeFilterClassAdapter(var list: ArrayList<FilterList>, val callBack: (Vie
         fun bind(item: FilterList) = with(binding) {
             textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
-            textViewFilterCount.gone()
+            textViewFilterCount.visible()
+            textViewFilterCount.text = item.count.toString()
 
         }
 

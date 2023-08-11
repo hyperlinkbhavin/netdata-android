@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.netdata.app.R
 import com.netdata.app.data.pojo.request.ExistisWarRoomsList
+import com.netdata.app.data.pojo.response.HomeNotificationList
 import com.netdata.app.databinding.RowItemExistisWarRoomsListBinding
 
-class ExistisWarRoomsAdapter(val callBack: (View, Int, ExistisWarRoomsList) -> Unit) : RecyclerView.Adapter<ExistisWarRoomsAdapter.ViewHolder>() {
+class ExistisWarRoomsAdapter(val callBack: (View, Int, HomeNotificationList.Data.Netdata.Room) -> Unit) : RecyclerView.Adapter<ExistisWarRoomsAdapter.ViewHolder>() {
 
-    var list = ArrayList<ExistisWarRoomsList>()
-    var selectionPosition = -1
+    var list = ArrayList<HomeNotificationList.Data.Netdata.Room>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -43,9 +44,9 @@ class ExistisWarRoomsAdapter(val callBack: (View, Int, ExistisWarRoomsList) -> U
         }
 
         @SuppressLint("SetTextI18n")
-        fun bind(item: ExistisWarRoomsList) = with(binding) {
+        fun bind(item: HomeNotificationList.Data.Netdata.Room) = with(binding) {
             textViewWarRoomsName.text = item.name
-            imageViewWarRoomsPriority.setImageResource(item.status)
+            imageViewWarRoomsPriority.setImageResource(R.drawable.ic_high_priority)
         }
 
     }
