@@ -86,11 +86,12 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         showLoader()
         val cookieManager: CookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
+        cookieManager.setAcceptThirdPartyCookies(webview, true)
 
         val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
         val cookieValue = "$sessionId;$token"
-        val domain = "app.netdata.cloud"
+        val domain = "https://app.netdata.cloud/"
 
         cookieManager.setCookie(domain, cookieValue)
         CookieManager.getInstance().flush()
@@ -100,7 +101,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         webview.settings.loadWithOverviewMode = true
         webview.settings.useWideViewPort = true
         webview.settings.builtInZoomControls = true
-        webview.webChromeClient = WebChromeClient()
+//        webview.webChromeClient = WebChromeClient()
         webview.settings.domStorageEnabled = true
         webview.settings.databaseEnabled = true
 

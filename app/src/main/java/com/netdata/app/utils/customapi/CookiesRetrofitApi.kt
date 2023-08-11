@@ -53,7 +53,7 @@ object CookiesNetworkClient {
                 cookieHandler.clearStoreCookies()
                 val response = chain.proceed(request)
 
-                Log.e("dynamic response code", response.toString())
+                Log.e("dynamic response code", response.request.url.toString())
 
                 if(response.code == 200){
                     throw  CookiesHandlerError("Cookie Error", cookieHandler.storeCookies)
