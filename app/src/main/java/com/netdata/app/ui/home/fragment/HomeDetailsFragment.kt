@@ -24,6 +24,14 @@ import com.netdata.app.ui.home.adapter.*
 import com.netdata.app.ui.settings.fragment.SettingsFragment
 import com.netdata.app.utils.Constant
 import com.netdata.app.utils.visible
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import java.net.HttpURLConnection
+import java.net.URL
 
 class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 
@@ -84,19 +92,18 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadWebview() = with(binding){
         showLoader()
-        val cookieManager: CookieManager = CookieManager.getInstance()
+        /*val cookieManager: CookieManager = CookieManager.getInstance()
         cookieManager.setAcceptCookie(true)
-        cookieManager.setAcceptThirdPartyCookies(webview, true)
+        cookieManager.setAcceptThirdPartyCookies(webview, true)*/
 
         val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
         val cookieValue = "$sessionId;$token"
-        val domain = "https://app.netdata.cloud/"
+        /*val domain = "https://app.netdata.cloud/"
 
         cookieManager.setCookie(domain, cookieValue)
-        CookieManager.getInstance().flush()
+        CookieManager.getInstance().flush()*/
 
-        // Enable JavaScript in WebView if needed
         webview.settings.javaScriptEnabled = true
         webview.settings.loadWithOverviewMode = true
         webview.settings.useWideViewPort = true
@@ -125,9 +132,34 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
             }
         }
 
+        val forwardedUrl = arguments?.getString(Constant.BUNDLE_URL)!!
+
+        val client = OkHttpClient()
+        val myURL = URL(forwardedUrl)
+        val request = Request.Builder()
+            .url(myURL)
+            .addHeader("Cookie", cookieValue)
+            .build()
+
+        GlobalScope.launch (Dispatchers.IO) {
+                try {
+                    val response = client.newCall(request).execute()
+                    if (response.isSuccessful) {
+                        val responseData = response.body?.string()
+                        launch(Dispatchers.Main) {
+                            webview.loadDataWithBaseURL(myURL.toString(), responseData!!, "text/html", "UTF-8", null)
+                        }
+                    } else {
+                        // Handle unsuccessful response
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
         // Load a URL into the WebView
-        Log.e("url", arguments?.getString(Constant.BUNDLE_URL)!!)
-        webview.loadUrl(arguments?.getString(Constant.BUNDLE_URL)!!)
+        /*Log.e("url", arguments?.getString(Constant.BUNDLE_URL)!!)
+        webview.loadUrl(arguments?.getString(Constant.BUNDLE_URL)!!)*/
     }
 
    /* @SuppressLint("NotifyDataSetChanged")

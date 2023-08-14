@@ -82,7 +82,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         HomeAdapter() { view, position, item ->
             when (view.id) {
                 R.id.constraintTop -> {
-                    readUnreadNotification(item)
+                    readUnreadNotification(item, isPermanentRead = true)
                     navigator.loadActivity(
                         IsolatedFullActivity::class.java,
                         HomeDetailsFragment::class.java
@@ -567,8 +567,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
-    private fun readUnreadNotification(item: HomeNotificationList) {
-        dbHelper.updateFetchNotificationData(item)
+    private fun readUnreadNotification(item: HomeNotificationList, isPermanentRead: Boolean = false) {
+        dbHelper.updateFetchNotificationData(item, isPermanentRead = isPermanentRead)
         homeAdapter.list.clear()
         if (isAllButtonSelected) {
             homeAdapter.list.addAll(getAllData())

@@ -370,10 +370,16 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 
-    fun updateFetchNotificationData(item: HomeNotificationList, isNotificationRead: Boolean  =false) {
+    fun updateFetchNotificationData(
+        item: HomeNotificationList,
+        isPermanentRead: Boolean = false,
+        isNotificationRead: Boolean = false
+    ) {
         val values = ContentValues().apply {
-            if(isNotificationRead){
+            if (isNotificationRead) {
                 put(FN_IS_NOTIFICATION_READ, 1)
+            } else if(isPermanentRead){
+                put(FN_IS_READ, 1)
             } else {
                 put(FN_IS_READ, if (item.isRead) 1 else 0)
                 put(FN_IS_NOTIFICATION_READ, 1)
