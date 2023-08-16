@@ -380,6 +380,7 @@ class DatabaseHelper(context: Context) :
                 put(FN_IS_NOTIFICATION_READ, 1)
             } else if(isPermanentRead){
                 put(FN_IS_READ, 1)
+                put(FN_IS_NOTIFICATION_READ, 1)
             } else {
                 put(FN_IS_READ, if (item.isRead) 1 else 0)
                 put(FN_IS_NOTIFICATION_READ, 1)

@@ -14,4 +14,19 @@ data class APIRequest(
 
     @SerializedName("token")
     var token: String? = null,
+
+    @SerializedName("name")
+    var name: String? = null,
+
+    @SerializedName("account_id")
+    var accountId: String? = null,
+
+    @SerializedName("integration_ids")
+    var integrationIds: ArrayList<String>? = null,
+
+    @SerializedName("starts_at")
+    var startsAt: String? = null,
+
+    @SerializedName("silencingRuleID")
+    var noRule: ArrayList<String>? = null,
 )

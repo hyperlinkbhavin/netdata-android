@@ -1,6 +1,7 @@
 package cloud.netdata.android.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.webkit.*
@@ -75,18 +76,8 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
     @SuppressLint("SetJavaScriptEnabled")
     private fun loadWebview() = with(binding){
         showLoader()
-        /*val cookieManager: CookieManager = CookieManager.getInstance()
-        cookieManager.setAcceptCookie(true)
-        cookieManager.setAcceptThirdPartyCookies(webview, true)*/
 
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
-        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
-        val cookieValue = "$sessionId;$token"
-        /*val domain = "https://app.netdata.cloud/"
-
-        cookieManager.setCookie(domain, cookieValue)
-        CookieManager.getInstance().flush()*/
-
+        // Enable JavaScript
         webview.settings.javaScriptEnabled = true
         webview.settings.loadWithOverviewMode = true
         webview.settings.useWideViewPort = true
@@ -94,20 +85,34 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 //        webview.webChromeClient = WebChromeClient()
         webview.settings.domStorageEnabled = true
         webview.settings.databaseEnabled = true
+        webview.settings.allowContentAccess = true
 
-        // Set a WebViewClient to handle events inside the WebView
+        // Set custom headers
+        val headers = mutableMapOf<String, String>()
+        headers["Host"] = "www.app.netdata.cloud"
+        headers["User-Agent"] = "curl/7.54.0"
+        headers["Accept"] = "*/*"
+        headers["Accept-Encoding"] = "gzip, deflate, br"
+        headers["Connection"] = "keep-alive"
+
+        // Set custom cookies
+        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+        val cookieValue = "$sessionId;$token"
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.removeAllCookies(null)
+//        cookieManager.setCookie("https://app.netdata.cloud", cookieValue)
+        cookieManager.setCookie("https://app.netdata.cloud", sessionId)
+        cookieManager.setCookie("https://app.netdata.cloud", token)
+
+        // Load URL with custom headers
         webview.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
                 // Page has finished loading
                 hideLoader()
             }
-
-            override fun onPageStarted(view: WebView?, url: String?, favicon: android.graphics.Bitmap?) {
-                super.onPageStarted(view, url, favicon)
-                // Page has started loading
-            }
-
+            @Deprecated("Deprecated in Java")
             override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                 // Handle URL loading within WebView, return true to indicate it's handled here
                 view?.loadUrl(url!!)
@@ -115,34 +120,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
             }
         }
 
-        val forwardedUrl = arguments?.getString(Constant.BUNDLE_URL)!!
-
-        val client = OkHttpClient()
-        val myURL = URL(forwardedUrl)
-        val request = Request.Builder()
-            .url(myURL)
-            .addHeader("Cookie", cookieValue)
-            .build()
-
-        GlobalScope.launch (Dispatchers.IO) {
-                try {
-                    val response = client.newCall(request).execute()
-                    if (response.isSuccessful) {
-                        val responseData = response.body?.string()
-                        launch(Dispatchers.Main) {
-                            webview.loadDataWithBaseURL(myURL.toString(), responseData!!, "text/html", "UTF-8", null)
-                        }
-                    } else {
-                        // Handle unsuccessful response
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-        // Load a URL into the WebView
-        /*Log.e("url", arguments?.getString(Constant.BUNDLE_URL)!!)
-        webview.loadUrl(arguments?.getString(Constant.BUNDLE_URL)!!)*/
+        webview.loadUrl(arguments?.getString(Constant.BUNDLE_URL)!!, headers)
     }
 
    /* @SuppressLint("NotifyDataSetChanged")

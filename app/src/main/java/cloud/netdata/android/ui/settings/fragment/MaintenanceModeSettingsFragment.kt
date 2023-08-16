@@ -4,18 +4,23 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import cloud.netdata.android.R
+import cloud.netdata.android.data.pojo.request.APIRequest
 import cloud.netdata.android.data.pojo.response.SpaceList
 import cloud.netdata.android.databinding.MaintenanceModeSettingsFragmentBinding
 import cloud.netdata.android.di.component.FragmentComponent
 import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.settings.adapter.MaintenanceModeSettingsAdapter
 import cloud.netdata.android.utils.Constant
+import cloud.netdata.android.utils.DateTimeFormatter
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.gone
 import cloud.netdata.android.utils.localdb.DatabaseHelper
@@ -28,6 +33,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
     lateinit var dbHelper: DatabaseHelper
     private var spaceList = ArrayList<SpaceList>()
+    private var spaceListPosition = -1
     private var manageSpaceList = ArrayList<SpaceList>()
 
     private val apiViewModel by lazy {
@@ -35,17 +41,20 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     }
 
     private val maintenanceModeSettingsAdapter by lazy {
-        MaintenanceModeSettingsAdapter() { view, position, item ->
+        MaintenanceModeSettingsAdapter(spaceList) { view, position, item ->
             when (view.id) {
                 R.id.switchDisableAllNotifications -> {
+                    spaceListPosition = position
                     updateData(position, item, 1)
                     getCheckData()
                 }
                 R.id.textViewUntilDate -> {
+                    spaceListPosition = position
                     updateData(position, item, 2)
                     getCheckData()
                 }
                 R.id.radioButtonForever -> {
+                    spaceListPosition = position
                     updateData(position, item, 3)
                     getCheckData()
                 }
@@ -60,6 +69,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeGetSpaceList()
+        observeSilenceSpace()
+        observeUnsilenceSpace()
     }
 
     override fun createViewBinding(
@@ -91,8 +102,14 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     @SuppressLint("NotifyDataSetChanged")
     private fun manageClick() = with(binding) {
         switchDisableAllNotifications.setOnClickListener {
-            for (item in maintenanceModeSettingsAdapter.list) {
-                item.isSelected = switchDisableAllNotifications.isChecked
+            for(i in spaceList.indices){
+                spaceListPosition = i
+                spaceList[i].isSelected = switchDisableAllNotifications.isChecked
+                spaceList[i].isForever = switchDisableAllNotifications.isChecked
+                spaceList[i].isUntil = false
+                Handler(Looper.getMainLooper()).postDelayed({
+                    callSilenceSpace(spaceList[i])
+                },1000)
             }
             if (switchDisableAllNotifications.isChecked) {
                 radioGroupAllNotifications.visible()
@@ -136,12 +153,19 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 spaceList[pos].isUntil = false
             }
         }
-        appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
+
+        /*if(spaceList[pos].isSelected){
+            callSilenceSpace(item)
+        } else {
+            callUnsilenceSpace(item)
+        }*/
+        callSilenceSpace(item)
+
         maintenanceModeSettingsAdapter.notifyItemChanged(pos)
     }
 
     private fun getCheckData() {
-        val data = maintenanceModeSettingsAdapter.list.find { !it.isSelected }
+        val data = spaceList.find { !it.isSelected }
         if (data?.name.isNullOrEmpty()) {
             binding.switchDisableAllNotifications.isChecked = true
             binding.radioGroupAllNotifications.visible()
@@ -183,8 +207,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         val mcurrentTime = Calendar.getInstance()
         val hour = mcurrentTime[Calendar.HOUR_OF_DAY]
         val minute = mcurrentTime[Calendar.MINUTE]
-        val mTimePicker: TimePickerDialog
-        mTimePicker = TimePickerDialog( requireContext(),
+        val mTimePicker = TimePickerDialog( requireContext(),
             { timePicker, selectedHour, selectedMinute ->
                 val minutes = if(selectedMinute < 10){
                     "0$selectedMinute"
@@ -253,6 +276,53 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         }
     }
 
+    private fun callSilenceSpace(item: SpaceList) {
+        showLoader()
+        apiViewModel.callSilenceSpace(item.id!!, APIRequest(
+            name = "Netdata-MobileApp-${item.id}",
+            accountId = session.userId,
+            integrationIds = arrayListOf("607bfd3c-02c1-4da2-b67a-0d01b518ce5d"),
+            startsAt = DateTimeFormatter.currentUTCTime
+        ))
+    }
+
+    private fun observeSilenceSpace() {
+        apiViewModel.silenceSpaceLiveData.observe(this) {
+            hideLoader()
+            if (it.responseCode == 200) {
+                spaceList[spaceListPosition].silenceRuleId = it.data!!.id
+                spaceList[spaceListPosition].silenceRuleName = it.data.name
+                appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
+            } else {
+                showMessage("Something wrong")
+            }
+        }
+    }
+
+    private fun callUnsilenceSpace(item: SpaceList) {
+        showLoader()
+        var ruleId = ""
+        if(!item.silenceRuleId.isNullOrEmpty()){
+            ruleId = item.silenceRuleId!!
+        }
+        apiViewModel.callUnsilenceSpace(item.id!!, APIRequest(
+            noRule = arrayListOf(ruleId)
+        ))
+    }
+
+    private fun observeUnsilenceSpace() {
+        apiViewModel.unsilenceSpaceLiveData.observe(this) {
+            hideLoader()
+            if (it.responseCode == 200) {
+                spaceList[spaceListPosition].silenceRuleId = ""
+                spaceList[spaceListPosition].silenceRuleName = ""
+                appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
+            } else {
+                showMessage("Something wrong")
+            }
+        }
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun checkAndStoreData(item: ArrayList<SpaceList>) {
         spaceList.clear()
@@ -274,8 +344,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         spaceList.addAll(arrayList)
 
-        maintenanceModeSettingsAdapter.list.clear()
-        maintenanceModeSettingsAdapter.list.addAll(spaceList)
+        getCheckData()
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
     }
 }

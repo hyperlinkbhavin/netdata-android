@@ -16,6 +16,8 @@ data class SpaceList(
     var isForever: Boolean = false,
     var isUntil: Boolean = false,
     var untilDate: String? = null,
+    var silenceRuleId: String? = null,
+    var silenceRuleName: String? = null,
     var count: Int = 0
 ){
     data class PlanDefinition (

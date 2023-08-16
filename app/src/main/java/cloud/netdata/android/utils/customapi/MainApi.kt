@@ -1,10 +1,7 @@
 package cloud.netdata.android.utils.customapi
 
 import cloud.netdata.android.data.pojo.request.APIRequest
-import cloud.netdata.android.data.pojo.response.DynamicLink
-import cloud.netdata.android.data.pojo.response.HomeNotificationList
-import cloud.netdata.android.data.pojo.response.RoomList
-import cloud.netdata.android.data.pojo.response.SpaceList
+import cloud.netdata.android.data.pojo.response.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -59,7 +56,7 @@ interface MainApi {
     fun updateAccountNotificationsSettings(@Header("Cookie") token: String, @Body apiRequest: APIRequest): Call<Any>
 
     @POST("api/v2/spaces/{spaceID}/notifications/silencing/rule")
-    fun silenceSpace(@Header("Cookie") token: String, @Path("spaceID") spaceID: String, @Body apiRequest: APIRequest): Call<Any>
+    fun silenceSpace(@Header("Cookie") token: String, @Path("spaceID") spaceID: String, @Body apiRequest: APIRequest): Call<SilenceRule>
 
     @POST("api/v2/spaces/{spaceID}/notifications/silencing/rules/delete")
     fun unsilenceSpace(@Header("Cookie") token: String, @Path("spaceID") spaceID: String, @Body apiRequest: APIRequest): Call<Any>

@@ -363,7 +363,7 @@ class DateTimeFormatter private constructor() {
         val currentUTCTime: String
             get() {
                 val df: DateFormat =
-                    SimpleDateFormat("dd-MMM-yyyy h:mm:ss a", Locale.US)
+                    SimpleDateFormat(DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW, Locale.US)
                 df.timeZone = TimeZone.getTimeZone("UTC")
                 return df.format(Date()) /*df.getCalendar()*/
             }

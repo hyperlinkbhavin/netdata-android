@@ -7,6 +7,7 @@ import cloud.netdata.android.data.pojo.MyResponseBody
 import cloud.netdata.android.data.pojo.request.APIRequest
 import cloud.netdata.android.data.pojo.response.HomeNotificationList
 import cloud.netdata.android.data.pojo.response.RoomList
+import cloud.netdata.android.data.pojo.response.SilenceRule
 import cloud.netdata.android.data.pojo.response.SpaceList
 import cloud.netdata.android.utils.Constant
 import retrofit2.Call
@@ -32,7 +33,7 @@ class ApiViewModel: ViewModel() {
     val getAlertDetailedLiveData = MutableLiveData<MyResponseBody<Any>>()
     val getAccountNotificationsSettingsLiveData = MutableLiveData<MyResponseBody<Any>>()
     val updateAccountNotificationsSettingsLiveData = MutableLiveData<MyResponseBody<Any>>()
-    val silenceSpaceLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val silenceSpaceLiveData = MutableLiveData<MyResponseBody<SilenceRule>>()
     val unsilenceSpaceLiveData = MutableLiveData<MyResponseBody<Any>>()
 
     fun callMagicLink(apiRequest: APIRequest)
@@ -328,14 +329,14 @@ class ApiViewModel: ViewModel() {
         val apiService = NetworkClient.createService(MainApi::class.java)
 
         val callApi = /*RetrofitApi.getInst().*/apiService.silenceSpace(cookie, spaceID, apiRequest)
-        callApi.enqueue(object: Callback<Any>{
+        callApi.enqueue(object: Callback<SilenceRule>{
 
-            override fun onResponse(call: Call<Any>, response: Response<Any>) {
+            override fun onResponse(call: Call<SilenceRule>, response: Response<SilenceRule>) {
                 silenceSpaceLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
             }
 
-            override fun onFailure(call: Call<Any>, t: Throwable) {
-                silenceSpaceLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+            override fun onFailure(call: Call<SilenceRule>, t: Throwable) {
+                silenceSpaceLiveData.postValue(MyResponseBody(0, "Test", SilenceRule(),isError = true, throwable = t))
                 Log.e("Fail Space", call.toString())
             }
 

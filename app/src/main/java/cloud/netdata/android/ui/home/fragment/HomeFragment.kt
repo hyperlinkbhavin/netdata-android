@@ -21,6 +21,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import cloud.netdata.android.R
 import cloud.netdata.android.data.pojo.enumclass.AlertStatus
@@ -570,6 +571,26 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewHome.adapter = homeAdapter
 //        recyclerViewFilterSelected.layoutManager = flexLayoutManager
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
+
+        recyclerViewHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    updateVisibleItems()
+                },3000)
+            }
+        })
+    }
+
+    private fun updateVisibleItems() {
+        val layoutManager = binding.recyclerViewHome.layoutManager as LinearLayoutManager
+        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+
+        for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
+            val item = homeList[i]
+            readUnreadNotification(item, isPermanentRead = true)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
@@ -1272,6 +1293,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         filterCount()
         drawerFilter()
         getNotificationCount()
+
+        session.userId = homeList[0].data!!.user!!.id!!
     }
 
     private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {

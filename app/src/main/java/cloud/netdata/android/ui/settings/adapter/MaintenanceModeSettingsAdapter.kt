@@ -15,9 +15,7 @@ import cloud.netdata.android.utils.visible
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MaintenanceModeSettingsAdapter(val callBack: (View, Int, SpaceList) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
-
-    var list = ArrayList<SpaceList>()
+class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBack: (View, Int, SpaceList) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
