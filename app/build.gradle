@@ -16,7 +16,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.netdata.app"
+        applicationId "cloud.netdata.android"
         minSdk 23
         targetSdk 33
         versionCode 1
@@ -49,7 +49,7 @@ android {
 //    kotlinOptions {
 //        jvmTarget = '1.8'
 //    }
-    namespace 'com.netdata.app'
+    namespace 'cloud.netdata.android'
 }
 
 dependencies {
