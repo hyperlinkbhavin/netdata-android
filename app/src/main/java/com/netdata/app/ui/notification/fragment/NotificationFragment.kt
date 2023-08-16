@@ -16,6 +16,7 @@ import com.netdata.app.data.pojo.response.SpaceList
 import com.netdata.app.databinding.NotificationFragmentBinding
 import com.netdata.app.di.component.FragmentComponent
 import com.netdata.app.ui.base.BaseFragment
+import com.netdata.app.ui.home.HomeActivity
 import com.netdata.app.ui.home.adapter.AllSpacesAdapter
 import com.netdata.app.ui.notification.adapter.NotificationAdapter
 import com.netdata.app.utils.Constant
@@ -43,7 +44,7 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                     appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.data!!.netdata!!.space!!.name!!)
                     appPreferences.putString(Constant.APP_PREF_SPACE_ID, item.data!!.netdata!!.space!!.id!!)
                     appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, true)
-                    navigator.goBack()
+                    navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
                 }
 
                 R.id.constraintNotificationRight -> {
@@ -84,7 +85,7 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
     }
 
     private fun toolbar() = with(binding) {
-        includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
+        includeToolbar.imageViewBack.setOnClickListener { navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start() }
         includeToolbar.textViewToolbarTitle.text = getString(R.string.title_new_notifications)
     }
 
@@ -234,6 +235,11 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
         notificationsAdapter.list.clear()
         notificationsAdapter.list.addAll(matchingDataList)
         notificationsAdapter.notifyDataSetChanged()
+    }
+
+    override fun onBackActionPerform(): Boolean {
+        navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
+        return super.onBackActionPerform()
     }
 
     /*private fun callRoomList() {
