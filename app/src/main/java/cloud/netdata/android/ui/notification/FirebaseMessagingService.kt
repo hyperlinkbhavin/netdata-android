@@ -161,10 +161,19 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.e("MessageReceived",remoteMessage.data.toString())
+        Log.e("Message Data",remoteMessage.data.toString())
         generateNotification(remoteMessage.notification!!.title!!, remoteMessage.notification!!.body!!, NotificationList.Results())
 
-        Log.e("MessageReceived", remoteMessage.toString())
+        /*Log.e("Message Title", remoteMessage.notification!!.title.toString())
+        Log.e("Message Body", remoteMessage.notification!!.body.toString())
+        Log.e("Message Id", remoteMessage.messageId.toString())
+        Log.e("Message Type", remoteMessage.messageType.toString())
+        Log.e("Message To", remoteMessage.to.toString())
+        Log.e("Message CollapseKey", remoteMessage.collapseKey.toString())
+        Log.e("Message From", remoteMessage.from.toString())
+        Log.e("Message Notification", remoteMessage.notification.toString())
+        Log.e("Message Priority", remoteMessage.priority.toString())
+        Log.e("Message Original Priority", remoteMessage.originalPriority.toString())*/
         /*if (remoteMessage.data.isNotEmpty()) {
             Log.d("TAG", "Message data payload: ${remoteMessage.data}")
             // twilio.conversations.new_message

@@ -226,6 +226,15 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun countSpaceList() {
+        if(appPreferences.getString(Constant.APP_PREF_SPACE_ID).isNotEmpty()){
+            for((index, item) in spaceList.withIndex()){
+                if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
+                    spacesItemPosition = index
+                    binding.textViewLabelAllWarRooms.text = item.name
+                    break
+                }
+            }
+        }
         val matchingDataList = if (spacesItemPosition != 0) {
             notificationList.filter { it.data!!.netdata!!.space!!.id == spaceList[spacesItemPosition].id && !it.isNotificationRead } as ArrayList<HomeNotificationList>
         } else {

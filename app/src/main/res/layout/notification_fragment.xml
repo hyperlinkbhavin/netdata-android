@@ -55,7 +55,7 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelAllWarRooms"
             style="@style/AppTheme.AppTextView.SemiBoldBlack14"
-            android:text="@string/label_all_spaces"
+            tools:text="@string/label_all_spaces"
             android:layout_marginStart="@dimen/dp_8"
             app:layout_constraintStart_toEndOf="@id/imageViewAllWarRooms"
             app:layout_constraintTop_toTopOf="@id/constraintAllWarRooms"

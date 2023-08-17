@@ -27,6 +27,9 @@ data class APIRequest(
     @SerializedName("starts_at")
     var startsAt: String? = null,
 
+    @SerializedName("lasts_until")
+    var lastsUntil: String? = null,
+
     @SerializedName("silencingRuleID")
     var noRule: ArrayList<String>? = null,
 )

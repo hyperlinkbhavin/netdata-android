@@ -15,7 +15,7 @@ import cloud.netdata.android.utils.visible
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBack: (View, Int, SpaceList) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
+class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBack: (View, Int, SpaceList, Boolean) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -43,7 +43,7 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
         init {
             binding.apply {
                 switchDisableAllNotifications.setOnClickListener {
-                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition], switchDisableAllNotifications.isChecked)
                 }
                 textViewUntilDate.setOnClickListener {
                     datePicker()
@@ -52,7 +52,7 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
                 radioButtonForever.setOnCheckedChangeListener { buttonView, isChecked ->
                     if(isChecked){
                         textViewUntilDate.text = "DD/MM/YY, HH:MM"
-                        callBack.invoke(radioButtonForever, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                        callBack.invoke(radioButtonForever, absoluteAdapterPosition, list[absoluteAdapterPosition], false)
                     }
                 }
 
@@ -61,11 +61,16 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
 
         @SuppressLint("SetTextI18n")
         fun bind(item: SpaceList) = with(binding) {
-            Log.e("isSelected", item.isSelected.toString())
             if(item.isSelected){
                 constraintDisableNotifications.isSelected = true
                 switchDisableAllNotifications.isChecked = true
                 radioGroupAllNotifications.visible()
+                if(item.isUntil){
+                    radioButtonUntil.isChecked  =true
+                    textViewUntilDate.text = item.untilDate
+                } else {
+                    radioButtonForever.isChecked  =true
+                }
             } else {
                 constraintDisableNotifications.isSelected = false
                 switchDisableAllNotifications.isChecked = false
@@ -78,8 +83,19 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
             val datePickerDialog = DatePickerDialog(
                 textViewDisableAllNotification.context,
                 { _, year, month, date ->
-                    val date = date.toString()+"/"+month.toString()+"/"+year.toString().drop(2)
-                    timePicker(date)
+                    val dates = if(date < 10){
+                        "0${date}"
+                    } else {
+                        (date).toString()
+                    }
+
+                    val months = if(month < 9){
+                        "0${month+1}"
+                    } else {
+                        (month+1).toString()
+                    }
+
+                    timePicker(dates +"/"+months +"/"+year.toString().drop(2))
                 },
                 mCalendar.get(Calendar.YEAR),
                 mCalendar.get(Calendar.MONTH),
@@ -100,7 +116,7 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
                     textViewUntilDate.setText(fullDate)
                     radioButtonUntil.isChecked = true
                     list[absoluteAdapterPosition].untilDate = fullDate
-                    callBack.invoke(textViewUntilDate, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                    callBack.invoke(textViewUntilDate, absoluteAdapterPosition, list[absoluteAdapterPosition], false)
                 },
                 hour,
                 minute,

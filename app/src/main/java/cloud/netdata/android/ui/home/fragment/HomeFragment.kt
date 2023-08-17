@@ -357,7 +357,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private fun getNotificationCount() = with(binding) {
         val count = dbHelper.getAllDataFromFetchNotification(isSimpleData = true).filter {
-            /*it.data!!.netdata!!.space!!.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID) &&*/ !it.isNotificationRead
+            it.data!!.netdata!!.space!!.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID) && !it.isNotificationRead
         }.size
         if (count != 0) {
             includeToolbar.textViewNotificationCount.visible()
@@ -575,21 +575,28 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                Handler(Looper.getMainLooper()).postDelayed({
+                /*Handler(Looper.getMainLooper()).postDelayed({
                     updateVisibleItems()
-                },3000)
+                },8000)*/
             }
         })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun updateVisibleItems() {
-        val layoutManager = binding.recyclerViewHome.layoutManager as LinearLayoutManager
-        val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
-        val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
+        try{
+            val layoutManager = binding.recyclerViewHome.layoutManager as LinearLayoutManager
+            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
-        for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
-            val item = homeList[i]
-            readUnreadNotification(item, isPermanentRead = true)
+            for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
+                val item = homeList[i]
+                readUnreadNotification(item, isPermanentRead = true)
+                Log.e("change", i.toString())
+            }
+            homeAdapter.notifyDataSetChanged()
+        } catch (_: Exception){
+
         }
     }
 
@@ -683,7 +690,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         textViewSpaceWarningName.text = item.data!!.netdata!!.alert!!.name[0]
         textViewNodeId.text = item.data!!.host[0].name
         textViewDiskSpace.text = item.data!!.netdata!!.chart!!.name
-        textViewWarRoomsList.text = "War Room 1 • War Room 2 • War Room 3 • War Rom 4"
+        var roomList = ""
+        for(i in item.data!!.netdata!!.room){
+            roomList += "${i.name} • "
+        }
+        textViewWarRoomsList.text = roomList.dropLast(3)
         textViewPriority.text = "${item.priority} ${getString(R.string.label_priority)}"
         textViewPriorityName.text = "${item.priority} ${getString(R.string.label_priority)}"
 
@@ -844,7 +855,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val view = layoutInflater.inflate(R.layout.bottom_sheet_existis_war_rooms_list, null)
 
         val existisWarRoomsAdapter by lazy {
-            ExistisWarRoomsAdapter() { view, position, item ->
+            ExistisWarRoomsAdapter(item.priority!!) { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
 //                        binding.textViewLabelAllWarRooms.text = item.name
@@ -1294,7 +1305,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         drawerFilter()
         getNotificationCount()
 
-        session.userId = homeList[0].data!!.user!!.id!!
+        if(homeList.isNotEmpty()){
+            session.userId = homeList[0].data!!.user!!.id!!
+        }
     }
 
     private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {
