@@ -343,7 +343,7 @@ class ApiViewModel: ViewModel() {
         })
     }
 
-    fun callUnsilenceSpace(spaceID: String, apiRequest: APIRequest)
+    fun callUnsilenceSpace(spaceID: String, params: ArrayList<String>)
     {
         val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
@@ -353,10 +353,11 @@ class ApiViewModel: ViewModel() {
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.unsilenceSpace(cookie, spaceID, apiRequest)
+        val callApi = /*RetrofitApi.getInst().*/apiService.unsilenceSpace(cookie, spaceID, params)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                Log.e("coodd", response.code().toString())
                 unsilenceSpaceLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
             }
 

@@ -178,11 +178,8 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                     space.name = "All Spaces"
                     spaceList.add(space)
                     spaceList.addAll(it.data)
-                    if (appPreferences.getString(Constant.APP_PREF_SPACE_LIST_MAINTAIN).isEmpty()) {
-                        appPreferences.putString(
-                            Constant.APP_PREF_SPACE_LIST_MAINTAIN,
-                            Gson().toJson(spaceList)
-                        )
+                    if (dbHelper.getMaintenanceMode().isEmpty()) {
+                        dbHelper.insertMaintenanceMode(Gson().toJson(spaceList))
                     }
                     callFetchHomeNotification()
                 }

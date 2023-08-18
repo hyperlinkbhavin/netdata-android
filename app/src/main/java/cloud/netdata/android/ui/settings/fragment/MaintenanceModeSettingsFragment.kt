@@ -6,6 +6,7 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
@@ -22,6 +23,7 @@ import cloud.netdata.android.utils.localdb.DatabaseHelper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragmentBinding>() {
 
@@ -45,8 +47,12 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     if (isChecked) {
                         callSilenceSpace(item)
                     } else {
-//                        callUnsilenceSpace(item)
-                        updateData(itemPosition, clickPosition)
+                        val ruleId = ArrayList<String>()
+                        if(!item.silenceRuleId.isNullOrEmpty()){
+                            ruleId.add(item.silenceRuleId!!)
+                        }
+                        callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
                     }
 
                 }
@@ -56,8 +62,12 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     item.isUntil = true
                     if(item.silenceRuleId!!.isNotEmpty()){
                         isChanged = true
-//                        callUnsilenceSpace(item)
-                        updateData(itemPosition, clickPosition)
+                        val ruleId = ArrayList<String>()
+                        if(!item.silenceRuleId.isNullOrEmpty()){
+                            ruleId.add(item.silenceRuleId!!)
+                        }
+                        callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
                     } else {
                         isChanged = false
                         callSilenceSpace(item)
@@ -71,8 +81,12 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     clickPosition = 3
                     if(item.silenceRuleId!!.isNotEmpty()){
                         isChanged = true
-//                        callUnsilenceSpace(item)
-                        updateData(itemPosition, clickPosition)
+                        val ruleId = ArrayList<String>()
+                        if(!item.silenceRuleId.isNullOrEmpty()){
+                            ruleId.add(item.silenceRuleId!!)
+                        }
+                        callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
                     } else {
                         isChanged = false
                         callSilenceSpace(item)
@@ -102,6 +116,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     }
 
     override fun bindData() {
+        dbHelper = DatabaseHelper(requireContext())
         toolbar()
         manageClick()
         setAdapter()
@@ -163,15 +178,21 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 }
             }
         } else {
+            val ruleId = ArrayList<String>()
             binding.radioGroupAllNotifications.visible()
             for ((index, item) in spaceList.withIndex()) {
                 if (item.isSelected) {
                     itemPosition = index
                     clickPosition = 1
-
+                    item.isSelected = false
+                    item.isForever = false
+                    item.isUntil = false
+                    item.untilDate = ""
+                    if(item.silenceRuleId!!.isNotEmpty()){
+                        ruleId.add(item.silenceRuleId!!)
+                    }
 //                    Handler(Looper.getMainLooper()).postDelayed({
-                    updateData(itemPosition, clickPosition)
-//                        callUnsilenceSpace(item)
+//                    updateData(itemPosition, clickPosition)
 //                    },2000)
                 }
             }
@@ -179,36 +200,22 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
     }
 
+    private fun changeDataForUnsilence(position: Int){
+        spaceList[position].silenceRuleId = ""
+        spaceList[position].silenceRuleName = ""
+        updateData(position, clickPosition)
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     private fun setAdapter() = with(binding) {
         recyclerViewMaintenanceMode.adapter = maintenanceModeSettingsAdapter
-
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateData(pos: Int, clickPos: Int) {
-        when (clickPos) {
-            1 -> {
-                spaceList[pos].isSelected = !spaceList[pos].isSelected
-                spaceList[pos].isForever = !spaceList[pos].isForever
-                spaceList[pos].isUntil = false
-                spaceList[pos].untilDate = ""
-            }
-            2 -> {
-                spaceList[pos].isForever = false
-                spaceList[pos].isUntil = true
-            }
-            3 -> {
-                spaceList[pos].isForever = true
-                spaceList[pos].isUntil = false
-                spaceList[pos].untilDate = ""
-            }
-        }
 
-        getCheckData()
-
-        appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
+//        appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
 
         /*if(spaceList[pos].isSelected){
             callSilenceSpace(item)
@@ -216,7 +223,32 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             callUnsilenceSpace(item)
         }*/
 
-        maintenanceModeSettingsAdapter.notifyDataSetChanged()
+        try{
+            when (clickPos) {
+                1 -> {
+                    spaceList[pos].isSelected = !spaceList[pos].isSelected
+                    spaceList[pos].isForever = !spaceList[pos].isForever
+                    spaceList[pos].isUntil = false
+                    spaceList[pos].untilDate = ""
+                }
+                2 -> {
+                    spaceList[pos].isForever = false
+                    spaceList[pos].isUntil = true
+                }
+                3 -> {
+                    spaceList[pos].isForever = true
+                    spaceList[pos].isUntil = false
+                    spaceList[pos].untilDate = ""
+                }
+            }
+
+            getCheckData()
+
+            dbHelper.updateMaintenanceMode(Gson().toJson(spaceList))
+            maintenanceModeSettingsAdapter.notifyDataSetChanged()
+        }
+        catch (_: Exception){
+        }
     }
 
     private fun getCheckData() {
@@ -382,32 +414,19 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         }
     }
 
-    private fun callUnsilenceSpace(item: SpaceList) {
+    private fun callUnsilenceSpace(item: SpaceList, ruleId: ArrayList<String>, position: Int) {
         showLoader()
-        var ruleId = ""
-        if(!item.silenceRuleId.isNullOrEmpty()){
-            ruleId = item.silenceRuleId!!
-        }
-        apiViewModel.callUnsilenceSpace(item.id!!, APIRequest(
-            noRule = arrayListOf(ruleId)
-        ))
+        changeDataForUnsilence(position)
+        apiViewModel.callUnsilenceSpace(item.id!!, ruleId)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeUnsilenceSpace() {
         apiViewModel.unsilenceSpaceLiveData.observe(this) {
             hideLoader()
-            if (it.responseCode == 200) {
-                if(isChanged){
-                    callSilenceSpace(spaceList[itemPosition])
-                } else {
-                    spaceList[itemPosition].silenceRuleId = ""
-                    spaceList[itemPosition].silenceRuleName = ""
-                    updateData(itemPosition, clickPosition)
-                }
-            } else {
-                showMessage("Something wrong")
-                maintenanceModeSettingsAdapter.notifyDataSetChanged()
+            if(isChanged){
+                isChanged = false
+                callSilenceSpace(spaceList[itemPosition])
             }
         }
     }
@@ -415,10 +434,13 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     @SuppressLint("NotifyDataSetChanged")
     private fun checkAndStoreData(item: ArrayList<SpaceList>) {
         spaceList.clear()
+        if(dbHelper.getMaintenanceMode().isEmpty()){
+            dbHelper.insertMaintenanceMode(Gson().toJson(item))
+        }
 
         val type = object : TypeToken<ArrayList<SpaceList>>() {}.type
         val arrayList: ArrayList<SpaceList> =
-            Gson().fromJson(appPreferences.getString(Constant.APP_PREF_SPACE_LIST_MAINTAIN), type)
+            Gson().fromJson(dbHelper.getMaintenanceMode(), type)
 
         val idsInFirstList = item.map { it.id }
         val idsInSecondList = arrayList.map { it.id }
@@ -432,6 +454,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         arrayList.removeAll(dataToRemove.toSet())
 
         spaceList.addAll(arrayList)
+        dbHelper.updateMaintenanceMode(Gson().toJson(spaceList))
 
         getCheckData()
         maintenanceModeSettingsAdapter.notifyDataSetChanged()

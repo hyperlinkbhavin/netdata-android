@@ -59,6 +59,6 @@ interface MainApi {
     fun silenceSpace(@Header("Cookie") token: String, @Path("spaceID") spaceID: String, @Body apiRequest: APIRequest): Call<SilenceRule>
 
     @POST("api/v2/spaces/{spaceID}/notifications/silencing/rules/delete")
-    fun unsilenceSpace(@Header("Cookie") token: String, @Path("spaceID") spaceID: String, @Body apiRequest: APIRequest): Call<Any>
+    fun unsilenceSpace(@Header("Cookie") token: String, @Path("spaceID") spaceID: String, @Body params: ArrayList<String>): Call<Any>
 
 }

@@ -27,6 +27,7 @@ class DatabaseHelper(context: Context) :
         private const val TABLE_APP_DETAILS = "appDetails"
         private const val TABLE_FETCH_NOTIFICATIONS = "fetchNotifications"
         private const val TABLE_ROOMS_DATA = "roomsData"
+        private const val TABLE_MAINTENANCE_MODE = "maintenanceMode"
 
         // Define column names for TABLE_SPACE
         private const val ID = "id"
@@ -98,6 +99,10 @@ class DatabaseHelper(context: Context) :
         private const val RD_NAME = "roomName"
         private const val RD_DATA_ID = "dataId"
 
+        // Define column names for TABLE_MAINTENANCE_MODE
+        private const val MM_ID = "id"
+        private const val MM_ARRAY_DATA = "arrayData"
+
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -129,6 +134,10 @@ class DatabaseHelper(context: Context) :
         val createTableRoomsData =
             "CREATE TABLE $TABLE_ROOMS_DATA ($RD_ID TEXT, $RD_NAME TEXT, $RD_DATA_ID LONG )"
         db.execSQL(createTableRoomsData)
+
+        val createTableMaintenanceMode =
+            "CREATE TABLE $TABLE_MAINTENANCE_MODE ($MM_ID INTEGER, $MM_ARRAY_DATA TEXT )"
+        db.execSQL(createTableMaintenanceMode)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -138,6 +147,7 @@ class DatabaseHelper(context: Context) :
         db.execSQL("DROP TABLE IF EXISTS $TABLE_APP_DETAILS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_FETCH_NOTIFICATIONS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_ROOMS_DATA")
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_MAINTENANCE_MODE")
         onCreate(db)
     }
 
@@ -765,6 +775,53 @@ class DatabaseHelper(context: Context) :
         } finally {
             db.close()
         }
+    }
+
+    fun deleteAllFetchNotification() {
+        val db = writableDatabase
+        db.delete(TABLE_FETCH_NOTIFICATIONS, null, null)
+        db.close()
+    }
+
+    /**
+     * Maintenance Mode
+     */
+    fun insertMaintenanceMode(data: String) {
+        val values = ContentValues().apply {
+            put(MM_ID, 1)
+            put(MM_ARRAY_DATA, data)
+        }
+
+        val db = writableDatabase
+        db.insert(TABLE_MAINTENANCE_MODE, null, values)
+        db.close()
+    }
+
+    fun updateMaintenanceMode(data: String) {
+        val values = ContentValues().apply {
+            put(MM_ARRAY_DATA, data)
+        }
+
+        val db = writableDatabase
+        db.update(TABLE_MAINTENANCE_MODE, values, "id = 1", null)
+        db.close()
+    }
+
+    fun getMaintenanceMode(): String {
+        var dataList = ""
+        val db = readableDatabase
+        val selectQuery = "SELECT * FROM $TABLE_MAINTENANCE_MODE"
+
+        val cursor = db.rawQuery(selectQuery, null)
+        cursor.use {
+            while (cursor.moveToNext()) {
+                dataList = cursor.getString(cursor.getColumnIndexOrThrow(MM_ARRAY_DATA))
+            }
+        }
+
+        db.close()
+        Log.e("app data", dataList.toString())
+        return dataList
     }
 
 }
