@@ -6,6 +6,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object ConvertDateTimeFormat {
+
+    fun isPreviousDate(dateString: String): Boolean{
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val currentDate = Calendar.getInstance().time
+
+        val date = dateFormat.parse(dateString)
+        return date!!.after(currentDate)  || date == currentDate
+    }
+
     fun dateTimeFormat(dateTime: String): String {
         val dateAndTime = dateTime.split("T")
         val date = dateAndTime[0]

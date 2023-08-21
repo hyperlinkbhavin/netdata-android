@@ -820,7 +820,6 @@ class DatabaseHelper(context: Context) :
         }
 
         db.close()
-        Log.e("app data", dataList.toString())
         return dataList
     }
 

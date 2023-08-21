@@ -10,12 +10,6 @@ import cloud.netdata.android.di.component.FragmentComponent
 import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.utils.Constant
 import cloud.netdata.android.utils.visible
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import java.net.URL
 
 class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 
@@ -89,21 +83,21 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 
         // Set custom headers
         val headers = mutableMapOf<String, String>()
-        headers["Host"] = "www.app.netdata.cloud"
-        headers["User-Agent"] = "curl/7.54.0"
-        headers["Accept"] = "*/*"
-        headers["Accept-Encoding"] = "gzip, deflate, br"
-        headers["Connection"] = "keep-alive"
+//        headers["Host"] = "www.app.netdata.cloud"
+//        headers["User-Agent"] = "curl/7.54.0"
+//        headers["Accept"] = "*/*"
+//        headers["Accept-Encoding"] = "gzip, deflate, br"
+//        headers["Connection"] = "keep-alive"
+        headers["Authorization"] = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         // Set custom cookies
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
-        val cookieValue = "$sessionId;$token"
+//        val cookieValue = "$sessionId;$token"
         val cookieManager = CookieManager.getInstance()
         cookieManager.removeAllCookies(null)
-//        cookieManager.setCookie("https://app.netdata.cloud", cookieValue)
         cookieManager.setCookie("https://app.netdata.cloud", sessionId)
-        cookieManager.setCookie("https://app.netdata.cloud", token)
+        cookieManager.setCookie("https://app.netdata.cloud", token)*/
 
         // Load URL with custom headers
         webview.webViewClient = object : WebViewClient() {
@@ -118,8 +112,19 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
                 view?.loadUrl(url!!)
                 return true
             }
+
+            override fun onReceivedError(
+                view: WebView?,
+                request: WebResourceRequest?,
+                error: WebResourceError?
+            ) {
+                super.onReceivedError(view, request, error)
+                Log.e("request", request.toString())
+                Log.e("error", error.toString())
+            }
         }
 
+        Log.e("url", arguments?.getString(Constant.BUNDLE_URL)!!)
         webview.loadUrl(arguments?.getString(Constant.BUNDLE_URL)!!, headers)
     }
 

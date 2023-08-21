@@ -2,6 +2,7 @@ package cloud.netdata.android.utils.customapi
 
 import android.util.Log
 import cloud.netdata.android.exception.CookiesHandlerError
+import cloud.netdata.android.utils.Constant
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -43,16 +44,18 @@ object CookiesNetworkClient {
         httpLogger.level = HttpLoggingInterceptor.Level.BODY
         val cookieHandler= CookieJarImpl()
         OkHttpClient.Builder()
-            .cookieJar(cookieHandler)
+//            .cookieJar(cookieHandler)
             .addInterceptor(httpLogger)
             .addInterceptor(Interceptor { chain ->
                 val request = chain.request()
                 cookieHandler.clearStoreCookies()
                 val response = chain.proceed(request)
 
-                Log.e("dynamic response code", response.request.url.toString())
+                Log.e("dynamic response url", response.request.url.toString())
+                Log.e("dynamic response code", response.code.toString())
 
-                if(response.code == 200){
+                Constant.dynamicResponseUrl = response.request.url.toString()
+                /*if(response.code == 200){
                     throw  CookiesHandlerError("Cookie Error", cookieHandler.storeCookies)
                 }
 
@@ -67,7 +70,7 @@ object CookiesNetworkClient {
                         // Example: Print the cookie value
                         println(cookie)
                     }
-                }
+                }*/
 
                 response
             })

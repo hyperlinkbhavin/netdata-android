@@ -105,18 +105,26 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
 
     private fun observeDynamicLink() {
         dynamicViewModel.liveData.observe(this) {
-            hideLoader()
-            /*if(it.responseCode == 200 && it.data!!.token!!.isNotEmpty()){
-                session.userSession = it.data.token!!
-                Constant.TOKEN = session.userSession
-                session.getFirebaseDeviceId { deviceId ->
-                    session.deviceId = deviceId
-                    callLinkDevice()
+            Handler(Looper.getMainLooper()).postDelayed({
+                hideLoader()
+                if(Constant.dynamicResponseUrl.contains("app.netdata.cloud/api/v2/auth/account/magic-link/mobile-app/login")){
+                    if(it.responseCode == 200 && it.data!!.token!!.isNotEmpty()){
+                        session.userSession = it.data.token!!
+                        Constant.TOKEN = session.userSession
+                        session.getFirebaseDeviceId { deviceId ->
+                            session.deviceId = deviceId
+                            callLinkDevice()
+                        }
+                    } else {
+                        showMessage("Link expire! Try again")
+                    }
+                } else {
+                    showMessage("Please login to view alert")
                 }
-            } else {
-                showMessage("Link expire! Try again")
-            }*/
-            if (it is CookiesHandlerError) {
+
+            },1000)
+
+            /*if (it is CookiesHandlerError) {
                 if (it.map.isNotEmpty()) {
                     appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_i"]!!)
                     appPreferences.putString(Constant.APP_PREF_COOKIE_SV, it.map["s_v_${it.map["s_i"]}"]!!)
@@ -129,7 +137,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
                 }
             } else {
                 Log.e("else", "else")
-            }
+            }*/
         }
     }
 

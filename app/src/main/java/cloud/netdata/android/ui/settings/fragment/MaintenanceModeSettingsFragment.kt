@@ -22,8 +22,8 @@ import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragmentBinding>() {
 
@@ -381,7 +381,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     startsAt = DateTimeFormatter.currentUTCTime,
                     lastsUntil = ConvertDateTimeFormat.convertLocalToUtcDate(
                         item.untilDate!!,
-                        "dd/MM/yy, HH:mm",
+                        DateTimeFormats.MAINTENANCE_MODE_DATE_FORMAT,
                         DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW
                     )
                 )
@@ -455,6 +455,23 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         spaceList.addAll(arrayList)
         dbHelper.updateMaintenanceMode(Gson().toJson(spaceList))
+
+        val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy, HH:mm", Locale.getDefault())
+
+        for((index, items) in spaceList.withIndex()){
+            try{
+                val ruleId = ArrayList<String>()
+                if(!items.silenceRuleId.isNullOrEmpty()){
+                    ruleId.add(items.silenceRuleId!!)
+                }
+                val dataDate = dateFormat.parse(items.untilDate!!)
+                if(dataDate != null && dataDate.before(currentDate)){
+                    callUnsilenceSpace(items, ruleId, index)
+                }
+            } catch (e: Exception){
+            }
+        }
 
         getCheckData()
         maintenanceModeSettingsAdapter.notifyDataSetChanged()

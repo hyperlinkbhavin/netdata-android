@@ -43,6 +43,7 @@ import cloud.netdata.android.ui.settings.fragment.SettingsFragment
 import cloud.netdata.android.utils.AppUtils
 import cloud.netdata.android.utils.Constant
 import cloud.netdata.android.utils.customapi.ApiViewModel
+import cloud.netdata.android.utils.customapi.DynamicViewModel
 import cloud.netdata.android.utils.gone
 import cloud.netdata.android.utils.localdb.DatabaseHelper
 import cloud.netdata.android.utils.visible
@@ -56,6 +57,10 @@ import java.util.*
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
+
+    private val dynamicViewModel by lazy {
+        ViewModelProvider(this)[DynamicViewModel::class.java]
+    }
 
     private val apiViewModel by lazy {
         ViewModelProvider(this)[ApiViewModel::class.java]
@@ -201,6 +206,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         observeLinkDevice()
         observeFetchHomeNotification()
         observeRoomList()
+        observeDynamicLink()
     }
 
     override fun createViewBinding(
@@ -229,7 +235,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     override fun onResume() {
         super.onResume()
-        callLinkDevice()
+        val deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK)
+
+        if (!deeplink.isNullOrEmpty()) {
+            callDynamicLink(deeplink)
+        } else {
+            session.getFirebaseDeviceId { deviceId ->
+                session.deviceId = deviceId
+                callLinkDevice()
+            }
+        }
+
         if (appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)) {
             showMessage("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}")
             appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, false)
@@ -1426,6 +1442,48 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     callFetchHomeNotification()
                 },1000)
             }
+        }
+    }
+
+    private fun callDynamicLink(link: String) {
+        showLoader()
+        dynamicViewModel.callDynamicLink(link)
+    }
+
+    private fun observeDynamicLink() {
+        dynamicViewModel.liveData.observe(this) {
+            Handler(Looper.getMainLooper()).postDelayed({
+                hideLoader()
+                if (Constant.dynamicResponseUrl.contains("app.netdata.cloud/spaces")) {
+                    navigator.loadActivity(
+                        IsolatedFullActivity::class.java,
+                        HomeDetailsFragment::class.java
+                    ).addBundle(bundleOf(Constant.BUNDLE_URL to Constant.dynamicResponseUrl))
+                        .start()
+                } else {
+                    showMessage("Fail to view alert due to a bad URL")
+                    session.getFirebaseDeviceId { deviceId ->
+                        session.deviceId = deviceId
+                        callLinkDevice()
+                    }
+                }
+
+            },500)
+
+            /*if (it is CookiesHandlerError) {
+                if (it.map.isNotEmpty()) {
+                    appPreferences.putString(Constant.APP_PREF_COOKIE_SI, it.map["s_i"]!!)
+                    appPreferences.putString(Constant.APP_PREF_COOKIE_SV, it.map["s_v_${it.map["s_i"]}"]!!)
+                    Constant.COOKIE_SI = it.map["s_i"]!!
+                    Constant.COOKIE_SV = it.map["s_v_${it.map["s_i"]}"]!!
+                    callLinkDevice()
+                    Log.e("cookie", Constant.COOKIE_SI)
+                } else {
+                    Log.e("else", "cookie")
+                }
+            } else {
+                Log.e("else", "else")
+            }*/
         }
     }
 

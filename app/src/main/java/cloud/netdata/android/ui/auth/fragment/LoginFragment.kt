@@ -80,8 +80,8 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
         apiViewModel.callMagicLink(
             APIRequest(
                 email = binding.editTextEmail.getVal(),
-                redirectURI = URLFactory.Link.SIGN_IN_LINK,
-                registerURI = URLFactory.Link.SIGN_UP_LINK
+                /*redirectURI = URLFactory.Link.SIGN_IN_LINK,
+                registerURI = URLFactory.Link.SIGN_UP_LINK*/
             )
         )
     }

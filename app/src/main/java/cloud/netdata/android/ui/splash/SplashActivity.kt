@@ -110,7 +110,7 @@ class SplashActivity : BaseActivity() {
             if (!AppUtils.isOpenRecently()) {
                 if (appPreferences.getBoolean(Constant.APP_PREF_IS_LOGIN)) {
                     if (!appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNullOrEmpty()) {
-                        loadActivity(HomeActivity::class.java).byFinishingCurrent().start()
+                        loadActivity(HomeActivity::class.java).addBundle(bundleOf(Constant.BUNDLE_DEEPLINK to url)).byFinishingCurrent().start()
                     } else {
                         loadActivity(
                             IsolatedFullActivity::class.java,

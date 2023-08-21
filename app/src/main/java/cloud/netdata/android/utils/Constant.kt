@@ -7,6 +7,7 @@ object Constant {
     var COOKIE_SV = ""
     var TOKEN = ""
     const val TOKEN_PRE_VALUE = "bearer"
+    var dynamicResponseUrl = ""
 
     var isSortBy = false
 //    var notificationPriorityList = ArrayList<NotificationPriorityList>()

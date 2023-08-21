@@ -59,16 +59,16 @@ class ApiViewModel: ViewModel() {
 
     fun callLinkDevice(apiRequest: APIRequest)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.linkDevice(cookie, apiRequest)
+        val callApi = /*RetrofitApi.getInst().*/apiService.linkDevice(token, apiRequest)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -86,16 +86,16 @@ class ApiViewModel: ViewModel() {
 
     fun callUnlinkDevice()
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.unlinkDevice(cookie)
+        val callApi = /*RetrofitApi.getInst().*/apiService.unlinkDevice(token)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -112,16 +112,16 @@ class ApiViewModel: ViewModel() {
 
     fun callGetSpaceList()
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.getSpaceList(cookie)
+        val callApi = /*RetrofitApi.getInst().*/apiService.getSpaceList(token)
         callApi.enqueue(object: Callback<ArrayList<SpaceList>>{
 
             override fun onResponse(call: Call<ArrayList<SpaceList>>, response: Response<ArrayList<SpaceList>>) {
@@ -138,16 +138,16 @@ class ApiViewModel: ViewModel() {
 
     fun callFetchHomeNotification()
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.fetchHomeNotification(cookie)
+        val callApi = /*RetrofitApi.getInst().*/apiService.fetchHomeNotification(token)
         callApi.enqueue(object: Callback<ArrayList<HomeNotificationList>>{
 
             override fun onResponse(call: Call<ArrayList<HomeNotificationList>>, response: Response<ArrayList<HomeNotificationList>>) {
@@ -165,16 +165,16 @@ class ApiViewModel: ViewModel() {
 
     fun callGetRoomsList(spaceID: String)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.getRoomsList(cookie, spaceID)
+        val callApi = /*RetrofitApi.getInst().*/apiService.getRoomsList(token, spaceID)
         callApi.enqueue(object: Callback<ArrayList<RoomList>>{
 
             override fun onResponse(call: Call<ArrayList<RoomList>>, response: Response<ArrayList<RoomList>>) {
@@ -192,16 +192,16 @@ class ApiViewModel: ViewModel() {
 
     fun callListSpaceAlertCount(spaceID: String)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.listSpaceAlertCount(cookie, spaceID)
+        val callApi = /*RetrofitApi.getInst().*/apiService.listSpaceAlertCount(token, spaceID)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -218,16 +218,16 @@ class ApiViewModel: ViewModel() {
 
     fun callListActiveAlertPerRoom(spaceID: String, roomID: String)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.listActiveAlertPerRoom(cookie, spaceID, roomID)
+        val callApi = /*RetrofitApi.getInst().*/apiService.listActiveAlertPerRoom(token, spaceID, roomID)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -244,16 +244,16 @@ class ApiViewModel: ViewModel() {
 
     fun callGetAlertDetailed(spaceID: String, roomID: String, alarm: String, chart: String)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
+        val cookie = "$sessionId;$token"*/
 
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.getAlertDetailed(cookie, spaceID, roomID, alarm, chart)
+        val callApi = /*RetrofitApi.getInst().*/apiService.getAlertDetailed(token, spaceID, roomID, alarm, chart)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -270,15 +270,15 @@ class ApiViewModel: ViewModel() {
 
     fun callGetAccountNotificationsSettings()
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val cookie = "$sessionId;$token"*/
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.getAccountNotificationsSettings(cookie)
+        val callApi = /*RetrofitApi.getInst().*/apiService.getAccountNotificationsSettings(token)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -295,15 +295,15 @@ class ApiViewModel: ViewModel() {
 
     fun callUpdateAccountNotificationsSettings(apiRequest: APIRequest)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val cookie = "$sessionId;$token"*/
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.updateAccountNotificationsSettings(cookie, apiRequest)
+        val callApi = /*RetrofitApi.getInst().*/apiService.updateAccountNotificationsSettings(token, apiRequest)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
@@ -320,15 +320,15 @@ class ApiViewModel: ViewModel() {
 
     fun callSilenceSpace(spaceID: String, apiRequest: APIRequest)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val cookie = "$sessionId;$token"*/
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.silenceSpace(cookie, spaceID, apiRequest)
+        val callApi = /*RetrofitApi.getInst().*/apiService.silenceSpace(token, spaceID, apiRequest)
         callApi.enqueue(object: Callback<SilenceRule>{
 
             override fun onResponse(call: Call<SilenceRule>, response: Response<SilenceRule>) {
@@ -345,15 +345,15 @@ class ApiViewModel: ViewModel() {
 
     fun callUnsilenceSpace(spaceID: String, params: ArrayList<String>)
     {
-        val sessionId = "s_i=${Constant.COOKIE_SI}"
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
-        val cookie = "$sessionId;$token"
-//        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val cookie = "$sessionId;$token"*/
+        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
-        val callApi = /*RetrofitApi.getInst().*/apiService.unsilenceSpace(cookie, spaceID, params)
+        val callApi = /*RetrofitApi.getInst().*/apiService.unsilenceSpace(token, spaceID, params)
         callApi.enqueue(object: Callback<Any>{
 
             override fun onResponse(call: Call<Any>, response: Response<Any>) {
