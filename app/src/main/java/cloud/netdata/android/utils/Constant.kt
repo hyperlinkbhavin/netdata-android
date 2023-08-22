@@ -6,7 +6,6 @@ object Constant {
     var COOKIE_SI = ""
     var COOKIE_SV = ""
     var TOKEN = ""
-    const val TOKEN_PRE_VALUE = "bearer"
     var dynamicResponseUrl = ""
 
     var isSortBy = false

@@ -88,7 +88,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
 //        headers["Accept"] = "*/*"
 //        headers["Accept-Encoding"] = "gzip, deflate, br"
 //        headers["Connection"] = "keep-alive"
-        headers["Authorization"] = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        headers["Authorization"] = Constant.TOKEN
 
         // Set custom cookies
         /*val sessionId = "s_i=${Constant.COOKIE_SI}"

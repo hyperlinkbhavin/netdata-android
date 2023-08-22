@@ -95,11 +95,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             when (view.id) {
                 R.id.constraintTop -> {
                     readUnreadNotification(item, isPermanentRead = true)
+                    val url = "https://app.netdata.cloud//webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
+                            "?space_id=${item.data!!.netdata!!.space!!.id}&room_id=${item.data!!.netdata!!.room[0].id}#token=${session.userSession.drop(7)}"
                     navigator.loadActivity(
                         IsolatedFullActivity::class.java,
                         HomeDetailsFragment::class.java
                     )
-                        .addBundle(bundleOf(Constant.BUNDLE_URL to item.data!!.netdata!!.alert!!.annotations!!.url))
+                        .addBundle(bundleOf(Constant.BUNDLE_URL to url))
                         .start()
                 }
 
@@ -240,10 +242,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         if (!deeplink.isNullOrEmpty()) {
             callDynamicLink(deeplink)
         } else {
-            session.getFirebaseDeviceId { deviceId ->
-                session.deviceId = deviceId
+//            session.getFirebaseDeviceId { deviceId ->
+//                session.deviceId = deviceId
                 callLinkDevice()
-            }
+//            }
         }
 
         if (appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)) {
@@ -1462,10 +1464,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                         .start()
                 } else {
                     showMessage("Fail to view alert due to a bad URL")
-                    session.getFirebaseDeviceId { deviceId ->
-                        session.deviceId = deviceId
+//                    session.getFirebaseDeviceId { deviceId ->
+//                        session.deviceId = deviceId
                         callLinkDevice()
-                    }
+//                    }
                 }
 
             },500)

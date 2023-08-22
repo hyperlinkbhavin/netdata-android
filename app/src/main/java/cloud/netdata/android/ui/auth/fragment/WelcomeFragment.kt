@@ -109,7 +109,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
                 hideLoader()
                 if(Constant.dynamicResponseUrl.contains("app.netdata.cloud/api/v2/auth/account/magic-link/mobile-app/login")){
                     if(it.responseCode == 200 && it.data!!.token!!.isNotEmpty()){
-                        session.userSession = it.data.token!!
+                        session.userSession = "bearer ${it.data.token!!}"
                         Constant.TOKEN = session.userSession
                         session.getFirebaseDeviceId { deviceId ->
                             session.deviceId = deviceId

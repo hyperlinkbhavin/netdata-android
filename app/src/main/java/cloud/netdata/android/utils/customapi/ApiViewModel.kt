@@ -64,7 +64,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -91,7 +91,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -117,7 +117,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -143,7 +143,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -170,7 +170,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -197,7 +197,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -223,7 +223,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -249,7 +249,7 @@ class ApiViewModel: ViewModel() {
 
         val cookie = "$sessionId;$token"*/
 
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -274,7 +274,7 @@ class ApiViewModel: ViewModel() {
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
         val cookie = "$sessionId;$token"*/
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -299,7 +299,7 @@ class ApiViewModel: ViewModel() {
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
         val cookie = "$sessionId;$token"*/
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -324,7 +324,7 @@ class ApiViewModel: ViewModel() {
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
         val cookie = "$sessionId;$token"*/
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 
@@ -349,7 +349,7 @@ class ApiViewModel: ViewModel() {
         val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
 
         val cookie = "$sessionId;$token"*/
-        val token = "${Constant.TOKEN_PRE_VALUE} ${Constant.TOKEN}"
+        val token = Constant.TOKEN
 
         val apiService = NetworkClient.createService(MainApi::class.java)
 

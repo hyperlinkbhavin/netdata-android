@@ -86,7 +86,7 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
     private fun startScan(){
         codeScanner.decodeCallback = DecodeCallback {
             requireActivity().runOnUiThread {
-                session.userSession = it.text
+                session.userSession = "bearer ${it.text}"
                 Constant.TOKEN = session.userSession
                 session.getFirebaseDeviceId { deviceId ->
                     session.deviceId = deviceId
