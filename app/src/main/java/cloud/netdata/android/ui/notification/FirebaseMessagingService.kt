@@ -49,7 +49,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
     fun generateNotification(
         title: String,
         message: String,
-        pushNotification: NotificationList.Results
+        alertName: String
     ) {
 
 // i have to add the if condition for user home and auth.
@@ -65,8 +65,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
 //        val defaultSoundUri: Uri = Uri.parse(Constant.notificationPriorityList[1].soundUrl!!)
 
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        Log.d("MyPushNotification", "createPendingIntentForHomeScreen: $pushNotification")
-        intent.putExtra(Constant.PUSH_NOTIFICATION, pushNotification)
+        intent.putExtra(Constant.PUSH_NOTIFICATION, alertName)
         intent.putExtra(Constant.NOTIFICATION_ICON, "message")
 
         //intent.putExtra(Constant.PUSH_NOTIFICATION,Gson().toJson(pushNotification))
@@ -161,10 +160,10 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.e("Message Data",remoteMessage.data.toString())
-        generateNotification(remoteMessage.notification!!.title!!, remoteMessage.notification!!.body!!, NotificationList.Results())
+        Log.e("Message Data",remoteMessage.data["alert_name"].toString())
+        generateNotification(remoteMessage.notification!!.title!!, remoteMessage.notification!!.body!!, remoteMessage.data["alert_name"].toString())
 
-        /*Log.e("Message Title", remoteMessage.notification!!.title.toString())
+        Log.e("Message Title", remoteMessage.notification!!.title.toString())
         Log.e("Message Body", remoteMessage.notification!!.body.toString())
         Log.e("Message Id", remoteMessage.messageId.toString())
         Log.e("Message Type", remoteMessage.messageType.toString())
@@ -173,7 +172,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
         Log.e("Message From", remoteMessage.from.toString())
         Log.e("Message Notification", remoteMessage.notification.toString())
         Log.e("Message Priority", remoteMessage.priority.toString())
-        Log.e("Message Original Priority", remoteMessage.originalPriority.toString())*/
+        Log.e("Message Original Priority", remoteMessage.originalPriority.toString())
         /*if (remoteMessage.data.isNotEmpty()) {
             Log.d("TAG", "Message data payload: ${remoteMessage.data}")
             // twilio.conversations.new_message
