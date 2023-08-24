@@ -33,6 +33,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private var clickPosition = -1
     private var isChanged = false
     private var manageSpaceList = ArrayList<SpaceList>()
+    private var isAllChange = false
+    private var allChangeIndex = -1
 
     private val apiViewModel by lazy {
         ViewModelProvider(this)[ApiViewModel::class.java]
@@ -163,20 +165,38 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private fun changeAllNotificationData(isChecked: Boolean) {
         if (isChecked) {
             binding.radioGroupAllNotifications.visible()
-            for ((index, item) in spaceList.withIndex()) {
+            allChangeIndex += 1
+            if(allChangeIndex != spaceList.size){
+                isAllChange = true
+
+                if(!spaceList[allChangeIndex].isSelected){
+                    itemPosition = allChangeIndex
+                    clickPosition = 1
+                    callSilenceSpace(spaceList[allChangeIndex])
+                } else {
+                    changeAllNotificationData(true)
+                }
+            } else {
+                isAllChange = false
+                allChangeIndex = -1
+                getCheckData()
+            }
+
+
+            /*for ((index, item) in spaceList.withIndex()) {
                 if (!item.isSelected) {
                     itemPosition = index
                     clickPosition = 1
-                    /*item.isSelected = switchDisableAllNotifications.isChecked
+                    *//*item.isSelected = switchDisableAllNotifications.isChecked
                     item.isForever = switchDisableAllNotifications.isChecked
                     item.isUntil = false
-                    item.untilDate = ""*/
+                    item.untilDate = ""*//*
 
 //                    Handler(Looper.getMainLooper()).postDelayed({
                     callSilenceSpace(item)
 //                    },2000)
                 }
-            }
+            }*/
         } else {
             val ruleId = ArrayList<String>()
             binding.radioGroupAllNotifications.visible()
@@ -407,8 +427,14 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 spaceList[itemPosition].silenceRuleId = it.data!!.id
                 spaceList[itemPosition].silenceRuleName = it.data.name
                 updateData(itemPosition, clickPosition)
+                if(isAllChange){
+                    changeAllNotificationData(true)
+                }
             } else {
-                showMessage("Something wrong")
+                if(isAllChange){
+                    changeAllNotificationData(true)
+                }
+                showMessage("Something wrong for ${spaceList[itemPosition].name}")
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()
             }
         }

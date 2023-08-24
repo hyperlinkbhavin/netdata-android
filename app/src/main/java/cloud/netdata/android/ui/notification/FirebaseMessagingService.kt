@@ -12,11 +12,13 @@ import android.os.Build
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import cloud.netdata.android.R
 import cloud.netdata.android.core.AppSession
 import cloud.netdata.android.data.pojo.response.NotificationList
 import cloud.netdata.android.ui.home.HomeActivity
 import cloud.netdata.android.utils.Constant
+import cloud.netdata.android.utils.localdb.DatabaseHelper
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import javax.inject.Inject
@@ -29,6 +31,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
 
     @Inject
     lateinit var appSession: AppSession
+    lateinit var dbHelper: DatabaseHelper
 
     private var conversationTitle: String? = null
 

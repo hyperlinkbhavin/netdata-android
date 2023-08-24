@@ -1,6 +1,8 @@
 package cloud.netdata.android.ui.home.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
@@ -12,11 +14,13 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
@@ -49,9 +53,15 @@ import cloud.netdata.android.utils.localdb.DatabaseHelper
 import cloud.netdata.android.utils.visible
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonParser
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
+import okio.IOException
+import java.io.File
+import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -1396,22 +1406,23 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             homeList.forEach {
                 tempClassList.add(it.data!!.netdata!!.alert!!)
             }
-            val tempList = tempClassList.distinctBy { it.classes }.map { it.classes }
+            val tempList = tempClassList.distinctBy { it.classes }.mapNotNull { it.classes }
             for (item in tempList) {
-                filterClassificationList.add(FilterList(item!!, isSelected = false))
+                filterClassificationList.add(FilterList(item, isSelected = false))
             }
         }
         if (filterTypeCompList.isEmpty()) {
             homeList.forEach {
                 tempTypeCompList.add(it.data!!.netdata!!.alert!!)
             }
-            val tempList = tempTypeCompList.distinctBy { it.type }.map { it.type }
-            val tempCompList = tempTypeCompList.distinctBy { it.component }.map { it.component }
+            val tempList = tempTypeCompList.distinctBy { it.type }.mapNotNull { it.type }
+            val tempCompList =
+                tempTypeCompList.distinctBy { it.component }.mapNotNull { it.component }
             for (item in tempList) {
-                filterTypeCompList.add(FilterList(item!!, isSelected = false))
+                filterTypeCompList.add(FilterList(item, isSelected = false))
             }
             for (item in tempCompList) {
-                filterTypeCompList.add(FilterList(item!!, isSelected = false))
+                filterTypeCompList.add(FilterList(item, isSelected = false))
             }
 
         }
