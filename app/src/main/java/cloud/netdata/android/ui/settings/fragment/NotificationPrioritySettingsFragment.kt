@@ -46,7 +46,7 @@ class NotificationPrioritySettingsFragment :
     private var isTempMediumPrioritySound = false
     private var isTempLowPrioritySound = false
 
-    private var conditionId = -1
+    private var conditionId = 0
 
     override fun inject(fragmentComponent: FragmentComponent) {
         fragmentComponent.inject(this)
@@ -90,7 +90,7 @@ class NotificationPrioritySettingsFragment :
     }
 
     private fun setData() = with(binding) {
-        /*if(dbHelper.getAllDataFromNotificationPriority().isEmpty()){
+        if(dbHelper.getAllDataFromNotificationPriority().isEmpty()){
             dbHelper.insertNotificationPriorityData(
                 NotificationPriorityList(
                     1,
@@ -124,48 +124,9 @@ class NotificationPrioritySettingsFragment :
                     0
                 )
             )
-        }*/
-
-        if(appPreferences.getString(Constant.APP_PREF_NOTIFICATION_PRIORITY_LIST).isEmpty()){
-            notificationPriorityList.add(NotificationPriorityList(
-                0,
-                Priority.HIGH_PRIORITY.name,
-                0,
-                "",
-                "",
-                0,
-                0
-            ))
-
-            notificationPriorityList.add(NotificationPriorityList(
-                1,
-                Priority.MEDIUM_PRIORITY.name,
-                0,
-                "",
-                "",
-                0,
-                0
-            ))
-            notificationPriorityList.add(NotificationPriorityList(
-                2,
-                Priority.LOW_PRIORITY.name,
-                0,
-                "",
-                "",
-                0,
-                0
-            ))
-
-            appPreferences.putString(Constant.APP_PREF_NOTIFICATION_PRIORITY_LIST, Gson().toJson(notificationPriorityList))
-        } else {
-            notificationPriorityList.clear()
-            val type = object : TypeToken<ArrayList<NotificationPriorityList>>() {}.type
-            val arrayList: ArrayList<NotificationPriorityList> =
-                Gson().fromJson(appPreferences.getString(Constant.APP_PREF_NOTIFICATION_PRIORITY_LIST), type)
-            notificationPriorityList.addAll(arrayList)
         }
 
-//        notificationPriorityList = dbHelper.getAllDataFromNotificationPriority()
+        notificationPriorityList = dbHelper.getAllDataFromNotificationPriority()
 
         notificationCheck(
             0,
@@ -233,7 +194,7 @@ class NotificationPrioritySettingsFragment :
 
     private fun manageClick() = with(binding) {
         switchHighPrioritySound.setOnCheckedChangeListener { buttonView, isChecked ->
-            conditionId = 0
+            conditionId = 1
             switchCheckChanged(
                 isChecked,
                 buttonHighPriorityApplyCustomTune,
@@ -243,7 +204,7 @@ class NotificationPrioritySettingsFragment :
         }
 
         switchMediumPrioritySound.setOnCheckedChangeListener { buttonView, isChecked ->
-            conditionId = 1
+            conditionId = 2
             switchCheckChanged(
                 isChecked,
                 buttonMediumPriorityApplyCustomTune,
@@ -253,7 +214,7 @@ class NotificationPrioritySettingsFragment :
         }
 
         switchLowPrioritySound.setOnCheckedChangeListener { buttonView, isChecked ->
-            conditionId = 2
+            conditionId = 3
             switchCheckChanged(
                 isChecked,
                 buttonLowPriorityApplyCustomTune,
@@ -269,7 +230,7 @@ class NotificationPrioritySettingsFragment :
 
             openAudioPicker()
 
-        //            manageNightModeForBottomSheet()
+            //            manageNightModeForBottomSheet()
         }
 
         buttonMediumPriorityApplyCustomTune.setOnClickListener {
@@ -278,7 +239,7 @@ class NotificationPrioritySettingsFragment :
             isTempLowPrioritySound = false
 
             openAudioPicker()
-        //            manageNightModeForBottomSheet()
+            //            manageNightModeForBottomSheet()
         }
 
         buttonLowPriorityApplyCustomTune.setOnClickListener {
@@ -288,7 +249,7 @@ class NotificationPrioritySettingsFragment :
 
             openAudioPicker()
 
-        //            manageNightModeForBottomSheet()
+            //            manageNightModeForBottomSheet()
         }
 
         buttonHighPriorityChangeSoundTune.setOnClickListener {
@@ -304,52 +265,45 @@ class NotificationPrioritySettingsFragment :
         }
 
         switchHighPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
-            /*dbHelper.updateNotificationPriorityData(
+            dbHelper.updateNotificationPriorityData(
                 isBanner = if (isChecked) 1 else 0,
                 conditionID = 1
-            )*/
-
-            storeDataInPreferences(0, isChecked, isBanner = true)
+            )
         }
 
         switchMediumPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
-            /*dbHelper.updateNotificationPriorityData(
+            dbHelper.updateNotificationPriorityData(
                 isBanner = if (isChecked) 1 else 0,
                 conditionID = 2
-            )*/
-            storeDataInPreferences(1, isChecked, isBanner = true)
+            )
         }
 
         switchLowPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
-            /*dbHelper.updateNotificationPriorityData(
+            dbHelper.updateNotificationPriorityData(
                 isBanner = if (isChecked) 1 else 0,
                 conditionID = 3
-            )*/
-            storeDataInPreferences(2, isChecked, isBanner = true)
+            )
         }
 
         switchHighPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
-            /*dbHelper.updateNotificationPriorityData(
+            dbHelper.updateNotificationPriorityData(
                 isVibration = if (isChecked) 1 else 0,
                 conditionID = 1
-            )*/
-            storeDataInPreferences(0, isChecked, isBanner = false)
+            )
         }
 
         switchMediumPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
-            /*dbHelper.updateNotificationPriorityData(
+            dbHelper.updateNotificationPriorityData(
                 isVibration = if (isChecked) 1 else 0,
                 conditionID = 2
-            )*/
-            storeDataInPreferences(1, isChecked, isBanner = false)
+            )
         }
 
         switchLowPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
-            /*dbHelper.updateNotificationPriorityData(
+            dbHelper.updateNotificationPriorityData(
                 isVibration = if (isChecked) 1 else 0,
                 conditionID = 3
-            )*/
-            storeDataInPreferences(2, isChecked, isBanner = false)
+            )
         }
     }
 
@@ -396,17 +350,12 @@ class NotificationPrioritySettingsFragment :
                     val audioName = audio!!.split("/").last()
                     Log.e("name", audioName)
                     binding.apply {
-                        /*dbHelper.updateNotificationPriorityData(
+                        dbHelper.updateNotificationPriorityData(
                             isSound = 1,
                             soundName = audioName,
                             soundUrl = audio,
                             conditionID = conditionId
-                        )*/
-                        notificationPriorityList[conditionId].isSound = 1
-                        notificationPriorityList[conditionId].soundName = audioName
-                        notificationPriorityList[conditionId].soundUrl = audio
-
-                        appPreferences.putString(Constant.APP_PREF_NOTIFICATION_PRIORITY_LIST, Gson().toJson(notificationPriorityList))
+                        )
                         if (isTempHighPrioritySound) {
 //                        isHighPrioritySound = true
                             buttonHighPriorityApplyCustomTune.invisible()
@@ -444,17 +393,12 @@ class NotificationPrioritySettingsFragment :
                 ContextCompat.getColor(requireContext(), R.color.colorPrimary)
             )
         } else {
-            /*dbHelper.updateNotificationPriorityData(
+            dbHelper.updateNotificationPriorityData(
                 isSound = 0,
                 soundName = "",
                 soundUrl = "",
                 conditionID = conditionId
-            )*/
-            notificationPriorityList[conditionId].isSound = 0
-            notificationPriorityList[conditionId].soundName = ""
-            notificationPriorityList[conditionId].soundUrl = ""
-
-            appPreferences.putString(Constant.APP_PREF_NOTIFICATION_PRIORITY_LIST, Gson().toJson(notificationPriorityList))
+            )
             buttonView.visible()
             buttonView.isClickable = false
             buttonView.backgroundTintList = ColorStateList.valueOf(
@@ -463,15 +407,6 @@ class NotificationPrioritySettingsFragment :
             buttonView2.gone()
             textView.gone()
         }
-    }
-
-    private fun storeDataInPreferences(position: Int, isChecked: Boolean, isBanner: Boolean = false){
-        if(isBanner){
-            notificationPriorityList[position].isBanner = if (isChecked) 1 else 0
-        } else {
-            notificationPriorityList[position].isVibration = if (isChecked) 1 else 0
-        }
-        appPreferences.putString(Constant.APP_PREF_NOTIFICATION_PRIORITY_LIST, Gson().toJson(notificationPriorityList))
     }
 
     /*private fun showPermissionDeniedDialog() {

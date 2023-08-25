@@ -76,19 +76,21 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         webview.settings.loadWithOverviewMode = true
         webview.settings.useWideViewPort = true
         webview.settings.builtInZoomControls = true
-//        webview.webChromeClient = WebChromeClient()
+        webview.webChromeClient = WebChromeClient()
         webview.settings.domStorageEnabled = true
         webview.settings.databaseEnabled = true
         webview.settings.allowContentAccess = true
+        webview.settings.userAgentString = "Mozilla/5.0 (Linux; Android 10; Pixel 3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36"
 
         // Set custom headers
-        val headers = mutableMapOf<String, String>()
-//        headers["Host"] = "www.app.netdata.cloud"
-//        headers["User-Agent"] = "curl/7.54.0"
+        val headers = HashMap<String, String>()
+//        headers["Host"] = "https://app.netdata.cloud"
+////        headers["User-Agent"] = "curl/7.54.0"
 //        headers["Accept"] = "*/*"
 //        headers["Accept-Encoding"] = "gzip, deflate, br"
 //        headers["Connection"] = "keep-alive"
-        headers["Authorization"] = Constant.TOKEN
+        Log.e("session", session.userSession)
+        headers["Authorization"] = session.userSession
 
         // Set custom cookies
         /*val sessionId = "s_i=${Constant.COOKIE_SI}"
@@ -106,10 +108,8 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
                 // Page has finished loading
                 hideLoader()
             }
-            @Deprecated("Deprecated in Java")
-            override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                // Handle URL loading within WebView, return true to indicate it's handled here
-                view?.loadUrl(url!!)
+            override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
+                view?.loadUrl(request?.url.toString())
                 return true
             }
 

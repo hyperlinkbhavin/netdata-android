@@ -85,6 +85,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private var homeList = ArrayList<HomeNotificationList>()
     private var roomList = ArrayList<RoomList>()
+    private var deeplink = ""
 
     private var filterStatusList = ArrayList<FilterList>()
     private var filterPriorityList = ArrayList<FilterList>()
@@ -242,15 +243,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         editTextHomeChanged()
         editTextFilterChanged()
 
+        deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK).toString()
+
 //        dbHelper.deleteFetchNotificationOlderThanWeek(ConvertDateTimeFormat.getDaysBeforeDate(17))
     }
 
     override fun onResume() {
         super.onResume()
-        val deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK)
 
-        if (!deeplink.isNullOrEmpty()) {
+
+        if (deeplink.isNotEmpty()) {
             callDynamicLink(deeplink)
+            deeplink = ""
         } else {
 //            session.getFirebaseDeviceId { deviceId ->
 //                session.deviceId = deviceId

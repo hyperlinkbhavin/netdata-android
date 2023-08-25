@@ -288,7 +288,7 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 
-    /*fun updateNotificationPriorityData(isSound: Int? = null, soundName: String? = null, soundUrl: String? = null, isBanner: Int? = null, isVibration: Int? = null, conditionID: Int) {
+    fun updateNotificationPriorityData(isSound: Int? = null, soundName: String? = null, soundUrl: String? = null, isBanner: Int? = null, isVibration: Int? = null, conditionID: Int) {
         val values = ContentValues().apply {
             if(isSound != null) put(NP_IS_SOUND, isSound)
             if(soundName != null) put(NP_SOUND_NAME, soundName)
@@ -300,7 +300,7 @@ class DatabaseHelper(context: Context) :
         val db = writableDatabase
         db.update(TABLE_NOTIFICATION_PRIORITY, values, "id = $conditionID", null)
         db.close()
-    }*/
+    }
 
     fun getAllDataFromNotificationPriority(): ArrayList<NotificationPriorityList> {
         val dataList = ArrayList<NotificationPriorityList>()
