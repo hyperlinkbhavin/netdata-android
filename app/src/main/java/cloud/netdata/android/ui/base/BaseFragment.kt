@@ -202,18 +202,32 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
         }
     }
 
-    private fun showSnackBar(message: String, viewSet: View) {
+    fun showSnackBar(message: String, viewSet: View) {
         hideKeyBoard()
         if (viewSet != null) {
             val snackbar = Snackbar.make(viewSet, message, Snackbar.LENGTH_LONG)
-            snackbar.duration = 3000
-            snackbar.setActionTextColor(Color.WHITE)
-            snackbar.setAction("OK", View.OnClickListener { snackbar.dismiss() })
-            val snackView = snackbar.getView()
-            val textView = snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+            snackbar.duration = 4000
+            snackbar.setActionTextColor(Color.BLACK)
+//            snackbar.setAction("OK", { snackbar.dismiss() })
+            val snackView = snackbar.view
+            val params = snackView.layoutParams as FrameLayout.LayoutParams
+            params.gravity = Gravity.TOP
+            params.setMargins(0,70,0,0)
+            snackView.layoutParams = params
+            val textView =
+                snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
             textView.maxLines = 4
 
-            snackView.setBackgroundColor(requireActivity().getResources().getColor(R.color.colorPrimary))
+            snackView.background = ResourcesCompat.getDrawable(resources, R.color.colorYellowF9, null)
+            /*snackView.setBackgroundColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.colorPrimary,
+                    null
+                )
+            )*/
+            snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
             snackbar.show()
         }
     }

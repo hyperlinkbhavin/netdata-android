@@ -34,6 +34,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
     private var conversationTitle: String? = null
     private var isVibrate = false
     private var isBanner = false
+    private var isSound = false
 
     companion object {
         const val DEFAULT_CHANNEL_ID = "7777"
@@ -63,55 +64,111 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
         val intent = Intent(this, HomeActivity::class.java)
 
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-//        val defaultSoundUri: Uri = Uri.parse(Constant.notificationPriorityList[1].soundUrl!!)
+//        val defaultSoundUri: Any
         val notificationList = dbHelper.getAllDataFromFetchNotification(isSimpleData = true)
         val notificationPriorityData = dbHelper.getAllDataFromNotificationPriority()
         val alertData = notificationList.find {
             it.data!!.host[0].id == data["node_id"] && it.data!!.netdata!!.space!!.id == data["space_id"]
-                    && it.data!!.netdata!!.alert!!.name[0].equals(data["alert_name"], ignoreCase = true)
+                    && it.data!!.netdata!!.alert!!.name[0].equals(
+                data["alert_name"],
+                ignoreCase = true
+            )
         }
 
-        val notificationPriority = notificationPriorityData.find { it.priority.equals(alertData!!.priority, true) }
-        Log.e("PRIORITY", notificationPriority.toString())
-        isVibrate = notificationPriority!!.isVibration == 1
-        isBanner = notificationPriority.isBanner == 1
+        try {
+            val notificationPriority =
+                notificationPriorityData.find { it.priority.equals(alertData!!.priority, true) }
+            Log.e("PRIORITY", notificationPriority.toString())
 
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        intent.putExtra(Constant.PUSH_NOTIFICATION, data["alert_name"])
-        intent.putExtra(Constant.NOTIFICATION_ICON, "message")
+            isVibrate = notificationPriority!!.isVibration == 1
+            isBanner = notificationPriority.isBanner == 1
+            isSound = notificationPriority.isSound == 1
 
-        val notificationID = System.currentTimeMillis().toInt()
-        val pendingIntent = PendingIntent.getActivity(
-            this,
-            notificationID,
-            intent,
-            PendingIntent.FLAG_IMMUTABLE
-        )
+            /*defaultSoundUri = if(!notificationPriority.soundUrl.isNullOrEmpty()){
+            Uri.parse(notificationPriority.soundUrl)
+        } else {
+            RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        }*/
 
-        //@mipmap/ic_app_logo_round
-        var builder: Any
-        builder = NotificationCompat.Builder(applicationContext, channelId)
-            .setSmallIcon(R.mipmap.ic_launcher)
-            .setAutoCancel(true)
-            .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
-            .setOnlyAlertOnce(true)
-            .setSound(defaultSoundUri)
-            .setLights(Color.BLUE, 1, 1)
-            .setContentIntent(pendingIntent)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            intent.putExtra(Constant.PUSH_NOTIFICATION, data["alert_name"])
+            intent.putExtra(Constant.NOTIFICATION_ICON, "message")
+
+            val notificationID = System.currentTimeMillis().toInt()
+            val pendingIntent = PendingIntent.getActivity(
+                this,
+                notificationID,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            //@mipmap/ic_app_logo_round
+            var builder: Any
+            if (isVibrate && isSound) {
+                builder = NotificationCompat.Builder(applicationContext, channelId)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
+                    .setOnlyAlertOnce(true)
+                    .setSound(defaultSoundUri)
+                    .setLights(Color.BLUE, 1, 1)
+                    .setContentIntent(pendingIntent)
+            } else if (isVibrate) {
+                builder = NotificationCompat.Builder(applicationContext, channelId)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
+                    .setOnlyAlertOnce(true)
+                    .setLights(Color.BLUE, 1, 1)
+                    .setContentIntent(pendingIntent)
+            } else {
+                builder = NotificationCompat.Builder(applicationContext, channelId)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setAutoCancel(true)
+                    .setVibrate(longArrayOf(0, 0, 0, 0))
+                    .setOnlyAlertOnce(true)
+                    .setSound(defaultSoundUri)
+                    .setLights(Color.BLUE, 1, 1)
+                    .setContentIntent(pendingIntent)
+            }
+
+            /*var builder = NotificationCompat.Builder(applicationContext, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
+                .setOnlyAlertOnce(true)
+                .setSound(defaultSoundUri)
+                .setLights(Color.BLUE, 1, 1)
+                .setContentIntent(pendingIntent)*/
 
 
-        builder = builder.setContent(getRemoteView(title, message))
+            builder = builder.setContent(getRemoteView(title, message))
 
-        val notificationManger =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManger =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificationChannel =
-                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-            notificationManger.createNotificationChannel(notificationChannel)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notificationChannel =
+                    NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+                notificationManger.createNotificationChannel(notificationChannel)
+            }
+
+            val msg = if(data["space_name"]!!.isNotEmpty()){
+                data["space_name"]
+            } else {
+                "Space"
+            }
+            val newIntent = Intent(Constant.MY_NOTIFICATION_ACTION)
+
+            intent.putExtra(Constant.MY_NOTIFICATION_MESSAGE, msg)
+            sendBroadcast(newIntent)
+
+            if (isBanner) {
+                notificationManger.notify(notificationID, builder.build())
+            }
+        } catch (e: Exception) {
+
         }
-
-        notificationManger.notify(notificationID, builder.build())
     }
 
     private fun getRemoteView(title: String, message: String): RemoteViews {

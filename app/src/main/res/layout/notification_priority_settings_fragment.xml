@@ -118,6 +118,7 @@
                 style="@style/AppCompatButtonGreenWithCorner"
                 android:text="@string/btn_apply_custom_tune_from_your_os"
                 android:layout_marginTop="@dimen/dp_16"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toBottomOf="@id/switchHighPrioritySound"/>
 
@@ -240,6 +241,7 @@
                 style="@style/AppCompatButtonGreenWithCorner"
                 android:text="@string/btn_apply_custom_tune_from_your_os"
                 android:layout_marginTop="@dimen/dp_16"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                 app:layout_constraintTop_toBottomOf="@id/switchMediumPrioritySound"/>
 
@@ -362,6 +364,7 @@
                 style="@style/AppCompatButtonGreenWithCorner"
                 android:text="@string/btn_apply_custom_tune_from_your_os"
                 android:layout_marginTop="@dimen/dp_16"
+                android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                 app:layout_constraintTop_toBottomOf="@id/switchLowPrioritySound"/>
 

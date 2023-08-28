@@ -11,6 +11,11 @@ interface MainApi {
     @POST("api/v2/auth/account/magic-link/mobile-app")
     fun loginData(@Body apiRequest: APIRequest): Call<Any>
 
+
+    @Headers("Accept: application/json")
+    @GET("api/v2/auth/account/magic-link/mobile-app/login")
+    fun signinLink(@Query("token") dynamicLink: String): Call<DynamicLink>
+
     @Headers("Accept: application/json")
     @GET("ls/click")
     fun fetchData(@Query("upn") dynamicLink: String): Call<DynamicLink>

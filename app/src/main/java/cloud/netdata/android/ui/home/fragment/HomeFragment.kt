@@ -2,18 +2,19 @@ package cloud.netdata.android.ui.home.fragment
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.widget.FrameLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
@@ -22,6 +23,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.lifecycle.ViewModelProvider
@@ -42,6 +44,7 @@ import cloud.netdata.android.ui.auth.AuthActivity
 import cloud.netdata.android.ui.auth.IsolatedFullActivity
 import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.home.adapter.*
+import cloud.netdata.android.ui.notification.NotificationBroadcastReceiver
 import cloud.netdata.android.ui.notification.fragment.NotificationFragment
 import cloud.netdata.android.ui.settings.fragment.SettingsFragment
 import cloud.netdata.android.utils.AppUtils
@@ -53,6 +56,8 @@ import cloud.netdata.android.utils.localdb.DatabaseHelper
 import cloud.netdata.android.utils.visible
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonParser
@@ -76,6 +81,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         ViewModelProvider(this)[ApiViewModel::class.java]
     }
 
+    private var notificationReceiver: NotificationBroadcastReceiver? = null
     lateinit var flexLayoutManager: FlexboxLayoutManager
     lateinit var dbHelper: DatabaseHelper
 
@@ -106,7 +112,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             when (view.id) {
                 R.id.constraintTop -> {
                     readUnreadNotification(item, isPermanentRead = true)
-                    val url = "https://app.netdata.cloud//webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
+                    val url = "https://app.netdata.cloud/webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
                             "?space_id=${item.data!!.netdata!!.space!!.id}&room_id=${item.data!!.netdata!!.room[0].id}#token=${session.userSession.drop(7)}"
                     navigator.loadActivity(
                         IsolatedFullActivity::class.java,
@@ -245,6 +251,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK).toString()
 
+        Log.e("session", session.userSession)
 //        dbHelper.deleteFetchNotificationOlderThanWeek(ConvertDateTimeFormat.getDaysBeforeDate(17))
     }
 
@@ -262,8 +269,19 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 //            }
         }
 
+        notificationReceiver = NotificationBroadcastReceiver(this)
+        context?.registerReceiver(notificationReceiver, IntentFilter(Constant.MY_NOTIFICATION_ACTION))
+
         if (appPreferences.getBoolean(Constant.APP_PREF_FROM_NOTIFICATION)) {
-            showMessage("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}")
+            showSnackBar("You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}", binding.editTextSearchServices)
+            /*val msg = "You are viewing ${appPreferences.getString(Constant.APP_PREF_SPACE_NAME)}"
+            val snackBar = Snackbar.make(binding.constraintAllWarRooms, msg, Snackbar.LENGTH_LONG)
+            // Change background color
+            snackBar.view.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorYellowF9))
+
+            // Change text color
+            snackBar.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
+            snackBar.show()*/
             appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, false)
         }
 
@@ -271,6 +289,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.includeToolbar.textViewSpace.text =
                 appPreferences.getString(Constant.APP_PREF_SPACE_NAME)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        context?.unregisterReceiver(notificationReceiver)
     }
 
     private fun toolbar() = with(binding) {
@@ -1478,11 +1501,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     ).addBundle(bundleOf(Constant.BUNDLE_URL to Constant.dynamicResponseUrl))
                         .start()
                 } else {
-                    showMessage("Fail to view alert due to a bad URL")
-//                    session.getFirebaseDeviceId { deviceId ->
-//                        session.deviceId = deviceId
-                        callLinkDevice()
-//                    }
+                    if (deeplink.isNotEmpty()) {
+                        showMessage("Fail to view alert due to a bad URL")
+                    }
+                    callLinkDevice()
                 }
 
             },500)
@@ -1501,6 +1523,40 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             } else {
                 Log.e("else", "else")
             }*/
+        }
+    }
+
+    fun showNotificationSnackbar(msg: String) {
+        hideKeyBoard()
+        if (view != null) {
+            val message = "New Notification Generated in $msg!"
+            val snackbar = Snackbar.make(binding.editTextSearchServices, message, Snackbar.LENGTH_LONG)
+            snackbar.duration = 20000
+            snackbar.setActionTextColor(Color.BLACK)
+            snackbar.setAction("View") {
+                callFetchHomeNotification()
+                snackbar.dismiss()
+            }
+            val snackView = snackbar.view
+            val params = snackView.layoutParams as FrameLayout.LayoutParams
+            params.gravity = Gravity.TOP
+            params.setMargins(0,70,0,0)
+            snackView.layoutParams = params
+            val textView =
+                snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
+            textView.maxLines = 4
+
+            snackView.background = ResourcesCompat.getDrawable(resources, R.color.colorYellowF9, null)
+            /*snackView.setBackgroundColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.colorPrimary,
+                    null
+                )
+            )*/
+            snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+            snackbar.show()
         }
     }
 

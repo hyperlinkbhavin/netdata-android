@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import cloud.netdata.android.data.pojo.request.APIRequest
 import cloud.netdata.android.databinding.AuthFragmentWelcomeBinding
 import cloud.netdata.android.di.component.FragmentComponent
-import cloud.netdata.android.exception.CookiesHandlerError
 import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.home.fragment.ChooseSpaceFragment
 import cloud.netdata.android.utils.Constant
@@ -38,7 +37,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeDynamicLink()
+        observeSigninLink()
         observeLinkDevice()
     }
 
@@ -53,7 +52,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
         val deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK)
 
         if(!deeplink.isNullOrEmpty()){
-            callDynamicLink(deeplink)
+            callSigninLink(deeplink)
         } /*else {
             val table1DataList = dbHelper.getAllDataFromSpace()
             for (data in table1DataList) {
@@ -98,16 +97,16 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
         }
     }
 
-    private fun callDynamicLink(link: String) {
+    private fun callSigninLink(link: String) {
         showLoader()
-        dynamicViewModel.callDynamicLink(link)
+        apiViewModel.callSignInLink(link)
     }
 
-    private fun observeDynamicLink() {
-        dynamicViewModel.liveData.observe(this) {
+    private fun observeSigninLink() {
+        apiViewModel.signinLiveData.observe(this) {
             Handler(Looper.getMainLooper()).postDelayed({
                 hideLoader()
-                if(Constant.dynamicResponseUrl.contains("app.netdata.cloud/api/v2/auth/account/magic-link/mobile-app/login")){
+//                if(Constant.dynamicResponseUrl.contains("app.netdata.cloud/api/v2/auth/account/magic-link/mobile-app/login")){
                     if(it.responseCode == 200 && it.data!!.token!!.isNotEmpty()){
                         session.userSession = "bearer ${it.data.token!!}"
                         Constant.TOKEN = session.userSession
@@ -118,9 +117,9 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
                     } else {
                         showMessage("Link expire! Try again")
                     }
-                } else {
+                /*} else {
                     showMessage("Please login to view alert")
-                }
+                }*/
 
             },1000)
 

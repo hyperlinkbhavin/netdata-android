@@ -30,6 +30,8 @@ object Constant {
     const val PUSH_NOTIFICATION = "PUSH_NOTIFICATION"
     const val NOTIFICATION_ICON = "NOTIFICATION_ICON"
     const val CONVERSATION_TITLE = "CONVERSATION_TITLE"
+    const val MY_NOTIFICATION_ACTION = "MY_NOTIFICATION_ACTION"
+    const val MY_NOTIFICATION_MESSAGE = "MY_NOTIFICATION_MESSAGE"
 
     val sortByTimeList = ArrayList<WarRoomsList>()
     val sortByNotificationPriorityList = ArrayList<WarRoomsList>()

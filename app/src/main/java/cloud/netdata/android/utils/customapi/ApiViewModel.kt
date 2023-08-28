@@ -5,10 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cloud.netdata.android.data.pojo.MyResponseBody
 import cloud.netdata.android.data.pojo.request.APIRequest
-import cloud.netdata.android.data.pojo.response.HomeNotificationList
-import cloud.netdata.android.data.pojo.response.RoomList
-import cloud.netdata.android.data.pojo.response.SilenceRule
-import cloud.netdata.android.data.pojo.response.SpaceList
+import cloud.netdata.android.data.pojo.response.*
 import cloud.netdata.android.utils.Constant
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,6 +20,7 @@ class ApiViewModel: ViewModel() {
     }
 
     val magicLinkLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val signinLiveData = MutableLiveData<MyResponseBody<DynamicLink>>()
     val linkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
     val unlinkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
     val spaceListLiveData = MutableLiveData<MyResponseBody<ArrayList<SpaceList>>>()
@@ -52,6 +50,33 @@ class ApiViewModel: ViewModel() {
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 Log.e("Fail Magic", t.toString())
                 magicLinkLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+            }
+
+        })
+    }
+
+    fun callSignInLink(dynamicLink: String) {
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = apiService.signinLink(dynamicLink)
+        callApi.enqueue(object : Callback<DynamicLink> {
+
+            override fun onResponse(call: Call<DynamicLink>, response: Response<DynamicLink>) {
+                signinLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+//                liveData.postValue(response.body())
+            }
+
+            override fun onFailure(call: Call<DynamicLink>, t: Throwable) {
+                signinLiveData.postValue(MyResponseBody(0, "Test", DynamicLink(),isError = true, throwable = t))
+
+                /*if(t is CookiesHandlerError){
+                    *//*val si = t.map["s_i"]
+                    val sv = t.map["s_v_$si"]
+                    myEdit.putString(Constant.APP_PREF_COOKIE_SI, t.map["s_i"]!!)
+                    myEdit.putString(Constant.APP_PREF_COOKIE_SV, t.map["s_v_${t.map["s_i"]}"]!!)*//*
+                    liveData.postValue(t)
+                }*/
+                Log.e("Fail Dynamic", t.localizedMessage.toString())
             }
 
         })

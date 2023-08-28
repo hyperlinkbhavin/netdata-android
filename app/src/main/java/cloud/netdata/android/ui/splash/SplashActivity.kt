@@ -67,11 +67,15 @@ class SplashActivity : BaseActivity() {
         var url = ""
 
         if (data != null) {
-//            val token = data.toString().substring(data.toString().lastIndexOf("upn=")+4)
             Log.e("deeplink", data.toString())
-            url = data.toString().split("=")[1]
-//            Log.e("deeplink", data.toString().substring(data.toString().lastIndexOf("upn=")+4))
-//            callDynamicLink((data.toString().split("=")[1]))
+            if (data.toString().contains("upn=")) {
+                url = data.toString().split("=")[1]
+            } else {
+                val tokenPattern = "token=([^&]*)".toRegex()
+                val matchResult = tokenPattern.find(data.toString())
+                url = matchResult?.groupValues?.getOrNull(1)!!
+                Log.e("token", url)
+            }
         }
 
         if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {

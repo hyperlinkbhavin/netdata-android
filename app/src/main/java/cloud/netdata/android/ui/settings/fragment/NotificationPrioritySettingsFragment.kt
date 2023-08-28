@@ -94,18 +94,18 @@ class NotificationPrioritySettingsFragment :
             dbHelper.insertNotificationPriorityData(
                 NotificationPriorityList(
                     1,
-                    Priority.HIGH_PRIORITY.name,
-                    0,
+                    Priority.HIGH_PRIORITY.shortName,
+                    1,
                     "",
                     "",
-                    0,
-                    0
+                    1,
+                    1
                 )
             )
             dbHelper.insertNotificationPriorityData(
                 NotificationPriorityList(
                     2,
-                    Priority.MEDIUM_PRIORITY.name,
+                    Priority.MEDIUM_PRIORITY.shortName,
                     0,
                     "",
                     "",
@@ -116,7 +116,7 @@ class NotificationPrioritySettingsFragment :
             dbHelper.insertNotificationPriorityData(
                 NotificationPriorityList(
                     3,
-                    Priority.LOW_PRIORITY.name,
+                    Priority.LOW_PRIORITY.shortName,
                     0,
                     "",
                     "",
@@ -170,7 +170,7 @@ class NotificationPrioritySettingsFragment :
         buttonView2: AppCompatButton,
         textView: AppCompatTextView,
     ) {
-        if (item.isSound == 1) {
+        /*if (item.isSound == 1) {
             switchSound.isChecked = true
             buttonView.isClickable = true
             buttonView.backgroundTintList = ColorStateList.valueOf(
@@ -186,8 +186,9 @@ class NotificationPrioritySettingsFragment :
             buttonView.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.colorGreyCF)
             )
-        }
+        }*/
 
+        switchSound.isChecked = item.isSound == 1
         switchBanner.isChecked = item.isBanner == 1
         switchVibration.isChecked = item.isVibration == 1
     }
@@ -387,7 +388,22 @@ class NotificationPrioritySettingsFragment :
         buttonView2: AppCompatButton,
         textView: AppCompatTextView
     ) {
-        if (isChecked) {
+        if(isChecked){
+            dbHelper.updateNotificationPriorityData(
+                isSound = 1,
+                soundName = "",
+                soundUrl = "",
+                conditionID = conditionId
+            )
+        } else {
+            dbHelper.updateNotificationPriorityData(
+                isSound = 0,
+                soundName = "",
+                soundUrl = "",
+                conditionID = conditionId
+            )
+        }
+        /*if (isChecked) {
             buttonView.isClickable = true
             buttonView.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(requireContext(), R.color.colorPrimary)
@@ -406,7 +422,7 @@ class NotificationPrioritySettingsFragment :
             )
             buttonView2.gone()
             textView.gone()
-        }
+        }*/
     }
 
     /*private fun showPermissionDeniedDialog() {
