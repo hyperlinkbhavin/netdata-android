@@ -33,6 +33,7 @@ import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
 import cloud.netdata.android.utils.visible
 import com.google.gson.Gson
+import java.util.Locale.filter
 
 class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
@@ -49,9 +50,14 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         ChooseSpaceAdapter(){ view, position, item ->
             when(view.id){
                 R.id.constraintTop -> {
-                    appPreferences.putString(Constant.APP_PREF_SPACE_ID, item.id!!)
-                    appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.name!!)
-                    navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
+                    if (item.plan.equals("EarlyBird", true) || item.plan.equals("Community", true)) {
+                    showSnackBar("This Space is not on a paid plan and cannot receive notifications on the Mobile App. Please upgrade.", binding.textViewLabelChooseSpace)
+                    }
+                    else {
+                        appPreferences.putString(Constant.APP_PREF_SPACE_ID, item.id!!)
+                        appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.name!!)
+                        navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
+                    }
                 }
             }
         }
@@ -173,20 +179,28 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeGetSpaceList(){
-        apiViewModel.spaceListLiveData.observe(this){
+        apiViewModel.spaceListLiveData.observe(this){ list ->
             hideLoader()
-            if(it.responseCode == 200){
-                if(it.data!!.isNotEmpty()){
+            if(list.responseCode == 200){
+                if(list.data!!.isNotEmpty()){
                     /*it.data.forEach {item ->
                         dbHelper.insertSpaceData(item)
                     }*/
                     spaceList.clear()
                     chooseSpaceAdapter.list.clear()
-                    spaceList.addAll(it.data)
+                    val tempSpaceList = list.data.sortedWith(
+                        compareBy(
+                            // Custom order based on plan type
+                            { it.plan in listOf("Community", "EarlyBird") }, // Plans other than "community" and "free" come first
+                            { it.plan != "EarlyBird" }, // "community" plans come before "free" plans
+                            { it.plan } // Sort alphabetically within the same plan type
+                        )
+                    )
+                    spaceList.addAll(tempSpaceList)
                     if(dbHelper.getMaintenanceMode().isEmpty()){
                         dbHelper.insertMaintenanceMode(Gson().toJson(spaceList))
                     }
-                    chooseSpaceAdapter.list.addAll(it.data)
+                    chooseSpaceAdapter.list.addAll(tempSpaceList)
                     chooseSpaceAdapter.notifyDataSetChanged()
                     callFetchHomeNotification()
                 }

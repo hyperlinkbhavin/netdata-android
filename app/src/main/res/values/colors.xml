@@ -7,8 +7,10 @@
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorWhiteF2">#F2F2F2</color>
+    <color name="colorWhiteD6">#F2F2F2</color>
     <color name="colorBlack35">#35414A</color>
     <color name="colorBlack1C">#1C1E22</color>
+    <color name="colorBlack3F">#3F4249</color>
     <color name="colorBlack2B">#2B3136</color>
     <color name="colorYellowF9">#F9A825</color>
     <color name="colorYellowFF">#FFC300</color>

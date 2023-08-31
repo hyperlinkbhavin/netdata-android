@@ -86,6 +86,7 @@ class ChangeThemeNightFragment: BaseFragment<ChangeThemeNightFragmentBinding>() 
 
         buttonDone.setOnClickListener {
             appPreferences.putString(Constant.APP_PREF_DAY_NIGHT_MODE, ThemeMode.Night.name)
+            Constant.isDarkMode = true
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             requireActivity().recreate()
             /*if(radioButtonNightTheme.isChecked){

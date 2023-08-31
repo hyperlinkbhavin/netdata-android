@@ -179,6 +179,10 @@
         <item name="android:backgroundTint">@color/colorWhite</item>
     </style>
 
+    <style name="ChangeBackgroundTintWhiteD6ToBlack3F" parent="">
+        <item name="android:backgroundTint">@color/colorWhiteD6</item>
+    </style>
+
     <style name="ChangeBackgroundTintBlack35ToGrey8F" parent="">
         <item name="android:backgroundTint">@color/colorBlack35</item>
     </style>

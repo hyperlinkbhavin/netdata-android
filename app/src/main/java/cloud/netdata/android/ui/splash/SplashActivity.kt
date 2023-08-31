@@ -1,5 +1,7 @@
 package cloud.netdata.android.ui.splash
 
+import android.app.UiModeManager
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -80,9 +82,14 @@ class SplashActivity : BaseActivity() {
 
         if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            Constant.isDarkMode = true
         } else if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Day.name) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            Constant.isDarkMode = false
         } else {
+            val uiModeManager =
+                getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+            Constant.isDarkMode = uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
 

@@ -7,6 +7,7 @@ object Constant {
     var COOKIE_SV = ""
     var TOKEN = ""
     var dynamicResponseUrl = ""
+    var isDarkMode = false
 
     var isSortBy = false
 //    var notificationPriorityList = ArrayList<NotificationPriorityList>()

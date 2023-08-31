@@ -479,7 +479,16 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         arrayList.removeAll(dataToRemove.toSet())
 
-        spaceList.addAll(arrayList)
+        val tempSpaceList = arrayList.sortedWith(
+            compareBy(
+                // Custom order based on plan type
+                { it.plan in listOf("Community", "EarlyBird") }, // Plans other than "community" and "free" come first
+                { it.plan != "EarlyBird" }, // "community" plans come before "free" plans
+                { it.plan } // Sort alphabetically within the same plan type
+            )
+        )
+
+        spaceList.addAll(tempSpaceList)
         dbHelper.updateMaintenanceMode(Gson().toJson(spaceList))
 
         val currentDate = Calendar.getInstance().time

@@ -65,17 +65,18 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
 
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 //        val defaultSoundUri: Any
-        val notificationList = dbHelper.getAllDataFromFetchNotification(isSimpleData = true)
-        val notificationPriorityData = dbHelper.getAllDataFromNotificationPriority()
-        val alertData = notificationList.find {
-            it.data!!.host[0].id == data["node_id"] && it.data!!.netdata!!.space!!.id == data["space_id"]
-                    && it.data!!.netdata!!.alert!!.name[0].equals(
-                data["alert_name"],
-                ignoreCase = true
-            )
-        }
 
         try {
+            val notificationList = dbHelper.getAllDataFromFetchNotification(isSimpleData = true)
+            val notificationPriorityData = dbHelper.getAllDataFromNotificationPriority()
+            val alertData = notificationList.find {
+                it.data!!.host[0].id == data["node_id"] && it.data!!.netdata!!.space!!.id == data["space_id"]
+                        && it.data!!.netdata!!.alert!!.name[0].equals(
+                    data["alert_name"],
+                    ignoreCase = true
+                )
+            }
+
             val notificationPriority =
                 notificationPriorityData.find { it.priority.equals(alertData!!.priority, true) }
             Log.e("PRIORITY", notificationPriority.toString())
