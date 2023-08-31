@@ -41,6 +41,7 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeLinkDevice()
+        observeGetUserData()
     }
 
     override fun bindData() {
@@ -107,8 +108,7 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
             hideLoader()
             if(!it.isError){
                 if(it.responseCode == 200){
-                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                    callGetUserData()
                 } else {
                     showMessage("Invalid QR code")
                     startScan()
@@ -116,6 +116,26 @@ class QRCodeLoginFragment : BaseFragment<AuthFragmentQrCodeLoginBinding>() {
             } else {
                 showMessage("Something wrong! Try again")
                 startScan()
+            }
+        }
+    }
+
+    private fun callGetUserData(){
+        showLoader()
+        apiViewModel.callGetUserData()
+    }
+
+    private fun observeGetUserData(){
+        apiViewModel.getUserDataLiveData.observe(this){
+            hideLoader()
+            if(!it.isError){
+                if(it.responseCode == 200){
+                    session.user = it.data
+                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                } else {
+                    showMessage("Something wrong!")
+                }
             }
         }
     }

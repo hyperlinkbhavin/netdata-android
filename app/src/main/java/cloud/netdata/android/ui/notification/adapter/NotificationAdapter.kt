@@ -31,11 +31,14 @@ class NotificationAdapter(val callBack: (View, Int, HomeNotificationList) -> Uni
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(list[position])
-        with(holder){
+        /*with(holder){
             binderHelper.setOpenOnlyOne(true)
             binderHelper.bind(binding.swipeRevealLayout, position.toString())
             binding.swipeRevealLayout.close(true)
-        }
+        }*/
+        /**
+         * For enable swipe layout remove comment from adapter, fragment and xml
+         */
     }
 
     override fun getItemCount(): Int {
@@ -53,9 +56,9 @@ class NotificationAdapter(val callBack: (View, Int, HomeNotificationList) -> Uni
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
 
-                constraintNotificationRight.setOnClickListener {
+                /*constraintNotificationRight.setOnClickListener {
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
-                }
+                }*/
             }
         }
 

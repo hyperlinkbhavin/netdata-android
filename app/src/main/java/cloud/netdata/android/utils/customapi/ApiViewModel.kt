@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cloud.netdata.android.data.pojo.MyResponseBody
+import cloud.netdata.android.data.pojo.User
 import cloud.netdata.android.data.pojo.request.APIRequest
 import cloud.netdata.android.data.pojo.response.*
 import cloud.netdata.android.utils.Constant
@@ -23,6 +24,7 @@ class ApiViewModel: ViewModel() {
     val signinLiveData = MutableLiveData<MyResponseBody<DynamicLink>>()
     val linkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
     val unlinkDeviceLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val getUserDataLiveData = MutableLiveData<MyResponseBody<User>>()
     val spaceListLiveData = MutableLiveData<MyResponseBody<ArrayList<SpaceList>>>()
     val fetchHomeNotificationLiveData = MutableLiveData<MyResponseBody<ArrayList<HomeNotificationList>>>()
     val roomListLiveData = MutableLiveData<MyResponseBody<ArrayList<RoomList>>>()
@@ -129,6 +131,32 @@ class ApiViewModel: ViewModel() {
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 unlinkDeviceLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
+                Log.e("Fail unlink", call.toString())
+            }
+
+        })
+    }
+
+    fun callGetUserData()
+    {
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"*/
+
+        val token = Constant.TOKEN
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.getUserData(token)
+        callApi.enqueue(object: Callback<User>{
+
+            override fun onResponse(call: Call<User>, response: Response<User>) {
+                getUserDataLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<User>, t: Throwable) {
+                getUserDataLiveData.postValue(MyResponseBody(0, "Test", User(),isError = true, throwable = t))
                 Log.e("Fail unlink", call.toString())
             }
 

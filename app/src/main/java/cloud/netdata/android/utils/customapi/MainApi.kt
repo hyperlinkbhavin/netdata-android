@@ -1,5 +1,6 @@
 package cloud.netdata.android.utils.customapi
 
+import cloud.netdata.android.data.pojo.User
 import cloud.netdata.android.data.pojo.request.APIRequest
 import cloud.netdata.android.data.pojo.response.*
 import retrofit2.Call
@@ -10,7 +11,6 @@ interface MainApi {
 //    @POST("api/v2/auth/account/magic-link")
     @POST("api/v2/auth/account/magic-link/mobile-app")
     fun loginData(@Body apiRequest: APIRequest): Call<Any>
-
 
     @Headers("Accept: application/json")
     @GET("api/v2/auth/account/magic-link/mobile-app/login")
@@ -25,6 +25,9 @@ interface MainApi {
 
     @DELETE("api/v1/auth/account/mobile-app-token")
     fun unlinkDevice(@Header("Authorization") token: String): Call<Any>
+
+    @GET("api/v2/accounts/me")
+    fun getUserData(@Header("Authorization") token: String): Call<User>
 
     @GET("api/v3/spaces")
     fun getSpaceList(@Header("Authorization") token: String): Call<ArrayList<SpaceList>>

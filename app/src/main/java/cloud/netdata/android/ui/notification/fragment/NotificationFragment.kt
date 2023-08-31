@@ -2,6 +2,7 @@ package cloud.netdata.android.ui.notification.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -47,9 +48,9 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                     navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
                 }
 
-                R.id.constraintNotificationRight -> {
+                /*R.id.constraintNotificationRight -> {
                     removeData(position)
-                }
+                }*/
             }
         }
     }
@@ -120,7 +121,7 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                     R.id.constraintMain -> {
                         spacesItemPosition = position
                         binding.textViewLabelAllWarRooms.text = item.name
-                        countSpaceList()
+                        countSpaceList(isLocalChange = true)
                         dialog.dismiss()
                     }
                 }
@@ -222,8 +223,8 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun countSpaceList() {
-        if(appPreferences.getString(Constant.APP_PREF_SPACE_ID).isNotEmpty()){
+    private fun countSpaceList(isLocalChange: Boolean = false) {
+        /*if(appPreferences.getString(Constant.APP_PREF_SPACE_ID).isNotEmpty() && !isLocalChange){
             for((index, item) in spaceList.withIndex()){
                 if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
                     spacesItemPosition = index
@@ -231,7 +232,7 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
                     break
                 }
             }
-        }
+        }*/
         val matchingDataList = if (spacesItemPosition != 0) {
             notificationList.filter { it.data!!.netdata!!.space!!.id == spaceList[spacesItemPosition].id && !it.isNotificationRead } as ArrayList<HomeNotificationList>
         } else {

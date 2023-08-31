@@ -39,6 +39,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
         super.onCreate(savedInstanceState)
         observeSigninLink()
         observeLinkDevice()
+        observeGetUserData()
     }
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): AuthFragmentWelcomeBinding {
@@ -150,13 +151,32 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
             hideLoader()
             if(!it.isError){
                 if(it.responseCode == 200){
-                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                    callGetUserData()
                 } else {
                     showMessage("Session expire! Try again")
                 }
             } else {
                 Log.e("failure link", "fail")
+            }
+        }
+    }
+
+    private fun callGetUserData(){
+        showLoader()
+        apiViewModel.callGetUserData()
+    }
+
+    private fun observeGetUserData(){
+        apiViewModel.getUserDataLiveData.observe(this){
+            hideLoader()
+            if(!it.isError){
+                if(it.responseCode == 200){
+                    session.user = it.data
+                    appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
+                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                } else {
+                    showMessage("Something wrong!")
+                }
             }
         }
     }

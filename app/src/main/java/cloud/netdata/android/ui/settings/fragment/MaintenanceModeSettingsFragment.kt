@@ -396,7 +396,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             apiViewModel.callSilenceSpace(
                 item.id!!, APIRequest(
                     name = "Netdata-MobileApp-${item.id}",
-                    accountId = session.userId,
+                    accountId = session.user!!.id,
                     integrationIds = arrayListOf("607bfd3c-02c1-4da2-b67a-0d01b518ce5d"),
                     startsAt = DateTimeFormatter.currentUTCTime,
                     lastsUntil = ConvertDateTimeFormat.convertLocalToUtcDate(
@@ -410,7 +410,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             apiViewModel.callSilenceSpace(
                 item.id!!, APIRequest(
                     name = "Netdata-MobileApp-${item.id}",
-                    accountId = session.userId,
+                    accountId = session.user!!.id,
                     integrationIds = arrayListOf("607bfd3c-02c1-4da2-b67a-0d01b518ce5d"),
                     startsAt = DateTimeFormatter.currentUTCTime
                 )

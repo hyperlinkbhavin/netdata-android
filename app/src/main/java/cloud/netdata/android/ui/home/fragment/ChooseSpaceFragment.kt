@@ -236,7 +236,6 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
             for (item in alertDataList) {
                 lastId++
                 dbHelper.insertFetchNotificationData(lastId, item)
-                session.userId = item.data!!.user!!.id!!
             }
         }
         notificationList.addAll(dbHelper.getAllDataFromFetchNotification(isSimpleData = true))

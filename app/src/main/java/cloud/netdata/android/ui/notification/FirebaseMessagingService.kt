@@ -68,7 +68,9 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
 
         try {
             val notificationList = dbHelper.getAllDataFromFetchNotification(isSimpleData = true)
+            Log.e("notificationList", notificationList.toString())
             val notificationPriorityData = dbHelper.getAllDataFromNotificationPriority()
+            Log.e("prioData", notificationPriorityData.toString())
             val alertData = notificationList.find {
                 it.data!!.host[0].id == data["node_id"] && it.data!!.netdata!!.space!!.id == data["space_id"]
                         && it.data!!.netdata!!.alert!!.name[0].equals(
@@ -76,6 +78,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
                     ignoreCase = true
                 )
             }
+            Log.e("alertData", alertData.toString())
 
             val notificationPriority =
                 notificationPriorityData.find { it.priority.equals(alertData!!.priority, true) }
@@ -106,6 +109,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
             //@mipmap/ic_app_logo_round
             var builder: Any
             if (isVibrate && isSound) {
+                Log.e("if 1","if 1")
                 builder = NotificationCompat.Builder(applicationContext, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setAutoCancel(true)
@@ -115,6 +119,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
                     .setLights(Color.BLUE, 1, 1)
                     .setContentIntent(pendingIntent)
             } else if (isVibrate) {
+                Log.e("if 2","if 2")
                 builder = NotificationCompat.Builder(applicationContext, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setAutoCancel(true)
@@ -123,6 +128,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
                     .setLights(Color.BLUE, 1, 1)
                     .setContentIntent(pendingIntent)
             } else {
+                Log.e("else","else")
                 builder = NotificationCompat.Builder(applicationContext, channelId)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setAutoCancel(true)
@@ -154,17 +160,15 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
                 notificationManger.createNotificationChannel(notificationChannel)
             }
 
-            val msg = if(data["space_name"]!!.isNotEmpty()){
-                data["space_name"]
-            } else {
+            Constant.MY_NOTIFICATION_MESSAGE = data["space_name"]!!.ifEmpty {
                 "Space"
             }
             val newIntent = Intent(Constant.MY_NOTIFICATION_ACTION)
 
-            intent.putExtra(Constant.MY_NOTIFICATION_MESSAGE, msg)
             sendBroadcast(newIntent)
 
             if (isBanner) {
+                Log.e("fire", "fire notification")
                 notificationManger.notify(notificationID, builder.build())
             }
         } catch (e: Exception) {
@@ -190,7 +194,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
             remoteMessage.data
         )
 
-        Log.e("Message Title", remoteMessage.notification!!.title.toString())
+        /*Log.e("Message Title", remoteMessage.notification!!.title.toString())
         Log.e("Message Body", remoteMessage.notification!!.body.toString())
         Log.e("Message Id", remoteMessage.messageId.toString())
         Log.e("Message Type", remoteMessage.messageType.toString())
@@ -199,7 +203,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
         Log.e("Message From", remoteMessage.from.toString())
         Log.e("Message Notification", remoteMessage.notification.toString())
         Log.e("Message Priority", remoteMessage.priority.toString())
-        Log.e("Message Original Priority", remoteMessage.originalPriority.toString())
+        Log.e("Message Original Priority", remoteMessage.originalPriority.toString())*/
 
     }
 

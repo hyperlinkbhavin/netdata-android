@@ -251,7 +251,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK).toString()
 
-        Log.e("session", session.userSession)
+        if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).isEmpty()){
+            appPreferences.putString(Constant.APP_PREF_SORTING_BY_TIME, "-1")
+        }
+        if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).isEmpty()){
+            appPreferences.putString(Constant.APP_PREF_SORTING_BY_PRIORITY, "-1")
+        }
+        if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).isEmpty()){
+            appPreferences.putString(Constant.APP_PREF_SORTING_BY_CRITICALITY, "-1")
+        }
 //        dbHelper.deleteFetchNotificationOlderThanWeek(ConvertDateTimeFormat.getDaysBeforeDate(17))
     }
 
@@ -412,7 +420,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private fun getNotificationCount() = with(binding) {
         val count = dbHelper.getAllDataFromFetchNotification(isSimpleData = true).filter {
-            it.data!!.netdata!!.space!!.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID) && !it.isNotificationRead
+            !it.isNotificationRead
+//            it.data!!.netdata!!.space!!.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID) && !it.isNotificationRead
         }.size
         if (count != 0) {
             includeToolbar.textViewNotificationCount.visible()
@@ -992,9 +1001,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             SortByAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        sortByTimeItemPosition = getItemPosition(item)
+                        /*sortByTimeItemPosition = getItemPosition(item)
                         sortByNotificationPriorityItemPosition = -1
-                        sortByCriticalityItemPosition = -1
+                        sortByCriticalityItemPosition = -1*/
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_TIME, getItemPosition(item).toString())
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_PRIORITY, "-1")
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_CRITICALITY, "-1")
                         sortByNotificationPriorityAdapter.selectedItemPosition = -1
                         sortByCriticalityAdapter.selectedItemPosition = -1
 
@@ -1009,9 +1021,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             SortByAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        sortByNotificationPriorityItemPosition = getItemPosition(item)
+                        /*sortByNotificationPriorityItemPosition = getItemPosition(item)
                         sortByTimeItemPosition = -1
-                        sortByCriticalityItemPosition = -1
+                        sortByCriticalityItemPosition = -1*/
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_TIME, "-1")
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_PRIORITY, getItemPosition(item).toString())
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_CRITICALITY, "-1")
                         sortByTimeAdapter.selectedItemPosition = -1
                         sortByCriticalityAdapter.selectedItemPosition = -1
 
@@ -1025,9 +1040,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             SortByAdapter() { view, position, item ->
                 when (view.id) {
                     R.id.constraintMain -> {
-                        sortByCriticalityItemPosition = getItemPosition(item)
+                        /*sortByCriticalityItemPosition = getItemPosition(item)
                         sortByTimeItemPosition = -1
-                        sortByNotificationPriorityItemPosition = -1
+                        sortByNotificationPriorityItemPosition = -1*/
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_TIME, "-1")
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_PRIORITY, "-1")
+                        appPreferences.putString(Constant.APP_PREF_SORTING_BY_CRITICALITY, getItemPosition(item).toString())
                         sortByTimeAdapter.selectedItemPosition = -1
                         sortByNotificationPriorityAdapter.selectedItemPosition = -1
 
@@ -1062,17 +1080,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         sortByCriticalityAdapter.list.add(WarRoomsList("Critical to Clear"))
         sortByCriticalityAdapter.list.add(WarRoomsList("Clear to Critical"))*/
 
-        if (sortByTimeItemPosition != -1) {
-            sortByTimeAdapter.selectedItemPosition = sortByTimeItemPosition
+        if (appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt() != -1) {
+            sortByTimeAdapter.selectedItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt()
         }
 
-        if (sortByNotificationPriorityItemPosition != -1) {
+        if (appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt() != -1) {
             sortByNotificationPriorityAdapter.selectedItemPosition =
-                sortByNotificationPriorityItemPosition
+                appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt()
         }
 
-        if (sortByCriticalityItemPosition != -1) {
-            sortByCriticalityAdapter.selectedItemPosition = sortByCriticalityItemPosition
+        if (appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt() != -1) {
+            sortByCriticalityAdapter.selectedItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt()
         }
 
         sortByTimeAdapter.notifyDataSetChanged()
@@ -1279,7 +1297,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 val tempPriorityList: ArrayList<String> = getFilterTempList(filterPriorityList)
                 val tempTypeList: ArrayList<String> = getFilterTempList(filterTypeCompList)
 
-             if(sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1){
+             if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt() != -1 ||
+                 appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt() != -1 ||
+                 appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt() != -1){
                  homeList.addAll(
                      dbHelper.getAllDataFromFetchNotification(
                          spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
@@ -1291,9 +1311,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                          nodesFilters = tempNodeList,
                          classFilters = tempClassList,
                          typeFilters = tempTypeList,
-                         sortByTimeItemPosition = sortByTimeItemPosition,
-                         sortByNotificationPriorityItemPosition = sortByNotificationPriorityItemPosition,
-                         sortByCriticalityItemPosition = sortByCriticalityItemPosition
+                         sortByTimeItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt(),
+                         sortByNotificationPriorityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt(),
+                         sortByCriticalityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt()
                      )
                  )
              } else {
@@ -1311,15 +1331,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                  )
              }
 
-        } else if (sortByTimeItemPosition != -1 || sortByNotificationPriorityItemPosition != -1 || sortByCriticalityItemPosition != -1) {
+        } else if (appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt() != -1 ||
+             appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt() != -1 ||
+             appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt() != -1) {
             homeList.addAll(
                 dbHelper.getAllDataFromFetchNotification(
                     spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
                     roomID = roomList[roomsItemPosition].id!!,
                     isSortBy = true,
-                    sortByTimeItemPosition = sortByTimeItemPosition,
-                    sortByNotificationPriorityItemPosition = sortByNotificationPriorityItemPosition,
-                    sortByCriticalityItemPosition = sortByCriticalityItemPosition
+                    sortByTimeItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt(),
+                    sortByNotificationPriorityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt(),
+                    sortByCriticalityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt()
                 )
             )
 //            homeAdapter.list.addAll(homeList)
@@ -1359,10 +1381,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         filterCount()
         drawerFilter()
         getNotificationCount()
-
-        if(homeList.isNotEmpty()){
-            session.userId = homeList[0].data!!.user!!.id!!
-        }
     }
 
     private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {
@@ -1526,10 +1544,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
-    fun showNotificationSnackbar(msg: String) {
+    fun showNotificationSnackbar() {
         hideKeyBoard()
         if (view != null) {
-            val message = "New Notification Generated in $msg!"
+            val message = "New Notification Generated in ${Constant.MY_NOTIFICATION_MESSAGE}!"
             val snackbar = Snackbar.make(binding.editTextSearchServices, message, Snackbar.LENGTH_LONG)
             snackbar.duration = 20000
             snackbar.setActionTextColor(Color.BLACK)
@@ -1557,6 +1575,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             )*/
             snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
             snackbar.show()
+        }
+        else {
+            Log.e("view", "view null")
         }
     }
 
