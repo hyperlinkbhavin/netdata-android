@@ -31,5 +31,6 @@ interface FragmentComponent {
     fun inject(homeDetailsFragment: HomeDetailsFragment)
     fun inject(changeThemeDayFragment: ChangeThemeDayFragment)
     fun inject(changeThemeNightFragment: ChangeThemeNightFragment)
+    fun inject(deleteNotificationFragment: DeleteNotificationFragment)
 
 }

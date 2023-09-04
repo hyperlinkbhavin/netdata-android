@@ -1,9 +1,7 @@
 package cloud.netdata.android.ui.home.fragment
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.IntentFilter
-import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -15,13 +13,11 @@ import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
@@ -58,17 +54,12 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonParser
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
-import okio.IOException
-import java.io.File
-import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -156,6 +147,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     tempCount()
+                    filterCount()
                 }
             }
         }
@@ -166,6 +158,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     tempCount()
+                    filterCount()
                 }
             }
         }
@@ -176,6 +169,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     tempCount()
+                    filterCount()
                 }
             }
         }
@@ -187,6 +181,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 R.id.checkBoxFilter -> {
                     updateTypeOrClass(pos, true)
                     tempCount()
+                    filterCount()
                 }
             }
         }
@@ -198,6 +193,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 R.id.checkBoxFilter -> {
                     updateTypeOrClass(pos, false)
                     tempCount()
+                    filterCount()
                 }
             }
         }
@@ -224,6 +220,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         super.onCreate(savedInstanceState)
         observeLinkDevice()
         observeFetchHomeNotification()
+        observeGetHomeNotificationOnNotify()
         observeRoomList()
         observeDynamicLink()
     }
@@ -1153,25 +1150,46 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun filterCount(){
+        var tempNodeList = ArrayList<String>()
+        if (filterNodesList.isNotEmpty()) {
+            tempNodeList = filterNodesList.filter { it.isSelected }
+                .map { it.otherName } as ArrayList<String>
+        }
+
+        val tempClassList: ArrayList<String> = getFilterTempList(filterClassificationList)
+        val tempStatusList: ArrayList<String> = getFilterTempList(filterStatusList)
+        val tempPriorityList: ArrayList<String> = getFilterTempList(filterPriorityList)
+        val tempTypeList: ArrayList<String> = getFilterTempList(filterTypeCompList)
+
+         val itemList = dbHelper.getAllDataFromFetchNotification(
+                    spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                    roomID = roomList[roomsItemPosition].id!!,
+                    isFilterBy = true,
+                    statusFilters = tempStatusList,
+                    priorityFilters = tempPriorityList,
+                    nodesFilters = tempNodeList,
+                    classFilters = tempClassList,
+                    typeFilters = tempTypeList
+                )
+
         for (item in filterNodesList) {
-            val matchingDataList = homeList.filter { it.data!!.host[0].id.equals(item.otherName, true)}
+            val matchingDataList = itemList.filter { it.data!!.host[0].id.equals(item.otherName, true)}
             item.count = matchingDataList.size
         }
         for (item in filterStatusList) {
-            val matchingDataList = homeList.filter { it.data!!.netdata!!.alert!!.current!!.status[0].equals(item.name, true)}
+            val matchingDataList = itemList.filter { it.data!!.netdata!!.alert!!.current!!.status[0].equals(item.name, true)}
             item.count = matchingDataList.size
         }
         for (item in filterPriorityList) {
-            val matchingDataList = homeList.filter { it.priority.equals(item.name, true)}
-            Log.e("dataaaaaa", matchingDataList.size.toString())
+            val matchingDataList = itemList.filter { it.priority.equals(item.name, true)}
             item.count = matchingDataList.size
         }
         for (item in filterClassificationList) {
-            val matchingDataList = homeList.filter { it.data!!.netdata!!.alert!!.classes.equals(item.name, true)}
+            val matchingDataList = itemList.filter { it.data!!.netdata!!.alert!!.classes.equals(item.name, true)}
             item.count = matchingDataList.size
         }
         for (item in filterTypeCompList) {
-            val matchingDataList = homeList.filter { it.data!!.netdata!!.alert!!.type.equals(item.name, true)
+            val matchingDataList = itemList.filter { it.data!!.netdata!!.alert!!.type.equals(item.name, true)
                     || it.data!!.netdata!!.alert!!.component.equals(item.name, true) }
             item.count = matchingDataList.size
         }
@@ -1249,18 +1267,39 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         return dateFormat.format(Date(currentTimeInMillis))
     }
 
-    @SuppressLint("SetTextI18n", "NotifyDataSetChanged")
     private fun callFetchHomeNotification() {
         showLoader()
         apiViewModel.callFetchHomeNotification()
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun observeFetchHomeNotification() {
         apiViewModel.fetchHomeNotificationLiveData.observe(this) {
             hideLoader()
             if (!it.isError || it.responseCode == 200) {
                 insertDataIfEmpty(it.data!!)
+            }
+        }
+    }
+
+    private fun callGetHomeNotificationOnNotify() {
+        apiViewModel.callFetchHomeNotification()
+    }
+
+    private fun observeGetHomeNotificationOnNotify() {
+        apiViewModel.fetchHomeNotificationLiveData.observe(this) {
+            if (!it.isError || it.responseCode == 200) {
+                if(it.data!!.isNotEmpty()){
+                    /*val gson = Gson()
+                    val type = object : TypeToken<List<HomeNotificationList>>() {}.type
+                    val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)*/
+                    var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
+                    for (item in it.data) {
+                        lastId++
+                        dbHelper.insertFetchNotificationData(lastId, item)
+                    }
+
+                    getNotificationCount()
+                }
             }
         }
     }
@@ -1546,13 +1585,16 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     fun showNotificationSnackbar() {
         hideKeyBoard()
+        callGetHomeNotificationOnNotify()
         if (view != null) {
             val message = "New Notification Generated in ${Constant.MY_NOTIFICATION_MESSAGE}!"
             val snackbar = Snackbar.make(binding.editTextSearchServices, message, Snackbar.LENGTH_LONG)
             snackbar.duration = 20000
             snackbar.setActionTextColor(Color.BLACK)
             snackbar.setAction("View") {
-                callFetchHomeNotification()
+                if(homeList.size != 0){
+                    binding.recyclerViewHome.scrollToPosition(0)
+                }
                 snackbar.dismiss()
             }
             val snackView = snackbar.view
