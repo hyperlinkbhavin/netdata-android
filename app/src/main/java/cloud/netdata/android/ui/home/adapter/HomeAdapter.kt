@@ -18,10 +18,9 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
+class HomeAdapter(var list: ArrayList<HomeNotificationList>, val callBack: (View, Int, HomeNotificationList) -> Unit) :
     RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
 
-    var list = ArrayList<HomeNotificationList>()
     var selectedPos = -1
     var previousPos = -1
 

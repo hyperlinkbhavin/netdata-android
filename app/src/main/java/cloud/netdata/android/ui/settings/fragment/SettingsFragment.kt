@@ -55,8 +55,13 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
                             navigator.load(TermsAndConditionsFragment::class.java).replace(true)
                         }
 
-                        // Change Your Theme
+                        // Notification Retention Settings
                         4 -> {
+                            navigator.load(NotificationRetentionSettingsFragment::class.java).replace(true)
+                        }
+
+                        // Change Your Theme
+                        5 -> {
                             if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
                                 navigator.loadActivity(
                                     IsolatedFullActivity::class.java,
@@ -72,12 +77,12 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
                         }
 
                         // Delete Account
-                        5 -> {
+                        6 -> {
                             deleteAccount()
                         }
 
                         // Sign out
-                        6 -> {
+                        7 -> {
                             signOut()
                         }
                     }
@@ -154,6 +159,15 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
                 getString(R.string.title_terms_and_privacy_policy),
                 getString(
                     R.string.label_terms_and_privacy_policy_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
+                R.drawable.ic_settings_change_themes,
+                getString(R.string.title_notification_retention_settings),
+                getString(
+                    R.string.label_change_your_theme_description
                 )
             )
         )

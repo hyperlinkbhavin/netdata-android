@@ -115,4 +115,5 @@
     <string name="label_all_nodes">All nodes</string>
     <string name="hint_search_spaces">Search spaces...</string>
     <string name="label_all_spaces">All Spaces</string>
+    <string name="title_notification_retention_settings">Notification Retention Settings</string>
 </resources>

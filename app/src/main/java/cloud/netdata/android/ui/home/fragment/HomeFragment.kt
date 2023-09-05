@@ -33,6 +33,7 @@ import cloud.netdata.android.data.pojo.request.FilterList
 import cloud.netdata.android.data.pojo.request.FilterSelectedList
 import cloud.netdata.android.data.pojo.request.WarRoomsList
 import cloud.netdata.android.data.pojo.response.HomeNotificationList
+import cloud.netdata.android.data.pojo.response.NotificationRetention
 import cloud.netdata.android.data.pojo.response.RoomList
 import cloud.netdata.android.databinding.HomeFragmentBinding
 import cloud.netdata.android.di.component.FragmentComponent
@@ -43,23 +44,21 @@ import cloud.netdata.android.ui.home.adapter.*
 import cloud.netdata.android.ui.notification.NotificationBroadcastReceiver
 import cloud.netdata.android.ui.notification.fragment.NotificationFragment
 import cloud.netdata.android.ui.settings.fragment.SettingsFragment
-import cloud.netdata.android.utils.AppUtils
-import cloud.netdata.android.utils.Constant
+import cloud.netdata.android.utils.*
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.customapi.DynamicViewModel
-import cloud.netdata.android.utils.gone
 import cloud.netdata.android.utils.localdb.DatabaseHelper
-import cloud.netdata.android.utils.visible
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -99,7 +98,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var isFilterBy = false
 
     private val homeAdapter by lazy {
-        HomeAdapter() { view, position, item ->
+        HomeAdapter(homeList) { view, position, item ->
             when (view.id) {
                 R.id.constraintTop -> {
                     readUnreadNotification(item, isPermanentRead = true)
@@ -240,6 +239,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         setAdapter()
 //        addData()
 
+        try {
+            manageNotificationRetentionData()
+        } catch (e: Exception) {
+        }
+
         binding.buttonAll.isSelected = isAllButtonSelected
         binding.buttonUnread.isSelected = !isAllButtonSelected
 
@@ -248,7 +252,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK).toString()
 
-        if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).isEmpty()){
+        if (appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).isEmpty()) {
             appPreferences.putString(Constant.APP_PREF_SORTING_BY_TIME, "-1")
         }
         if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).isEmpty()){
@@ -339,6 +343,37 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         })
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    private fun manageNotificationRetentionData() {
+        var notificationRetentionList = ArrayList<NotificationRetention>()
+        if (appPreferences.getString(Constant.APP_PREF_NOTIFICATION_RETENTION).isEmpty()) {
+            notificationRetentionList.clear()
+            notificationRetentionList.add(NotificationRetention("1 day", 1))
+            notificationRetentionList.add(NotificationRetention("1 week", 7))
+            notificationRetentionList.add(NotificationRetention("2 weeks", 14, true))
+            notificationRetentionList.add(NotificationRetention("1 month", 30))
+            appPreferences.putString(
+                Constant.APP_PREF_NOTIFICATION_RETENTION,
+                Gson().toJson(notificationRetentionList)
+            )
+        } else {
+            val gson = Gson()
+            val type = object : TypeToken<List<NotificationRetention>>() {}.type
+            notificationRetentionList = gson.fromJson(
+                appPreferences.getString(Constant.APP_PREF_NOTIFICATION_RETENTION),
+                type
+            )
+        }
+
+        val data = notificationRetentionList.find { it.isSelected }
+        if (data != null) {
+            dbHelper.deleteFetchNotificationOlderThanWeek(
+                ConvertDateTimeFormat.getDaysBeforeDate(data.value)
+            )
+        }
+        homeAdapter.notifyDataSetChanged()
+    }
+
     @SuppressLint("SetTextI18n")
     fun filter(text: String?) {
         val temp = ArrayList<HomeNotificationList>()
@@ -346,7 +381,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             //or use .equal(text) with you want equal match
             //use .toLowerCase() for better matches
             if (d.data!!.netdata!!.alert!!.name[0].contains(text!!, true) ||
-                        d.data!!.netdata!!.alert!!.type!!.contains(text, true) ||
+                d.data!!.netdata!!.alert!!.type!!.contains(text, true) ||
                 d.data!!.netdata!!.alert!!.component!!.contains(text, true) ||
                 d.data!!.netdata!!.chart!!.id!!.contains(text, true)) {
                 temp.add(d)
@@ -625,6 +660,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
+    private val handler = Handler(Looper.getMainLooper())
+    private var currentItem: HomeNotificationList? = null
+    private var timeOnCurrentItem: Long = 0
+
     private fun setAdapter() = with(binding) {
         /*flexLayoutManager = FlexboxLayoutManager(context)
         flexLayoutManager.flexDirection = FlexDirection.ROW*/
@@ -634,35 +673,58 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
 
         recyclerViewHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            @SuppressLint("NotifyDataSetChanged")
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                /*Handler(Looper.getMainLooper()).postDelayed({
-                    updateVisibleItems()
-                },8000)*/
+                updateVisibleItems()
             }
         })
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateVisibleItems() {
-        try{
+        try {
             val layoutManager = binding.recyclerViewHome.layoutManager as LinearLayoutManager
-            val firstVisibleItemPosition = layoutManager.findFirstVisibleItemPosition()
+            val firstVisibleItemPosition = layoutManager.findFirstCompletelyVisibleItemPosition()
             val lastVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
 
-            for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
-                val item = homeList[i]
-                readUnreadNotification(item, isPermanentRead = true)
-                Log.e("change", i.toString())
+            if (lastVisibleItemPosition != RecyclerView.NO_POSITION && firstVisibleItemPosition != RecyclerView.NO_POSITION) {
+                val visibleItem = homeList[firstVisibleItemPosition]
+                Log.e("pos", "$firstVisibleItemPosition $lastVisibleItemPosition")
+                if (currentItem == null || currentItem != visibleItem) {
+                    currentItem = visibleItem
+                    timeOnCurrentItem = System.currentTimeMillis()
+
+                    // Update the UI to reflect the current visible item
+                    // You can change the text, background, or any other view properties here
+
+
+                    handler.removeCallbacksAndMessages(null) // Remove any previous callbacks
+                    handler.postDelayed({
+                        // Check if the user stayed on the current item for 5 seconds
+                        if (System.currentTimeMillis() - timeOnCurrentItem >= 8000) {
+                            // Change the value of the visible item here
+                            for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
+                                val item = homeList[i]
+                                readUnreadNotification(item, isPermanentRead = true, isAutoRead = true, i)
+                                Log.e("change", i.toString())
+                            }
+                        }
+                    }, 8000)
+                }
             }
-            homeAdapter.notifyDataSetChanged()
         } catch (_: Exception){
 
         }
     }
 
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
-    private fun readUnreadNotification(item: HomeNotificationList, isPermanentRead: Boolean = false) {
+    private fun readUnreadNotification(
+        item: HomeNotificationList,
+        isPermanentRead: Boolean = false,
+        isAutoRead: Boolean = false,
+        itemPosition: Int = 0
+    ) {
         dbHelper.updateFetchNotificationData(item, isPermanentRead = isPermanentRead)
         homeAdapter.list.clear()
         if (isAllButtonSelected) {
@@ -671,6 +733,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             homeAdapter.list.addAll(getAllData(isUnread = true))
         }
         homeAdapter.notifyDataSetChanged()
+        if(isAutoRead){
+            homeAdapter.notifyItemChanged(itemPosition)
+        }
         binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
         binding.buttonUnread.text =
             "${getString(R.string.btn_unread)} (${getAllData(isUnread = true).size})"

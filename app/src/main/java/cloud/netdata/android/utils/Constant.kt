@@ -1,6 +1,7 @@
 package cloud.netdata.android.utils
 
 import cloud.netdata.android.data.pojo.request.WarRoomsList
+import cloud.netdata.android.data.pojo.response.NotificationRetention
 
 object Constant {
     var COOKIE_SI = ""
@@ -26,6 +27,7 @@ object Constant {
     const val APP_PREF_SORTING_BY_TIME = "APP_PREF_SORTING_BY_TIME"
     const val APP_PREF_SORTING_BY_PRIORITY = "APP_PREF_SORTING_BY_PRIORITY"
     const val APP_PREF_SORTING_BY_CRITICALITY = "APP_PREF_SORTING_BY_CRITICALITY"
+    const val APP_PREF_NOTIFICATION_RETENTION = "APP_PREF_NOTIFICATION_RETENTION"
 
 
     const val BUNDLE_DEEPLINK = "BUNDLE_DEEPLINK"
@@ -54,7 +56,6 @@ object Constant {
         sortByCriticalityList.add(WarRoomsList("Critical to Clear"))
         sortByCriticalityList.add(WarRoomsList("Clear to Critical"))
     }
-
 
     const val dummyData = """
  [
