@@ -159,9 +159,9 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
             }
         }
 
-        spanString.setSpan(termsAndCondition, 20, 22, 0)
-        spanString.setSpan(ForegroundColorSpan(Color.parseColor("#00AB44")), 20, 22, 0)
-        spanString.setSpan(StyleSpan(Typeface.BOLD), 20, 22, 0)
+        spanString.setSpan(termsAndCondition, 20, (20+count.length), 0)
+        spanString.setSpan(ForegroundColorSpan(Color.parseColor("#00AB44")), 20, (20+count.length), 0)
+        spanString.setSpan(StyleSpan(Typeface.BOLD), 20, (20+count.length), 0)
 
         binding.textViewChooseSpaceText.movementMethod =
             LinkMovementMethod.getInstance()
@@ -246,7 +246,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     private fun countSpaceList(){
         var totalCount = 0
         for (space in spaceList) {
-            val matchingDataList = notificationList.filter { it.data!!.netdata!!.space!!.id == space.id && !it.isNotificationRead }
+            val matchingDataList = notificationList.filter { it.data!!.netdata!!.space!!.id == space.id && !it.isRead }
             space.count = matchingDataList.size
             totalCount += matchingDataList.size
         }

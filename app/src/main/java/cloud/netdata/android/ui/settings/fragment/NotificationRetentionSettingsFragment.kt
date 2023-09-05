@@ -23,10 +23,8 @@ class NotificationRetentionSettingsFragment: BaseFragment<NotificationRetentionS
         NotificationRetentionSettingsAdapter() { view->
             when (view.id) {
                 R.id.radioButton -> {
-                    storeData()
                 }
                 R.id.constraintMain -> {
-                    storeData()
                 }
             }
         }
@@ -70,6 +68,7 @@ class NotificationRetentionSettingsFragment: BaseFragment<NotificationRetentionS
 
     private fun manageClick() = with(binding){
         buttonDone.setOnClickListener {
+            storeData()
             navigator.goBack()
         }
     }

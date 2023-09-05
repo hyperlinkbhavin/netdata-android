@@ -263,148 +263,148 @@
                         <androidx.constraintlayout.widget.Guideline
                             android:id="@+id/guidelineStartInner"
                             style="@style/StyleStartGuideline"
-                            app:layout_constraintGuide_begin="@dimen/dp_16"/>
+                            app:layout_constraintGuide_begin="@dimen/dp_16" />
 
                         <androidx.constraintlayout.widget.Guideline
                             android:id="@+id/guidelineEndInner"
                             style="@style/StyleEndGuideline"
-                            app:layout_constraintGuide_end="@dimen/dp_16"/>
+                            app:layout_constraintGuide_end="@dimen/dp_16" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintNode"
-                    android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:layout_marginTop="@dimen/dp_24"
-                    app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
-                    app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
-                    app:layout_constraintTop_toTopOf="parent">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintAlertStatus"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginTop="@dimen/dp_16"
+                            app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
+                            app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
+                            app:layout_constraintTop_toTopOf="parent">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/textViewLabelNode"
-                        style="@style/AppTheme.AppTextView.BoldBlack35ToGrey8F12"
-                        android:text="@string/label_node"
-                        app:layout_constraintStart_toStartOf="@id/constraintNode"
-                        app:layout_constraintTop_toTopOf="@id/constraintNode"/>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/textViewLabelAlertStatus"
+                                style="@style/AppTheme.AppTextView.BoldBlack35ToGrey8F12"
+                                android:text="@string/label_alert_status"
+                                app:layout_constraintStart_toStartOf="@id/constraintAlertStatus"
+                                app:layout_constraintTop_toTopOf="@id/constraintAlertStatus" />
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imageViewNodeDown"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        style="@style/ChangeTintColorBlack35ToGreyCF"
-                        android:src="@drawable/ic_down"
-                        android:padding="@dimen/dp_5"
-                        app:layout_constraintEnd_toEndOf="@id/constraintNode"
-                        app:layout_constraintTop_toTopOf="@id/textViewLabelNode"
-                        app:layout_constraintBottom_toBottomOf="@id/textViewLabelNode"/>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/imageViewAlertStatusDown"
+                                style="@style/ChangeTintColorBlack35ToGreyCF"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/dp_5"
+                                android:src="@drawable/ic_down"
+                                app:layout_constraintBottom_toBottomOf="@id/textViewLabelAlertStatus"
+                                app:layout_constraintEnd_toEndOf="@id/constraintAlertStatus"
+                                app:layout_constraintTop_toTopOf="@id/textViewLabelAlertStatus" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewNode"
-                        android:layout_height="wrap_content"
-                        android:layout_width="@dimen/dp_0"
-                        tools:listitem="@layout/row_item_filter_checkbox"
-                        tools:itemCount="3"
-                        android:layout_marginTop="@dimen/dp_8"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        android:orientation="vertical"
-                        app:layout_constraintStart_toStartOf="@id/constraintNode"
-                        app:layout_constraintEnd_toEndOf="@id/constraintNode"
-                        app:layout_constraintTop_toBottomOf="@id/textViewLabelNode"/>
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewAlertStatus"
+                                android:layout_width="@dimen/dp_0"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_8"
+                                android:orientation="vertical"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:layout_constraintEnd_toEndOf="@id/constraintAlertStatus"
+                                app:layout_constraintStart_toStartOf="@id/constraintAlertStatus"
+                                app:layout_constraintTop_toBottomOf="@id/textViewLabelAlertStatus"
+                                tools:itemCount="3"
+                                tools:listitem="@layout/row_item_filter_checkbox" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <View
-                    android:id="@+id/viewNode"
-                    android:layout_height="@dimen/dp_1"
-                    android:layout_width="@dimen/dp_0"
-                    android:background="@color/colorBlack35"
-                    android:layout_marginTop="@dimen/sp_10"
-                    app:layout_constraintStart_toStartOf="@id/constraintNode"
-                    app:layout_constraintEnd_toEndOf="@id/constraintNode"
-                    app:layout_constraintTop_toBottomOf="@id/constraintNode"/>
+                        <View
+                            android:id="@+id/viewAlertStatus"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="@dimen/dp_1"
+                            android:layout_marginTop="@dimen/sp_10"
+                            android:background="@color/colorBlack35"
+                            app:layout_constraintEnd_toEndOf="@id/constraintAlertStatus"
+                            app:layout_constraintStart_toStartOf="@id/constraintAlertStatus"
+                            app:layout_constraintTop_toBottomOf="@id/constraintAlertStatus" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintAlertStatus"
-                    android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:layout_marginTop="@dimen/dp_16"
-                    app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
-                    app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
-                    app:layout_constraintTop_toBottomOf="@id/viewNode">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintNode"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginTop="@dimen/dp_24"
+                            app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
+                            app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
+                            app:layout_constraintTop_toBottomOf="@id/viewAlertStatus">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/textViewLabelAlertStatus"
-                        style="@style/AppTheme.AppTextView.BoldBlack35ToGrey8F12"
-                        android:text="@string/label_alert_status"
-                        app:layout_constraintStart_toStartOf="@id/constraintAlertStatus"
-                        app:layout_constraintTop_toTopOf="@id/constraintAlertStatus"/>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/textViewLabelNode"
+                                style="@style/AppTheme.AppTextView.BoldBlack35ToGrey8F12"
+                                android:text="@string/label_node"
+                                app:layout_constraintStart_toStartOf="@id/constraintNode"
+                                app:layout_constraintTop_toTopOf="@id/constraintNode" />
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imageViewAlertStatusDown"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        style="@style/ChangeTintColorBlack35ToGreyCF"
-                        android:src="@drawable/ic_down"
-                        android:padding="@dimen/dp_5"
-                        app:layout_constraintEnd_toEndOf="@id/constraintAlertStatus"
-                        app:layout_constraintTop_toTopOf="@id/textViewLabelAlertStatus"
-                        app:layout_constraintBottom_toBottomOf="@id/textViewLabelAlertStatus"/>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/imageViewNodeDown"
+                                style="@style/ChangeTintColorBlack35ToGreyCF"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/dp_5"
+                                android:src="@drawable/ic_down"
+                                app:layout_constraintBottom_toBottomOf="@id/textViewLabelNode"
+                                app:layout_constraintEnd_toEndOf="@id/constraintNode"
+                                app:layout_constraintTop_toTopOf="@id/textViewLabelNode" />
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewAlertStatus"
-                        android:layout_height="wrap_content"
-                        android:layout_width="@dimen/dp_0"
-                        tools:listitem="@layout/row_item_filter_checkbox"
-                        tools:itemCount="3"
-                        android:layout_marginTop="@dimen/dp_8"
-                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                        android:orientation="vertical"
-                        app:layout_constraintStart_toStartOf="@id/constraintAlertStatus"
-                        app:layout_constraintEnd_toEndOf="@id/constraintAlertStatus"
-                        app:layout_constraintTop_toBottomOf="@id/textViewLabelAlertStatus"/>
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewNode"
+                                android:layout_width="@dimen/dp_0"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_8"
+                                android:orientation="vertical"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:layout_constraintEnd_toEndOf="@id/constraintNode"
+                                app:layout_constraintStart_toStartOf="@id/constraintNode"
+                                app:layout_constraintTop_toBottomOf="@id/textViewLabelNode"
+                                tools:itemCount="3"
+                                tools:listitem="@layout/row_item_filter_checkbox" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                        </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <View
-                    android:id="@+id/viewAlertStatus"
-                    android:layout_height="@dimen/dp_1"
-                    android:layout_width="@dimen/dp_0"
-                    android:background="@color/colorBlack35"
-                    android:layout_marginTop="@dimen/sp_10"
-                    app:layout_constraintStart_toStartOf="@id/constraintAlertStatus"
-                    app:layout_constraintEnd_toEndOf="@id/constraintAlertStatus"
-                    app:layout_constraintTop_toBottomOf="@id/constraintAlertStatus"/>
+                        <View
+                            android:id="@+id/viewNode"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="@dimen/dp_1"
+                            android:layout_marginTop="@dimen/sp_10"
+                            android:background="@color/colorBlack35"
+                            app:layout_constraintEnd_toEndOf="@id/constraintNode"
+                            app:layout_constraintStart_toStartOf="@id/constraintNode"
+                            app:layout_constraintTop_toBottomOf="@id/constraintNode" />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintNotificationPriority"
-                    android:layout_height="wrap_content"
-                    android:layout_width="@dimen/dp_0"
-                    android:layout_marginStart="@dimen/dp_8"
-                    android:layout_marginTop="@dimen/dp_16"
-                    app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
-                    app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
-                    app:layout_constraintTop_toBottomOf="@id/viewAlertStatus">
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintNotificationPriority"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginTop="@dimen/dp_16"
+                            app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
+                            app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
+                            app:layout_constraintTop_toBottomOf="@id/viewNode">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/textViewLabelNotificationPriority"
-                        style="@style/AppTheme.AppTextView.BoldBlack35ToGrey8F12"
-                        android:text="@string/label_notification_priority"
-                        app:layout_constraintStart_toStartOf="@id/constraintNotificationPriority"
-                        app:layout_constraintTop_toTopOf="@id/constraintNotificationPriority"/>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/textViewLabelNotificationPriority"
+                                style="@style/AppTheme.AppTextView.BoldBlack35ToGrey8F12"
+                                android:text="@string/label_notification_priority"
+                                app:layout_constraintStart_toStartOf="@id/constraintNotificationPriority"
+                                app:layout_constraintTop_toTopOf="@id/constraintNotificationPriority" />
 
-                    <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imageViewNotificationPriorityDown"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        style="@style/ChangeTintColorBlack35ToGreyCF"
-                        android:src="@drawable/ic_down"
-                        android:padding="@dimen/dp_5"
-                        app:layout_constraintEnd_toEndOf="@id/constraintNotificationPriority"
-                        app:layout_constraintTop_toTopOf="@id/textViewLabelNotificationPriority"
-                        app:layout_constraintBottom_toBottomOf="@id/textViewLabelNotificationPriority"/>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/imageViewNotificationPriorityDown"
+                                style="@style/ChangeTintColorBlack35ToGreyCF"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/dp_5"
+                                android:src="@drawable/ic_down"
+                                app:layout_constraintBottom_toBottomOf="@id/textViewLabelNotificationPriority"
+                                app:layout_constraintEnd_toEndOf="@id/constraintNotificationPriority"
+                                app:layout_constraintTop_toTopOf="@id/textViewLabelNotificationPriority" />
 
-                    <androidx.recyclerview.widget.RecyclerView
+                            <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewNotificationPriority"
                         android:layout_height="wrap_content"
                         android:layout_width="@dimen/dp_0"

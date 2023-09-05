@@ -98,7 +98,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var isFilterBy = false
 
     private val homeAdapter by lazy {
-        HomeAdapter(homeList) { view, position, item ->
+        HomeAdapter() { view, position, item ->
             when (view.id) {
                 R.id.constraintTop -> {
                     readUnreadNotification(item, isPermanentRead = true)
@@ -706,8 +706,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                             // Change the value of the visible item here
                             for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
                                 val item = homeList[i]
-                                readUnreadNotification(item, isPermanentRead = true, isAutoRead = true, i)
-                                Log.e("change", i.toString())
+                                homeList[i].isRead = true
+                                homeList[i].isNotificationRead = true
+                                readUnreadNotification(item, isPermanentRead = true)
                             }
                         }
                     }, 8000)
@@ -721,9 +722,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun readUnreadNotification(
         item: HomeNotificationList,
-        isPermanentRead: Boolean = false,
-        isAutoRead: Boolean = false,
-        itemPosition: Int = 0
+        isPermanentRead: Boolean = false
     ) {
         dbHelper.updateFetchNotificationData(item, isPermanentRead = isPermanentRead)
         homeAdapter.list.clear()
@@ -733,9 +732,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             homeAdapter.list.addAll(getAllData(isUnread = true))
         }
         homeAdapter.notifyDataSetChanged()
-        if(isAutoRead){
-            homeAdapter.notifyItemChanged(itemPosition)
-        }
         binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
         binding.buttonUnread.text =
             "${getString(R.string.btn_unread)} (${getAllData(isUnread = true).size})"

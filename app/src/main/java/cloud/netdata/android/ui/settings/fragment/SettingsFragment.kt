@@ -45,19 +45,19 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
                                 .replace(true)
                         }
 
-                        // Share App
+                        // Notification Retention Settings
                         2 -> {
+                            navigator.load(NotificationRetentionSettingsFragment::class.java).replace(true)
+                        }
+
+                        // Share App
+                        3 -> {
                             shareApp()
                         }
 
                         // Terms and Privacy Policy
-                        3 -> {
-                            navigator.load(TermsAndConditionsFragment::class.java).replace(true)
-                        }
-
-                        // Notification Retention Settings
                         4 -> {
-                            navigator.load(NotificationRetentionSettingsFragment::class.java).replace(true)
+                            navigator.load(TermsAndConditionsFragment::class.java).replace(true)
                         }
 
                         // Change Your Theme
@@ -148,6 +148,15 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
         )
         settingsAdapter.list.add(
             SettingsList(
+                R.drawable.ic_settings_notification_retention,
+                getString(R.string.title_notification_retention_settings),
+                getString(
+                    R.string.label_change_your_theme_description
+                )
+            )
+        )
+        settingsAdapter.list.add(
+            SettingsList(
                 R.drawable.ic_settings_share_app, getString(R.string.title_share_app), getString(
                     R.string.label_share_app_description
                 )
@@ -159,15 +168,6 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
                 getString(R.string.title_terms_and_privacy_policy),
                 getString(
                     R.string.label_terms_and_privacy_policy_description
-                )
-            )
-        )
-        settingsAdapter.list.add(
-            SettingsList(
-                R.drawable.ic_settings_change_themes,
-                getString(R.string.title_notification_retention_settings),
-                getString(
-                    R.string.label_change_your_theme_description
                 )
             )
         )
