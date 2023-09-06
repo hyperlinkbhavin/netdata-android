@@ -120,6 +120,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     readUnreadNotification(item)
                 }
 
+                R.id.textViewUndo -> {
+                    homeList[position].isTempMessageRead = false
+                    readUnreadNotification(item)
+                }
+
                 R.id.rightViewSwipe -> {
                     bottomSheetPriority(item)
                 }
@@ -708,7 +713,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                                 val item = homeList[i]
                                 homeList[i].isRead = true
                                 homeList[i].isNotificationRead = true
+                                homeList[i].isTempMessageRead = true
                                 readUnreadNotification(item, isPermanentRead = true)
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    homeList[i].isTempMessageRead = false
+                                    homeAdapter.notifyDataSetChanged()
+                                }, 4000)
                             }
                         }
                     }, 8000)

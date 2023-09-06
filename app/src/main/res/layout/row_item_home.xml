@@ -56,10 +56,39 @@
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewName"
+            android:layout_width="@dimen/dp_0"
             style="@style/AppTheme.AppTextView.BoldBlack16"
             tools:text="inbound packets dropped ratio"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toTopOf="@id/constraintTop"/>
+            app:layout_constraintTop_toTopOf="@id/constraintTop"
+            app:layout_constraintEnd_toStartOf="@id/textViewMessage"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_you_have_seen_the_message"
+            android:layout_marginStart="@dimen/dp_6"
+            android:visibility="gone"
+            android:fontFamily="@font/font_ibm_plex_sans_medium"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintStart_toEndOf="@id/textViewName"
+            app:layout_constraintTop_toTopOf="@id/textViewName"
+            app:layout_constraintBottom_toBottomOf="@id/textViewName"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewUndo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_undo"
+            android:fontFamily="@font/font_ibm_plex_sans_medium"
+            android:textColor="@color/colorPrimary"
+            android:layout_marginStart="@dimen/dp_6"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@id/textViewMessage"
+            app:layout_constraintTop_toTopOf="@id/textViewMessage"
+            app:layout_constraintBottom_toBottomOf="@id/textViewMessage"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imageViewCalendar"

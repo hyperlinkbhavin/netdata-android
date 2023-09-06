@@ -69,8 +69,8 @@ class NotificationPrioritySettingsFragment :
         toolbar()
         manageClick()
 
-        getPermission()
-        audioActivityResult()
+//        getPermission()
+//        audioActivityResult()
 
 //        dbHelper.updateNotificationPriorityData(1,"Test", "url",1,1,1)
 

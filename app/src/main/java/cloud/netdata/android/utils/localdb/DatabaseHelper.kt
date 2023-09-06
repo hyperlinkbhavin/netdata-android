@@ -616,7 +616,7 @@ class DatabaseHelper(context: Context) :
                 allData.rooms = roomsList*/
 
                 val data = HomeNotificationList(id, allData, createdAt, timestamp, isRead == 1,
-                    isSpaceRead == 1, isNotificationRead == 1, priority)
+                    isSpaceRead == 1, isNotificationRead == 1, priority = priority)
 
                 dataList.add(data)
             }

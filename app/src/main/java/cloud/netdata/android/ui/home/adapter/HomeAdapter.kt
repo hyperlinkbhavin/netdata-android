@@ -87,6 +87,11 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                 textViewWarRoomsListCount.setOnClickListener {
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
+
+                textViewUndo.setOnClickListener {
+                    list[absoluteAdapterPosition].isRead = !list[absoluteAdapterPosition].isRead
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                }
             }
         }
 
@@ -94,6 +99,14 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
         fun bind(item: HomeNotificationList) = with(binding) {
             if (absoluteAdapterPosition != selectedPos && (swipeLayout.isRightOpen || swipeLayout.isLeftOpen)) {
                 swipeLayout.close(true)
+            }
+
+            if(item.isTempMessageRead){
+                textViewMessage.visible()
+                textViewUndo.visible()
+            } else {
+                textViewMessage.gone()
+                textViewUndo.invisible()
             }
 
             if (item.isRead) {

@@ -10,6 +10,7 @@ data class HomeNotificationList(
     var isRead: Boolean = false,
     var isSpaceRead : Boolean = false,
     var isNotificationRead: Boolean = false,
+    var isTempMessageRead: Boolean = false,
     var priority: String?= null
 ) {
     data class Data(
