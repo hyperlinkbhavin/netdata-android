@@ -37,6 +37,8 @@ object Constant {
     const val NOTIFICATION_ICON = "NOTIFICATION_ICON"
     const val CONVERSATION_TITLE = "CONVERSATION_TITLE"
     const val MY_NOTIFICATION_ACTION = "MY_NOTIFICATION_ACTION"
+    const val COMMUNITY = "Community"
+    const val EARLY_BIRD = "EarlyBird"
     var MY_NOTIFICATION_MESSAGE = "Space"
 
     val sortByTimeList = ArrayList<WarRoomsList>()

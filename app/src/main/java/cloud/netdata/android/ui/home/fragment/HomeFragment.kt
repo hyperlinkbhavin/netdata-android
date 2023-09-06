@@ -101,7 +101,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         HomeAdapter() { view, position, item ->
             when (view.id) {
                 R.id.constraintTop -> {
-                    readUnreadNotification(item, isPermanentRead = true)
+                    readUnreadNotification(item, isSwipeRead = true)
                     val url = "https://app.netdata.cloud/webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
                             "?space_id=${item.data!!.netdata!!.space!!.id}&room_id=${item.data!!.netdata!!.room[0].id}#token=${session.userSession.drop(7)}"
                     navigator.loadActivity(
@@ -117,12 +117,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
 
                 R.id.leftViewSwipe -> {
-                    readUnreadNotification(item)
+                    readUnreadNotification(item, isSwipeRead = true)
                 }
 
                 R.id.textViewUndo -> {
                     homeList[position].isTempMessageRead = false
-                    readUnreadNotification(item)
+                    readUnreadNotification(item, isSwipeRead = true)
                 }
 
                 R.id.rightViewSwipe -> {
@@ -710,15 +710,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                         if (System.currentTimeMillis() - timeOnCurrentItem >= 8000) {
                             // Change the value of the visible item here
                             for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
-                                val item = homeList[i]
-                                homeList[i].isRead = true
-                                homeList[i].isNotificationRead = true
-                                homeList[i].isTempMessageRead = true
-                                readUnreadNotification(item, isPermanentRead = true)
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    homeList[i].isTempMessageRead = false
-                                    homeAdapter.notifyDataSetChanged()
-                                }, 4000)
+                                Log.e("read", homeList[i].isAutoReadStop.toString())
+                                if(!homeList[i].isAutoReadStop && !homeList[i].isRead){
+                                    val item = homeList[i]
+                                    homeList[i].isRead = true
+                                    homeList[i].isNotificationRead = true
+                                    homeList[i].isTempMessageRead = true
+                                    readUnreadNotification(item, isPermanentRead = true)
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        homeList[i].isTempMessageRead = false
+                                        homeAdapter.notifyDataSetChanged()
+                                    }, 4000)
+                                }
                             }
                         }
                     }, 8000)
@@ -732,9 +735,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     @SuppressLint("NotifyDataSetChanged", "SetTextI18n")
     private fun readUnreadNotification(
         item: HomeNotificationList,
-        isPermanentRead: Boolean = false
+        isPermanentRead: Boolean = false,
+        isSwipeRead: Boolean = false
     ) {
-        dbHelper.updateFetchNotificationData(item, isPermanentRead = isPermanentRead)
+        dbHelper.updateFetchNotificationData(item, isPermanentRead = isPermanentRead, isSwipeRead = isSwipeRead)
         homeAdapter.list.clear()
         if (isAllButtonSelected) {
             homeAdapter.list.addAll(getAllData())
@@ -1376,13 +1380,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun insertDataIfEmpty(alertDataList: ArrayList<HomeNotificationList>) {
-//        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
-        if(alertDataList.isNotEmpty()){
-            /*val gson = Gson()
+        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
+//        if(alertDataList.isNotEmpty()){
+            val gson = Gson()
             val type = object : TypeToken<List<HomeNotificationList>>() {}.type
-            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)*/
+            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
             var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
-            for (item in alertDataList) {
+            for (item in alarmDataList) {
                 lastId++
                 dbHelper.insertFetchNotificationData(lastId, item)
             }

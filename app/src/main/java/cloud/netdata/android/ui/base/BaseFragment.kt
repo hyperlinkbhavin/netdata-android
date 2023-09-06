@@ -1,5 +1,6 @@
 package cloud.netdata.android.ui.base
 
+import android.app.UiModeManager
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Color
@@ -9,7 +10,9 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -80,7 +83,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
 
 
 
-        val nightModeFlags = requireContext().resources.configuration.uiMode and
+        /*val nightModeFlags = requireContext().resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK
         when (nightModeFlags) {
             Configuration.UI_MODE_NIGHT_YES -> {
@@ -89,6 +92,25 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
             }
             Configuration.UI_MODE_NIGHT_NO -> {
                 appPreferences.putString(Constant.APP_PREF_DAY_NIGHT_MODE, ThemeMode.Day.name)
+                window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorWhiteF2)
+            }
+        }*/
+
+        if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
+            Constant.isDarkMode = true
+        } else if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Day.name) {
+            Constant.isDarkMode = false
+        } else {
+            val uiModeManager =
+                requireContext().getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+            Constant.isDarkMode = uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES
+        }
+
+        when {
+            Constant.isDarkMode -> {
+                window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorBlack2B)
+            }
+            else -> {
                 window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorWhiteF2)
             }
         }

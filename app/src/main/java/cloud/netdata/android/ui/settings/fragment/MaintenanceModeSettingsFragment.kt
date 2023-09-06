@@ -6,7 +6,6 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
@@ -169,7 +168,9 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             if(allChangeIndex != spaceList.size){
                 isAllChange = true
 
-                if(!spaceList[allChangeIndex].isSelected){
+                if(!spaceList[allChangeIndex].isSelected
+                    && !spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
+                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
                     itemPosition = allChangeIndex
                     clickPosition = 1
                     callSilenceSpace(spaceList[allChangeIndex])
@@ -198,23 +199,22 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 }
             }*/
         } else {
-            val ruleId = ArrayList<String>()
-            binding.radioGroupAllNotifications.visible()
-            for ((index, item) in spaceList.withIndex()) {
-                if (item.isSelected) {
-                    itemPosition = index
-                    clickPosition = 1
-                    item.isSelected = false
-                    item.isForever = false
-                    item.isUntil = false
-                    item.untilDate = ""
-                    if(item.silenceRuleId!!.isNotEmpty()){
-                        ruleId.add(item.silenceRuleId!!)
-                    }
-//                    Handler(Looper.getMainLooper()).postDelayed({
-//                    updateData(itemPosition, clickPosition)
-//                    },2000)
+            allChangeIndex += 1
+            if(allChangeIndex != spaceList.size){
+                isAllChange = true
+
+                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
+                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                    itemPosition = allChangeIndex
+                    clickPosition = 4
+                    callUnsilenceSpace(spaceList[allChangeIndex], arrayListOf(spaceList[allChangeIndex].silenceRuleId!!), allChangeIndex)
+                } else {
+                    changeAllNotificationData(false)
                 }
+            } else {
+                isAllChange = false
+                allChangeIndex = -1
+                getCheckData()
             }
         }
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
@@ -260,6 +260,12 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     spaceList[pos].isUntil = false
                     spaceList[pos].untilDate = ""
                 }
+                4 -> {
+                    spaceList[pos].isSelected = false
+                    spaceList[pos].isForever = false
+                    spaceList[pos].isUntil = false
+                    spaceList[pos].untilDate = ""
+                }
             }
 
             getCheckData()
@@ -272,7 +278,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     }
 
     private fun getCheckData() {
-        val data = spaceList.find { !it.isSelected }
+        val data = spaceList.find { !it.isSelected && !it.plan.equals(Constant.COMMUNITY, true)
+                && !it.plan.equals(Constant.EARLY_BIRD, true) }
         if (data?.name.isNullOrEmpty()) {
             binding.switchDisableAllNotifications.isChecked = true
             binding.radioGroupAllNotifications.visible()
@@ -450,9 +457,18 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private fun observeUnsilenceSpace() {
         apiViewModel.unsilenceSpaceLiveData.observe(this) {
             hideLoader()
-            if(isChanged){
-                isChanged = false
-                callSilenceSpace(spaceList[itemPosition])
+            if(it.responseCode == 200){
+                if(isChanged){
+                    isChanged = false
+                    callSilenceSpace(spaceList[itemPosition])
+                }
+                if(isAllChange){
+                    changeAllNotificationData(false)
+                }
+            } else {
+                if(isAllChange){
+                    changeAllNotificationData(false)
+                }
             }
         }
     }
@@ -482,8 +498,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         val tempSpaceList = arrayList.sortedWith(
             compareBy(
                 // Custom order based on plan type
-                { it.plan in listOf("Community", "EarlyBird") }, // Plans other than "community" and "free" come first
-                { it.plan != "EarlyBird" }, // "community" plans come before "free" plans
+                { it.plan in listOf(Constant.COMMUNITY, Constant.EARLY_BIRD) }, // Plans other than "community" and "free" come first
+                { it.plan != Constant.EARLY_BIRD }, // "community" plans come before "free" plans
                 { it.plan } // Sort alphabetically within the same plan type
             )
         )

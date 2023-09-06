@@ -83,16 +83,16 @@ class SplashActivity : BaseActivity() {
         if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             Constant.isDarkMode = true
-//        } else if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Day.name) {
-        } else {
+        } else if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Day.name) {
+//        } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             Constant.isDarkMode = false
-        } /*else {
+        } else {
             val uiModeManager =
                 getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
             Constant.isDarkMode = uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-        }*/
+        }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 

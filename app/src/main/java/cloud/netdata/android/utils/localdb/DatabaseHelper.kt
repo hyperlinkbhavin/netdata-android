@@ -90,6 +90,7 @@ class DatabaseHelper(context: Context) :
         private const val FN_IS_READ = "isRead"
         private const val FN_IS_SPACE_READ = "isSpaceRead"
         private const val FN_IS_NOTIFICATION_READ = "isNotificationRead"
+        private const val FN_IS_AUTO_READ_STOP = "isAutoReadStop"
         private const val FN_CREATED_AT = "createdAt"
         private const val FN_TIMESTAMP = "timestamp"
         private const val FN_PRIORITY = "priority"
@@ -128,7 +129,7 @@ class DatabaseHelper(context: Context) :
                     "$FN_ALERT_EDIT_COMMAND TEXT, $FN_ALERT_EDIT_LINE TEXT, $FN_ROOMS TEXT, $FN_CHART_ID TEXT, $FN_CHART_NAME TEXT, " +
                     "$FN_SPACE_ID TEXT, $FN_SPACE_NAME TEXT, $FN_CONTEXT_NAME TEXT, $FN_USER_ID TEXT, " +
                     "$FN_USER_NAME TEXT, $FN_USER_EMAIL TEXT, $FN_IS_READ INTEGER, $FN_IS_SPACE_READ INTEGER, " +
-                    "$FN_IS_NOTIFICATION_READ INTEGER, $FN_CREATED_AT TEXT, $FN_TIMESTAMP TEXT, $FN_PRIORITY TEXT )"
+                    "$FN_IS_NOTIFICATION_READ INTEGER, $FN_IS_AUTO_READ_STOP TEXT, $FN_CREATED_AT TEXT, $FN_TIMESTAMP TEXT, $FN_PRIORITY TEXT )"
         db.execSQL(createTableFetchNotificationsQuery)
 
         val createTableRoomsData =
@@ -366,6 +367,7 @@ class DatabaseHelper(context: Context) :
             put(FN_IS_READ, 0)
             put(FN_IS_SPACE_READ, 0)
             put(FN_IS_NOTIFICATION_READ, 0)
+            put(FN_IS_AUTO_READ_STOP, 0)
             put(FN_CREATED_AT, item.createdAt)
             put(FN_TIMESTAMP, item.timestamp)
             put(FN_PRIORITY, Priority.HIGH_PRIORITY.shortName)
@@ -383,7 +385,8 @@ class DatabaseHelper(context: Context) :
     fun updateFetchNotificationData(
         item: HomeNotificationList,
         isPermanentRead: Boolean = false,
-        isNotificationRead: Boolean = false
+        isNotificationRead: Boolean = false,
+        isSwipeRead: Boolean = false
     ) {
         val values = ContentValues().apply {
             if (isNotificationRead) {
@@ -391,6 +394,10 @@ class DatabaseHelper(context: Context) :
             } else if(isPermanentRead){
                 put(FN_IS_READ, 1)
                 put(FN_IS_NOTIFICATION_READ, 1)
+            } else if(isSwipeRead){
+                put(FN_IS_READ, if (item.isRead) 1 else 0)
+                put(FN_IS_NOTIFICATION_READ, 1)
+                put(FN_IS_AUTO_READ_STOP, 1)
             } else {
                 put(FN_IS_READ, if (item.isRead) 1 else 0)
                 put(FN_IS_NOTIFICATION_READ, 1)
@@ -568,6 +575,7 @@ class DatabaseHelper(context: Context) :
                 val isRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_READ))
                 val isSpaceRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_SPACE_READ))
                 val isNotificationRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_NOTIFICATION_READ))
+                val isAutoReadStop = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_AUTO_READ_STOP))
                 val createdAt = cursor.getString(cursor.getColumnIndexOrThrow(FN_CREATED_AT))
                 val timestamp = cursor.getString(cursor.getColumnIndexOrThrow(FN_TIMESTAMP))
                 val priority = cursor.getString(cursor.getColumnIndexOrThrow(FN_PRIORITY))
@@ -616,7 +624,8 @@ class DatabaseHelper(context: Context) :
                 allData.rooms = roomsList*/
 
                 val data = HomeNotificationList(id, allData, createdAt, timestamp, isRead == 1,
-                    isSpaceRead == 1, isNotificationRead == 1, priority = priority)
+                    isSpaceRead == 1, isNotificationRead == 1,
+                    isAutoReadStop = isAutoReadStop == 1, priority = priority)
 
                 dataList.add(data)
             }

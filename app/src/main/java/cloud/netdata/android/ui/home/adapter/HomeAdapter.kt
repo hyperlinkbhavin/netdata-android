@@ -75,6 +75,7 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
 
                 leftViewSwipe.setOnClickListener {
                     list[absoluteAdapterPosition].isRead = !list[absoluteAdapterPosition].isRead
+                    list[absoluteAdapterPosition].isAutoReadStop = true
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                     /*list[absoluteAdapterPosition].isRead = !list[absoluteAdapterPosition].isRead
                     notifyItemChanged(absoluteAdapterPosition)*/
@@ -90,6 +91,7 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
 
                 textViewUndo.setOnClickListener {
                     list[absoluteAdapterPosition].isRead = !list[absoluteAdapterPosition].isRead
+                    list[absoluteAdapterPosition].isAutoReadStop = true
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }
