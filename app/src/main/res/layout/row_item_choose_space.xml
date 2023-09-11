@@ -45,9 +45,21 @@
             android:backgroundTint="@color/colorPrimary"
             android:layout_marginEnd="@dimen/dp_16"
             android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@id/constraintNext"
+            app:layout_constraintEnd_toStartOf="@id/imageViewSilencingRules"
             app:layout_constraintTop_toTopOf="@id/constraintTop"
             app:layout_constraintBottom_toBottomOf="@id/constraintNext"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageViewSilencingRules"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/ChangeTintColor"
+                android:visibility="gone"
+                android:layout_marginEnd="@dimen/dp_10"
+                android:src="@drawable/ic_silencing_rules"
+                app:layout_constraintEnd_toStartOf="@id/constraintNext"
+                app:layout_constraintTop_toTopOf="@id/constraintNext"
+                app:layout_constraintBottom_toBottomOf="@id/constraintNext"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraintNext"

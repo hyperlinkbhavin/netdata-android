@@ -55,8 +55,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                         /*if(!item.silenceRuleId.isNullOrEmpty()){
                             ruleId.add(item.silenceRuleId!!)
                         }*/
-                        ruleId.addAll(item.silenceRuleIdList)
-                        Log.e("rule id", ruleId.toString())
+                        ruleId.addAll(item.silenceRuleIdList.distinct())
                         callUnsilenceSpace(item, ruleId, position)
 //                        updateData(itemPosition, clickPosition)
                     }
@@ -292,7 +291,27 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
             getCheckData()
 
-            dbHelper.updateMaintenanceMode(Gson().toJson(spaceList))
+            dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
+                mapOf(
+                    "id" to space.id,
+                    "slug" to space.slug,
+                    "name" to space.name,
+                    "description" to space.description,
+                    "iconURL" to space.iconURL,
+                    "createdAt" to space.createdAt,
+                    "permissions" to space.permissions,
+                    "plan" to space.plan,
+                    "planDefinition" to space.planDefinition,
+                    "isSelected" to space.isSelected,
+                    "isForever" to space.isForever,
+                    "isUntil" to space.isUntil,
+                    "untilDate" to space.untilDate,
+                    "silenceRuleId" to space.silenceRuleId,
+                    "silenceRuleIdList" to arrayListOf(""),
+                    "silenceRuleName" to space.silenceRuleName,
+                    "count" to space.count,
+                )
+            }))
             maintenanceModeSettingsAdapter.notifyDataSetChanged()
         }
         catch (_: Exception){
@@ -432,10 +451,17 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 if(!it.data.isNullOrEmpty()){
                     val silencingRuleIdList = ArrayList<String>()
                     it.data.forEach { silenceRule ->
-                        silencingRuleIdList.add(silenceRule.id!!)
+                        if (silenceRule.state.equals("ACTIVE", true)
+                            && silenceRule.integrationIds[0].equals("607bfd3c-02c1-4da2-b67a-0d01b518ce5d", true)
+                        ) {
+                            silencingRuleIdList.add(silenceRule.id!!)
+                        }
                     }
+                    Log.e("before", spaceList[spaceListItemPosition].toString())
+                    Log.e("rrr", silencingRuleIdList.toString())
 
                     spaceList[spaceListItemPosition].silenceRuleIdList.addAll(silencingRuleIdList)
+                    Log.e("list", spaceList[spaceListItemPosition].toString())
                     spaceListItemPosition++
                     if(spaceListItemPosition != spaceList.size - 1){
                         callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
@@ -555,7 +581,26 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         )
 
         spaceList.addAll(tempSpaceList)
-        dbHelper.updateMaintenanceMode(Gson().toJson(spaceList))
+
+        dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
+            mapOf(
+                "id" to space.id,
+                "slug" to space.slug,
+                "name" to space.name,
+                "description" to space.description,
+                "iconURL" to space.iconURL,
+                "createdAt" to space.createdAt,
+                "permissions" to space.permissions,
+                "planDefinition" to space.planDefinition,
+                "isSelected" to space.isSelected,
+                "isForever" to space.isForever,
+                "isUntil" to space.isUntil,
+                "untilDate" to space.untilDate,
+                "silenceRuleId" to space.silenceRuleId,
+                "silenceRuleName" to space.silenceRuleName,
+                "count" to space.count,
+            )
+        }))
 
         val currentDate = Calendar.getInstance().time
         val dateFormat = SimpleDateFormat("dd/MM/yyyy, HH:mm", Locale.getDefault())

@@ -41,6 +41,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     private var spaceList = ArrayList<SpaceList>()
     private var notificationList = ArrayList<HomeNotificationList>()
+    private var spaceListItemPosition = 0
 
     private val apiViewModel by lazy {
         ViewModelProvider(this)[ApiViewModel::class.java]
@@ -71,6 +72,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         super.onCreate(savedInstanceState)
         observeGetSpaceList()
         observeFetchHomeNotification()
+        observeGetSilencingRules()
     }
 
     override fun createViewBinding(inflater: LayoutInflater, container: ViewGroup?, attachToRoot: Boolean): ChooseSpaceFragmentBinding {
@@ -191,8 +193,8 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     val tempSpaceList = list.data.sortedWith(
                         compareBy(
                             // Custom order based on plan type
-                            { it.plan in listOf("Community", "EarlyBird") }, // Plans other than "community" and "free" come first
-                            { it.plan != "EarlyBird" }, // "community" plans come before "free" plans
+                            { it.plan in listOf(Constant.COMMUNITY, Constant.EARLY_BIRD) }, // Plans other than "community" and "free" come first
+                            { it.plan != Constant.EARLY_BIRD }, // "community" plans come before "free" plans
                             { it.plan } // Sort alphabetically within the same plan type
                         )
                     )
@@ -202,10 +204,43 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     }
                     chooseSpaceAdapter.list.addAll(tempSpaceList)
                     chooseSpaceAdapter.notifyDataSetChanged()
+                    if(spaceList[spaceListItemPosition].plan != Constant.COMMUNITY
+                        && spaceList[spaceListItemPosition].plan != Constant.EARLY_BIRD){
+                        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
+                    }
                     callFetchHomeNotification()
                 }
             } else {
                 showMessage("Something wrong! Try again")
+            }
+        }
+    }
+
+    private fun callGetSilencingRules(spaceId: String) {
+        apiViewModel.callGetSilencingRules(spaceId)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeGetSilencingRules() {
+        apiViewModel.getSilencingRulesLiveData.observe(this) {
+            hideLoader()
+            if (it.responseCode == 200) {
+                if(!it.data.isNullOrEmpty()){
+                    val silencingRuleIdList = ArrayList<String>()
+                    it.data.forEach { silenceRule ->
+                        if(silenceRule.state.equals("ACTIVE", true)
+                            && silenceRule.integrationIds[0].equals("607bfd3c-02c1-4da2-b67a-0d01b518ce5d", true)){
+                            silencingRuleIdList.add(silenceRule.id!!)
+                        }
+                    }
+
+                    spaceList[spaceListItemPosition].silenceRuleIdList.addAll(silencingRuleIdList)
+                    spaceListItemPosition++
+                    if(spaceListItemPosition != spaceList.size - 1){
+                        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
+                    }
+                }
+                chooseSpaceAdapter.notifyDataSetChanged()
             }
         }
     }
