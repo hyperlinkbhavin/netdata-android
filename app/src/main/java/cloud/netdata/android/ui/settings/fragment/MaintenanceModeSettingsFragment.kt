@@ -6,6 +6,7 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
@@ -23,11 +24,13 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragmentBinding>() {
 
     lateinit var dbHelper: DatabaseHelper
     private var spaceList = ArrayList<SpaceList>()
+    private var spaceListItemPosition = 0
     private var itemPosition = -1
     private var clickPosition = -1
     private var isChanged = false
@@ -49,51 +52,64 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                         callSilenceSpace(item)
                     } else {
                         val ruleId = ArrayList<String>()
-                        if(!item.silenceRuleId.isNullOrEmpty()){
+                        /*if(!item.silenceRuleId.isNullOrEmpty()){
                             ruleId.add(item.silenceRuleId!!)
-                        }
+                        }*/
+                        ruleId.addAll(item.silenceRuleIdList)
+                        Log.e("rule id", ruleId.toString())
                         callUnsilenceSpace(item, ruleId, position)
 //                        updateData(itemPosition, clickPosition)
                     }
 
                 }
                 R.id.textViewUntilDate -> {
-                    itemPosition = position
-                    clickPosition = 2
-                    item.isUntil = true
-                    if(item.silenceRuleId!!.isNotEmpty()){
-                        isChanged = true
-                        val ruleId = ArrayList<String>()
-                        if(!item.silenceRuleId.isNullOrEmpty()){
-                            ruleId.add(item.silenceRuleId!!)
-                        }
-                        callUnsilenceSpace(item, ruleId, position)
-//                        updateData(itemPosition, clickPosition)
-                    } else {
-                        isChanged = false
-                        callSilenceSpace(item)
-                    }
+                    changeUntil(item, position)
+                }
+                R.id.radioButtonUntil -> {
+                    changeUntil(item, position)
                 }
                 R.id.radioButtonForever -> {
-                    item.isForever = true
-                    item.isUntil = false
-                    item.untilDate = ""
-                    itemPosition = position
-                    clickPosition = 3
-                    if(item.silenceRuleId!!.isNotEmpty()){
-                        isChanged = true
-                        val ruleId = ArrayList<String>()
-                        if(!item.silenceRuleId.isNullOrEmpty()){
-                            ruleId.add(item.silenceRuleId!!)
-                        }
-                        callUnsilenceSpace(item, ruleId, position)
-//                        updateData(itemPosition, clickPosition)
-                    } else {
-                        isChanged = false
-                        callSilenceSpace(item)
-                    }
+                    changeForever(item, position)
                 }
             }
+        }
+    }
+
+    private fun changeUntil(item: SpaceList, position: Int){
+        itemPosition = position
+        clickPosition = 2
+        item.isUntil = true
+        if(item.silenceRuleId!!.isNotEmpty()){
+            isChanged = true
+            val ruleId = ArrayList<String>()
+            if(!item.silenceRuleId.isNullOrEmpty()){
+                ruleId.add(item.silenceRuleId!!)
+            }
+            callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
+        } else {
+            isChanged = false
+            callSilenceSpace(item)
+        }
+    }
+
+    private fun changeForever(item: SpaceList, position: Int){
+        item.isForever = true
+        item.isUntil = false
+        item.untilDate = ""
+        itemPosition = position
+        clickPosition = 3
+        if(item.silenceRuleId!!.isNotEmpty()){
+            isChanged = true
+            val ruleId = ArrayList<String>()
+            if(!item.silenceRuleId.isNullOrEmpty()){
+                ruleId.add(item.silenceRuleId!!)
+            }
+            callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
+        } else {
+            isChanged = false
+            callSilenceSpace(item)
         }
     }
 
@@ -106,6 +122,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         observeGetSpaceList()
         observeSilenceSpace()
         observeUnsilenceSpace()
+        observeGetSilencingRules()
     }
 
     override fun createViewBinding(
@@ -157,6 +174,11 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             }
 
             changeAllNotificationData(true)
+        }
+
+        radioButtonUntil.setOnClickListener {
+            isChanged = true
+            datePicker()
         }
     }
 
@@ -397,6 +419,33 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         }
     }
 
+    private fun callGetSilencingRules(spaceId: String) {
+        showLoader()
+        apiViewModel.callGetSilencingRules(spaceId)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun observeGetSilencingRules() {
+        apiViewModel.getSilencingRulesLiveData.observe(this) {
+            hideLoader()
+            if (it.responseCode == 200) {
+                if(!it.data.isNullOrEmpty()){
+                    val silencingRuleIdList = ArrayList<String>()
+                    it.data.forEach { silenceRule ->
+                        silencingRuleIdList.add(silenceRule.id!!)
+                    }
+
+                    spaceList[spaceListItemPosition].silenceRuleIdList.addAll(silencingRuleIdList)
+                    spaceListItemPosition++
+                    if(spaceListItemPosition != spaceList.size - 1){
+                        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
+                    }
+                }
+                maintenanceModeSettingsAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
     private fun callSilenceSpace(item: SpaceList) {
         showLoader()
         if (item.isUntil) {
@@ -432,6 +481,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             hideLoader()
             if (it.responseCode == 200) {
                 spaceList[itemPosition].silenceRuleId = it.data!!.id
+                spaceList[itemPosition].silenceRuleIdList.add(it.data.id!!)
                 spaceList[itemPosition].silenceRuleName = it.data.name
                 updateData(itemPosition, clickPosition)
                 if(isAllChange){
@@ -525,6 +575,6 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         }
 
         getCheckData()
-        maintenanceModeSettingsAdapter.notifyDataSetChanged()
+        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
     }
 }

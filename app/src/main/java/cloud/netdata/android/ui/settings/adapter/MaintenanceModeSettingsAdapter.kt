@@ -50,6 +50,9 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
                 textViewUntilDate.setOnClickListener {
                     datePicker()
                 }
+                radioButtonUntil.setOnClickListener {
+                    datePicker()
+                }
 
                 radioButtonForever.setOnCheckedChangeListener { buttonView, isChecked ->
                     if(isChecked){

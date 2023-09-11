@@ -69,4 +69,6 @@ interface MainApi {
     @POST("api/v2/spaces/{spaceID}/notifications/silencing/rules/delete")
     fun unsilenceSpace(@Header("Authorization") token: String, @Path("spaceID") spaceID: String, @Body params: ArrayList<String>): Call<Any>
 
+    @GET("api/v2/spaces/{spaceID}/notifications/silencing/rules")
+    fun getSilencingRules(@Header("Authorization") token: String, @Path("spaceID") spaceID: String): Call<ArrayList<SilencingRulesList>>
 }

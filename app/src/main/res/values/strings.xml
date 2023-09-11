@@ -118,4 +118,5 @@
     <string name="title_notification_retention_settings">Control Notification Retention Settings</string>
     <string name="label_you_have_seen_the_message">You have seen the message</string>
     <string name="label_undo">Undo</string>
+    <string name="label_reset_all">Reset All</string>
 </resources>

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="cloud.netdata.android">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-feature android:name="android.hardware.camera.any"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:allowBackup="true"
@@ -18,7 +20,10 @@
         android:supportsRtl="true"
         android:name=".di.App"
         android:theme="@style/AppTheme">
-        <activity android:exported="true" android:screenOrientation="portrait" android:name=".ui.splash.SplashActivity">
+        <activity
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:name=".ui.splash.SplashActivity">
             <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,22 +42,43 @@
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="http" android:host="u8647778.ct.sendgrid.net" />
-                <data android:scheme="https" android:host="u8647778.ct.sendgrid.net" />
-                <data android:scheme="http" android:host="app.netdata.cloud" />
-                <data android:scheme="https" android:host="app.netdata.cloud" />
+
+                <data
+                    android:scheme="http"
+                    android:host="app.netdata.cloud" />
+            </intent-filter>
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="app.netdata.cloud" />
             </intent-filter>
 
         </activity>
-        <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.home.HomeActivity"/>
-        <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.auth.AuthActivity"/>
-        <activity android:exported="false" android:screenOrientation="portrait" android:name=".ui.auth.IsolatedFullActivity"/>
+        <activity
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:name=".ui.home.HomeActivity" />
+        <activity
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:name=".ui.auth.AuthActivity" />
+        <activity
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:name=".ui.auth.IsolatedFullActivity" />
 
         <receiver
             android:name=".ui.notification.NotificationBroadcastReceiver"
-            android:exported="false">
+            android:exported="false"
+            tools:ignore="Instantiatable">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -62,8 +88,8 @@
             android:name=".ui.notification.FirebaseMessagingService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
     </application>

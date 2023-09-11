@@ -35,6 +35,7 @@ class ApiViewModel: ViewModel() {
     val updateAccountNotificationsSettingsLiveData = MutableLiveData<MyResponseBody<Any>>()
     val silenceSpaceLiveData = MutableLiveData<MyResponseBody<SilenceRule>>()
     val unsilenceSpaceLiveData = MutableLiveData<MyResponseBody<Any>>()
+    val getSilencingRulesLiveData = MutableLiveData<MyResponseBody<ArrayList<SilencingRulesList>>>()
 
     fun callMagicLink(apiRequest: APIRequest)
     {
@@ -417,6 +418,32 @@ class ApiViewModel: ViewModel() {
             override fun onFailure(call: Call<Any>, t: Throwable) {
                 unsilenceSpaceLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
                 Log.e("Fail Space", call.toString())
+            }
+
+        })
+    }
+
+    fun callGetSilencingRules(spaceID: String)
+    {
+        /*val sessionId = "s_i=${Constant.COOKIE_SI}"
+        val token = "s_v_${Constant.COOKIE_SI}=${Constant.COOKIE_SV}"
+
+        val cookie = "$sessionId;$token"*/
+        val token = Constant.TOKEN
+
+        val apiService = NetworkClient.createService(MainApi::class.java)
+
+        val callApi = /*RetrofitApi.getInst().*/apiService.getSilencingRules(token, spaceID)
+        callApi.enqueue(object: Callback<ArrayList<SilencingRulesList>>{
+
+            override fun onResponse(call: Call<ArrayList<SilencingRulesList>>, response: Response<ArrayList<SilencingRulesList>>) {
+                Log.e("coodd", response.code().toString())
+                getSilencingRulesLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
+            }
+
+            override fun onFailure(call: Call<ArrayList<SilencingRulesList>>, t: Throwable) {
+                getSilencingRulesLiveData.postValue(MyResponseBody(0, "Test", ArrayList(),isError = true, throwable = t))
+                Log.e("Fail silence rule", call.toString())
             }
 
         })

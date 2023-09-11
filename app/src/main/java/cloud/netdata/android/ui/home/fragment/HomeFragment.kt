@@ -243,6 +243,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         manageClick()
         setAdapter()
 //        addData()
+        isAllButtonSelected = appPreferences.getBooleanDefTrue(Constant.APP_PREF_IS_ALL_BUTTON_SELECTED)
 
         try {
             manageNotificationRetentionData()
@@ -474,6 +475,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             isAllButtonSelected = true
             binding.buttonAll.isSelected = isAllButtonSelected
             binding.buttonUnread.isSelected = !isAllButtonSelected
+            appPreferences.putBoolean(Constant.APP_PREF_IS_ALL_BUTTON_SELECTED, isAllButtonSelected)
 
             homeAdapter.list.clear()
             homeAdapter.list.addAll(getAllData())
@@ -484,6 +486,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             isAllButtonSelected = false
             binding.buttonAll.isSelected = isAllButtonSelected
             binding.buttonUnread.isSelected = !isAllButtonSelected
+            appPreferences.putBoolean(Constant.APP_PREF_IS_ALL_BUTTON_SELECTED, isAllButtonSelected)
 
             homeAdapter.list.clear()
             homeAdapter.list.addAll(getAllData(isUnread = true))
@@ -580,6 +583,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         imageViewTypeAndComponentDown.setOnClickListener {
             changeFilterRotation(imageViewTypeAndComponentDown, recyclerViewTypeAndComponent)
+        }
+        textViewResetAll.setOnClickListener {
+            navigator.load(HomeFragment::class.java).replace(false)
         }
     }
 
@@ -1321,10 +1327,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     @SuppressLint("NotifyDataSetChanged")
     private fun observeLinkDevice() {
         apiViewModel.linkDeviceLiveData.observe(this) {
-            hideLoader()
             if (it.responseCode == 200) {
                 callRoomList()
             } else {
+                hideLoader()
                 showToast("Session expired! Please login again")
                 appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
                 appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
@@ -1349,9 +1355,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private fun observeFetchHomeNotification() {
         apiViewModel.fetchHomeNotificationLiveData.observe(this) {
-            hideLoader()
             if (!it.isError || it.responseCode == 200) {
                 insertDataIfEmpty(it.data!!)
+            } else {
+                hideLoader()
             }
         }
     }
@@ -1380,17 +1387,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun insertDataIfEmpty(alertDataList: ArrayList<HomeNotificationList>) {
-        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
-//        if(alertDataList.isNotEmpty()){
-            val gson = Gson()
+//        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
+        if(alertDataList.isNotEmpty()){
+            /*val gson = Gson()
             val type = object : TypeToken<List<HomeNotificationList>>() {}.type
-            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)
+            val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)*/
             var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
-            for (item in alarmDataList) {
+            for (item in alertDataList) {
                 lastId++
                 dbHelper.insertFetchNotificationData(lastId, item)
             }
         }
+        hideLoader()
         manageTableData()
     }
 
@@ -1595,7 +1603,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     @SuppressLint("NotifyDataSetChanged")
     private fun observeRoomList() {
         apiViewModel.roomListLiveData.observe(this) {
-            hideLoader()
             if (!it.isError && it.responseCode == 200) {
                 roomList.clear()
                 roomList.addAll(it.data!!)
@@ -1613,6 +1620,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 Handler(Looper.getMainLooper()).postDelayed({
                     callFetchHomeNotification()
                 },1000)
+            } else {
+                hideLoader()
             }
         }
     }
@@ -1625,7 +1634,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun observeDynamicLink() {
         dynamicViewModel.liveData.observe(this) {
             Handler(Looper.getMainLooper()).postDelayed({
-                hideLoader()
                 if (Constant.dynamicResponseUrl.contains("app.netdata.cloud/spaces")) {
                     navigator.loadActivity(
                         IsolatedFullActivity::class.java,

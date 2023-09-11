@@ -248,11 +248,21 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/textViewTitleFilter"/>
 
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textViewResetAll"
+                    style="@style/AppTheme.AppTextView.RegularBlack35ToGrey8F14"
+                    android:text="@string/label_reset_all"
+                    android:layout_marginHorizontal="@dimen/dp_3"
+                    android:ellipsize="end"
+                    android:layout_marginTop="@dimen/dp_10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/editTextSearchHere"/>
+
                 <androidx.core.widget.NestedScrollView android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_0"
                     android:fillViewport="true"
                     android:layout_marginTop="@dimen/dp_10"
-                    app:layout_constraintTop_toBottomOf="@id/editTextSearchHere"
+                    app:layout_constraintTop_toBottomOf="@id/textViewResetAll"
                     app:layout_constraintBottom_toBottomOf="parent">
 
                     <androidx.constraintlayout.widget.ConstraintLayout

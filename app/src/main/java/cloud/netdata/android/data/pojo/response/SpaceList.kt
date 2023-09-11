@@ -17,6 +17,7 @@ data class SpaceList(
     var isUntil: Boolean = false,
     var untilDate: String? = null,
     var silenceRuleId: String? = null,
+    var silenceRuleIdList: ArrayList<String> = arrayListOf(),
     var silenceRuleName: String? = null,
     var count: Int = 0
 ){

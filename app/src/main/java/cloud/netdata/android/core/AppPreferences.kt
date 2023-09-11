@@ -37,6 +37,10 @@ constructor(context: Context) {
         return sharedPreferences.getBoolean(name, false)
     }
 
+    fun getBooleanDefTrue(name: String): Boolean {
+        return sharedPreferences.getBoolean(name, true)
+    }
+
     fun getString(name: String): String {
         return sharedPreferences.getString(name,"")?:""
     }

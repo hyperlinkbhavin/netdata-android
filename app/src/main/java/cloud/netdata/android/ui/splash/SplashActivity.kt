@@ -32,6 +32,7 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+import android.content.Intent
 
 class SplashActivity : BaseActivity() {
 
@@ -65,16 +66,20 @@ class SplashActivity : BaseActivity() {
         Constant.COOKIE_SV = appPreferences.getString(Constant.APP_PREF_COOKIE_SV)
         Constant.TOKEN = session.userSession
 
-        val data: Uri? = intent?.data
+//        val data: Uri? = intent?.data
         var url = ""
+        // ATTENTION: This was auto-generated to handle app links.
+        val appLinkIntent: Intent = intent
+        val appLinkAction: String? = appLinkIntent.action
+        val appLinkData: Uri? = appLinkIntent.data
 
-        if (data != null) {
-            Log.e("deeplink", data.toString())
-            if (data.toString().contains("upn=")) {
-                url = data.toString().split("=")[1]
+        if (appLinkData != null) {
+            Log.e("deeplink", appLinkData.toString())
+            if (appLinkData.toString().contains("upn=")) {
+                url = appLinkData.toString().split("=")[1]
             } else {
                 val tokenPattern = "token=([^&]*)".toRegex()
-                val matchResult = tokenPattern.find(data.toString())
+                val matchResult = tokenPattern.find(appLinkData.toString())
                 url = matchResult?.groupValues?.getOrNull(1)!!
                 Log.e("token", url)
             }
