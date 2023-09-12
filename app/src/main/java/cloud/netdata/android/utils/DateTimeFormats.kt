@@ -53,6 +53,7 @@ object DateTimeFormats {
     const val SERVER_DATE_FORMAT = "yyyy-MM-dd"
     const val SERVER_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss"
     const val SERVER_DATE_TIME_FORMAT_NEW = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
+    const val SERVER_DATE_TIME_FORMAT_NEW_ONE = "yyyy-MM-dd'T'HH:mm:ss'Z'"
     const val MAINTENANCE_MODE_DATE_FORMAT = "dd/MM/yy, HH:mm"
     const val LOCAL_LIST_FORMAT = "dd MMM yyyy hh:mm a"
     const val BOOKING_LIST_FORMAT = "MMM dd, yyyy" //Mar 19, 2020

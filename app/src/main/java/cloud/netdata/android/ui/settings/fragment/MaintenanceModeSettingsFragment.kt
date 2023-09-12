@@ -6,7 +6,6 @@ import android.app.TimePickerDialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
@@ -49,13 +48,19 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     itemPosition = position
                     clickPosition = 1
                     if (isChecked) {
+                        if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
+                        }
                         callSilenceSpace(item)
                     } else {
+                        if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
+                        }
                         val ruleId = ArrayList<String>()
                         /*if(!item.silenceRuleId.isNullOrEmpty()){
                             ruleId.add(item.silenceRuleId!!)
                         }*/
-                        ruleId.addAll(item.silenceRuleIdList.distinct())
+                        ruleId.addAll(item.silenceRuleIdList)
                         callUnsilenceSpace(item, ruleId, position)
 //                        updateData(itemPosition, clickPosition)
                     }
@@ -78,12 +83,10 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         itemPosition = position
         clickPosition = 2
         item.isUntil = true
-        if(item.silenceRuleId!!.isNotEmpty()){
+        if(item.silenceRuleIdList.isNotEmpty()){
             isChanged = true
             val ruleId = ArrayList<String>()
-            if(!item.silenceRuleId.isNullOrEmpty()){
-                ruleId.add(item.silenceRuleId!!)
-            }
+            ruleId.addAll(item.silenceRuleIdList)
             callUnsilenceSpace(item, ruleId, position)
 //                        updateData(itemPosition, clickPosition)
         } else {
@@ -98,12 +101,10 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         item.untilDate = ""
         itemPosition = position
         clickPosition = 3
-        if(item.silenceRuleId!!.isNotEmpty()){
+        if(item.silenceRuleIdList.isNotEmpty()){
             isChanged = true
             val ruleId = ArrayList<String>()
-            if(!item.silenceRuleId.isNullOrEmpty()){
-                ruleId.add(item.silenceRuleId!!)
-            }
+            ruleId.addAll(item.silenceRuleIdList)
             callUnsilenceSpace(item, ruleId, position)
 //                        updateData(itemPosition, clickPosition)
         } else {
@@ -184,6 +185,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     @SuppressLint("NotifyDataSetChanged", "SuspiciousIndentation")
     private fun changeAllNotificationData(isChecked: Boolean) {
         if (isChecked) {
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
             binding.radioGroupAllNotifications.visible()
             allChangeIndex += 1
             if(allChangeIndex != spaceList.size){
@@ -220,6 +222,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 }
             }*/
         } else {
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
             allChangeIndex += 1
             if(allChangeIndex != spaceList.size){
                 isAllChange = true
@@ -228,7 +231,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
                     itemPosition = allChangeIndex
                     clickPosition = 4
-                    callUnsilenceSpace(spaceList[allChangeIndex], arrayListOf(spaceList[allChangeIndex].silenceRuleId!!), allChangeIndex)
+                    callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, allChangeIndex)
                 } else {
                     changeAllNotificationData(false)
                 }
@@ -244,6 +247,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private fun changeDataForUnsilence(position: Int){
         spaceList[position].silenceRuleId = ""
         spaceList[position].silenceRuleName = ""
+        spaceList[position].silenceRuleIdList = arrayListOf()
         updateData(position, clickPosition)
     }
 
@@ -291,7 +295,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
             getCheckData()
 
-            dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
+            /*dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
                 mapOf(
                     "id" to space.id,
                     "slug" to space.slug,
@@ -311,7 +315,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     "silenceRuleName" to space.silenceRuleName,
                     "count" to space.count,
                 )
-            }))
+            }))*/
             maintenanceModeSettingsAdapter.notifyDataSetChanged()
         }
         catch (_: Exception){
@@ -443,30 +447,43 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         apiViewModel.callGetSilencingRules(spaceId)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+    @SuppressLint("NotifyDataSetChanged", "SuspiciousIndentation")
     private fun observeGetSilencingRules() {
         apiViewModel.getSilencingRulesLiveData.observe(this) {
             hideLoader()
             if (it.responseCode == 200) {
-                if(!it.data.isNullOrEmpty()){
-                    val silencingRuleIdList = ArrayList<String>()
+                if(!it.data.isNullOrEmpty()) {
                     it.data.forEach { silenceRule ->
                         if (silenceRule.state.equals("ACTIVE", true)
-                            && silenceRule.integrationIds[0].equals("607bfd3c-02c1-4da2-b67a-0d01b518ce5d", true)
+                            && silenceRule.integrationIds[0].equals(
+                                "607bfd3c-02c1-4da2-b67a-0d01b518ce5d",
+                                true
+                            )
                         ) {
-                            silencingRuleIdList.add(silenceRule.id!!)
+                            if(!spaceList[spaceListItemPosition].silenceRuleIdList.contains(silenceRule.id)
+                                && !silenceRule.id.isNullOrEmpty()){
+                                spaceList[spaceListItemPosition].silenceRuleIdList.add(silenceRule.id!!)
+                                if(silenceRule.lastsUntil != null){
+                                    spaceList[spaceListItemPosition].untilDate = ConvertDateTimeFormat.convertDate(silenceRule.lastsUntil!!,
+                                        DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW_ONE, DateTimeFormats.MAINTENANCE_MODE_DATE_FORMAT)
+                                    spaceList[spaceListItemPosition].isUntil = true
+                                }
+                            }
                         }
                     }
-                    Log.e("before", spaceList[spaceListItemPosition].toString())
-                    Log.e("rrr", silencingRuleIdList.toString())
 
-                    spaceList[spaceListItemPosition].silenceRuleIdList.addAll(silencingRuleIdList)
-                    Log.e("list", spaceList[spaceListItemPosition].toString())
-                    spaceListItemPosition++
-                    if(spaceListItemPosition != spaceList.size - 1){
-                        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
-                    }
+
                 }
+                spaceList[spaceListItemPosition].isSelected = !spaceList[spaceListItemPosition].silenceRuleIdList.isNullOrEmpty()
+                    spaceListItemPosition++
+                    if (spaceListItemPosition != spaceList.size - 1
+                        && !spaceList[spaceListItemPosition].plan.equals(Constant.COMMUNITY, true)
+                        && !spaceList[spaceListItemPosition].plan.equals(Constant.EARLY_BIRD, true)
+                    ) {
+                        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
+                    } else {
+                        getCheckData()
+                    }
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()
             }
         }
@@ -526,14 +543,15 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private fun callUnsilenceSpace(item: SpaceList, ruleId: ArrayList<String>, position: Int) {
         showLoader()
         changeDataForUnsilence(position)
-        apiViewModel.callUnsilenceSpace(item.id!!, ruleId)
+        val ruleIdArrayList = ArrayList(ruleId.filter { it.isNotEmpty() }.distinct())
+        apiViewModel.callUnsilenceSpace(item.id!!, ruleIdArrayList)
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeUnsilenceSpace() {
         apiViewModel.unsilenceSpaceLiveData.observe(this) {
             hideLoader()
-            if(it.responseCode == 200){
+            if(it.isError){
                 if(isChanged){
                     isChanged = false
                     callSilenceSpace(spaceList[itemPosition])
@@ -552,7 +570,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     @SuppressLint("NotifyDataSetChanged")
     private fun checkAndStoreData(item: ArrayList<SpaceList>) {
         spaceList.clear()
-        if(dbHelper.getMaintenanceMode().isEmpty()){
+        /*if(dbHelper.getMaintenanceMode().isEmpty()){
             dbHelper.insertMaintenanceMode(Gson().toJson(item))
         }
 
@@ -569,9 +587,9 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         val dataToRemove = arrayList.filter { it.id !in idsInFirstList }
 
-        arrayList.removeAll(dataToRemove.toSet())
+        arrayList.removeAll(dataToRemove.toSet())*/
 
-        val tempSpaceList = arrayList.sortedWith(
+        val tempSpaceList = item.sortedWith(
             compareBy(
                 // Custom order based on plan type
                 { it.plan in listOf(Constant.COMMUNITY, Constant.EARLY_BIRD) }, // Plans other than "community" and "free" come first
@@ -582,7 +600,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         spaceList.addAll(tempSpaceList)
 
-        dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
+        /*dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
             mapOf(
                 "id" to space.id,
                 "slug" to space.slug,
@@ -591,6 +609,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 "iconURL" to space.iconURL,
                 "createdAt" to space.createdAt,
                 "permissions" to space.permissions,
+                "plan" to space.plan,
                 "planDefinition" to space.planDefinition,
                 "isSelected" to space.isSelected,
                 "isForever" to space.isForever,
@@ -600,9 +619,9 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 "silenceRuleName" to space.silenceRuleName,
                 "count" to space.count,
             )
-        }))
+        }))*/
 
-        val currentDate = Calendar.getInstance().time
+        /*val currentDate = Calendar.getInstance().time
         val dateFormat = SimpleDateFormat("dd/MM/yyyy, HH:mm", Locale.getDefault())
 
         for((index, items) in spaceList.withIndex()){
@@ -617,9 +636,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 }
             } catch (e: Exception){
             }
-        }
-
-        getCheckData()
+        }*/
         callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
     }
 }

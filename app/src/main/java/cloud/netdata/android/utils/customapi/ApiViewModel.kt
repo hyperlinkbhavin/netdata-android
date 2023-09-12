@@ -416,8 +416,8 @@ class ApiViewModel: ViewModel() {
             }
 
             override fun onFailure(call: Call<Any>, t: Throwable) {
-                unsilenceSpaceLiveData.postValue(MyResponseBody(0, "Test", "",isError = true, throwable = t))
-                Log.e("Fail Space", call.toString())
+                unsilenceSpaceLiveData.postValue(MyResponseBody(200, "Test", "",isError = true, throwable = t))
+                Log.e("Fail Unsilence", call.toString())
             }
 
         })
@@ -437,7 +437,7 @@ class ApiViewModel: ViewModel() {
         callApi.enqueue(object: Callback<ArrayList<SilencingRulesList>>{
 
             override fun onResponse(call: Call<ArrayList<SilencingRulesList>>, response: Response<ArrayList<SilencingRulesList>>) {
-                Log.e("coodd", response.code().toString())
+                Log.e("cooddeee", response.code().toString())
                 getSilencingRulesLiveData.postValue(MyResponseBody(response.code(), "Test", response.body(), throwable = null))
             }
 

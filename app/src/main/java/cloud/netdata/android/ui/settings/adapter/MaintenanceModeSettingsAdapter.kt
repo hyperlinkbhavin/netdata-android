@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import cloud.netdata.android.R
 import cloud.netdata.android.data.pojo.response.SpaceList
 import cloud.netdata.android.databinding.RowItemMaintenanceModeSettingsBinding
-import cloud.netdata.android.utils.gone
-import cloud.netdata.android.utils.visible
+import cloud.netdata.android.utils.*
 import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import java.util.*
 import kotlin.collections.ArrayList
@@ -66,7 +65,7 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
 
         @SuppressLint("SetTextI18n")
         fun bind(item: SpaceList) = with(binding) {
-            if (item.plan.equals("EarlyBird", true) || item.plan.equals("Community", true)) {
+            if (item.plan.equals(Constant.EARLY_BIRD, true) || item.plan.equals(Constant.COMMUNITY, true)) {
                 constraintDisableNotifications.setBackgroundResource(R.drawable.dw_corner_four_with_border_bg_inactive)
                 constraintDisableNotifications.isSelected = false
                 switchDisableAllNotifications.isClickable = false
@@ -76,7 +75,9 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
                 switchDisableAllNotifications.isClickable = true
             }
 
-                if(item.isSelected){
+                if(item.isSelected
+                    && !item.plan.equals(Constant.EARLY_BIRD, true)
+                    && !item.plan.equals(Constant.COMMUNITY, true)){
                 constraintDisableNotifications.isSelected = true
                 switchDisableAllNotifications.isChecked = true
                 radioGroupAllNotifications.visible()

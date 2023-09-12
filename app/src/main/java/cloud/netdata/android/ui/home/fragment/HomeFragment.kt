@@ -43,6 +43,7 @@ import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.home.adapter.*
 import cloud.netdata.android.ui.notification.NotificationBroadcastReceiver
 import cloud.netdata.android.ui.notification.fragment.NotificationFragment
+import cloud.netdata.android.ui.settings.fragment.MaintenanceModeSettingsFragment
 import cloud.netdata.android.ui.settings.fragment.SettingsFragment
 import cloud.netdata.android.utils.*
 import cloud.netdata.android.utils.customapi.ApiViewModel
@@ -304,6 +305,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             binding.includeToolbar.textViewSpace.text =
                 appPreferences.getString(Constant.APP_PREF_SPACE_NAME)
         }
+        Log.e("silence", appPreferences.getBoolean(Constant.APP_PREF_IS_SPACE_SILENCE).toString())
+        if(appPreferences.getBoolean(Constant.APP_PREF_IS_SPACE_SILENCE)){
+            showSilenceSpaceSnackbar()
+        }
     }
 
     override fun onPause() {
@@ -471,6 +476,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun manageClick() = with(binding) {
+        swipeRefresh.setOnRefreshListener {
+            callRoomList()
+            swipeRefresh.isRefreshing = false
+        }
+
         buttonAll.setOnClickListener {
             isAllButtonSelected = true
             binding.buttonAll.isSelected = isAllButtonSelected
@@ -1684,6 +1694,43 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             val params = snackView.layoutParams as FrameLayout.LayoutParams
             params.gravity = Gravity.TOP
             params.setMargins(0,70,0,0)
+            snackView.layoutParams = params
+            val textView =
+                snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+            textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
+            textView.maxLines = 4
+
+            snackView.background = ResourcesCompat.getDrawable(resources, R.color.colorYellowF9, null)
+            /*snackView.setBackgroundColor(
+                ResourcesCompat.getColor(
+                    resources,
+                    R.color.colorPrimary,
+                    null
+                )
+            )*/
+            snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+            snackbar.show()
+        }
+        else {
+            Log.e("view", "view null")
+        }
+    }
+
+    private fun showSilenceSpaceSnackbar() {
+        hideKeyBoard()
+        if (view != null) {
+            val message = "This space is silence tap on settings to get navigated to the maintenance mode screen"
+            val snackbar = Snackbar.make(binding.editTextSearchServices, message, Snackbar.LENGTH_LONG)
+            snackbar.duration = 600000
+            snackbar.setActionTextColor(Color.BLACK)
+            snackbar.setAction("Settings") {
+                navigator.loadActivity(IsolatedFullActivity::class.java, MaintenanceModeSettingsFragment::class.java).start()
+                snackbar.dismiss()
+            }
+            val snackView = snackbar.view
+            val params = snackView.layoutParams as FrameLayout.LayoutParams
+            params.gravity = Gravity.TOP
+            params.setMargins(0,100,0,0)
             snackView.layoutParams = params
             val textView =
                 snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView

@@ -57,6 +57,11 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     else {
                         appPreferences.putString(Constant.APP_PREF_SPACE_ID, item.id!!)
                         appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.name!!)
+                        if(item.silenceRuleIdList.isNotEmpty()){
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
+                        } else {
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
+                        }
                         navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
                     }
                 }

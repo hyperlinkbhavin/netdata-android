@@ -9,6 +9,7 @@ data class SilencingRulesList(
     @SerializedName("integration_ids" ) var integrationIds : ArrayList<String> = arrayListOf(),
     @SerializedName("starts_at"       ) var startsAt       : String?           = null,
     @SerializedName("disabled"        ) var disabled       : Boolean?          = null,
+    @SerializedName("lasts_until"     ) var lastsUntil     : String?          = null,
     @SerializedName("read_only"       ) var readOnly       : Boolean?          = null,
     @SerializedName("state"           ) var state          : String?           = null
 )
