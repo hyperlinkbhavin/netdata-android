@@ -183,7 +183,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     }
 
     @SuppressLint("NotifyDataSetChanged", "SuspiciousIndentation")
-    private fun changeAllNotificationData(isChecked: Boolean) {
+    private fun changeAllNotificationData(isChecked: Boolean, isUntil: Boolean = false) {
         if (isChecked) {
             appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
             binding.radioGroupAllNotifications.visible()
@@ -193,10 +193,18 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
                 if(!spaceList[allChangeIndex].isSelected
                     && !spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)
+                    && !isUntil){
                     itemPosition = allChangeIndex
                     clickPosition = 1
                     callSilenceSpace(spaceList[allChangeIndex])
+                } else if(isUntil
+                    && !spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
+                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                    itemPosition = allChangeIndex
+                    clickPosition = 1
+                    isChanged = true
+                    callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, clickPosition)
                 } else {
                     changeAllNotificationData(true)
                 }
@@ -379,7 +387,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     it.untilDate = "$date, $selectedHour:$minutes"
                 }
 
-                changeAllNotificationData(true)
+                changeAllNotificationData(true, true)
                 textViewUntilDate.text = "$date, $selectedHour:$minutes"
                 radioButtonUntil.isChecked = true
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()

@@ -75,8 +75,9 @@ class SplashActivity : BaseActivity() {
 
         if (appLinkData != null) {
             Log.e("deeplink", appLinkData.toString())
-            if (appLinkData.toString().contains("upn=")) {
-                url = appLinkData.toString().split("=")[1]
+            if (appLinkData.toString().contains("/spaces/")) {
+//                url = appLinkData.toString().split("=")[1]
+                url = appLinkData.toString()
             } else {
                 val tokenPattern = "token=([^&]*)".toRegex()
                 val matchResult = tokenPattern.find(appLinkData.toString())

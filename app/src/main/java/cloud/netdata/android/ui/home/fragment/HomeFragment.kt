@@ -276,13 +276,24 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
 
         if (deeplink.isNotEmpty()) {
-            callDynamicLink(deeplink)
+//            callDynamicLink(deeplink)
+            Log.e("liiik", deeplink)
+            if (deeplink.contains("app.netdata.cloud/spaces")) {
+                navigator.loadActivity(
+                    IsolatedFullActivity::class.java,
+                    HomeDetailsFragment::class.java
+                ).addBundle(bundleOf(Constant.BUNDLE_URL to deeplink))
+                    .start()
+            } else {
+//                showMessage("Fail to view alert due to a bad URL")
+                callLinkDevice()
+            }
             deeplink = ""
         } else {
-//            session.getFirebaseDeviceId { deviceId ->
-//                session.deviceId = deviceId
+            session.getFirebaseDeviceId { deviceId ->
+                session.deviceId = deviceId
                 callLinkDevice()
-//            }
+            }
         }
 
         notificationReceiver = NotificationBroadcastReceiver(this)
