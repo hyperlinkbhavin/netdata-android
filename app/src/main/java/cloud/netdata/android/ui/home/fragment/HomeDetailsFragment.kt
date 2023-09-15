@@ -75,7 +75,7 @@ class HomeDetailsFragment: BaseFragment<HomeDetailsFragmentBinding>() {
         webview.settings.javaScriptEnabled = true
         webview.settings.loadWithOverviewMode = true
         webview.settings.useWideViewPort = true
-        webview.settings.builtInZoomControls = true
+//        webview.settings.builtInZoomControls = true
         webview.webChromeClient = WebChromeClient()
         webview.settings.domStorageEnabled = true
         webview.settings.databaseEnabled = true

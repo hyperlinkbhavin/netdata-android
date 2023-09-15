@@ -32,5 +32,6 @@ interface FragmentComponent {
     fun inject(changeThemeDayFragment: ChangeThemeDayFragment)
     fun inject(changeThemeNightFragment: ChangeThemeNightFragment)
     fun inject(notificationRetentionSettingsFragment: NotificationRetentionSettingsFragment)
+    fun inject(duplicateMaintenanceModeSettingsFragment: DuplicateMaintenanceModeSettingsFragment)
 
 }

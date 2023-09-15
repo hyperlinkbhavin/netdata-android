@@ -33,6 +33,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 import android.content.Intent
+import androidx.core.content.ContentProviderCompat.requireContext
+import cloud.netdata.android.utils.localdb.DatabaseHelper
 
 class SplashActivity : BaseActivity() {
 
@@ -43,6 +45,7 @@ class SplashActivity : BaseActivity() {
 
     @Inject
     lateinit var appPreferences: AppPreferences
+    lateinit var dbHelper: DatabaseHelper
 
     lateinit var splashActivityBinding: SplashActivityBinding
     override fun findFragmentPlaceHolder(): Int {
@@ -61,6 +64,7 @@ class SplashActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        observeDynamicLink()
+        dbHelper = DatabaseHelper(this)
 
         Constant.COOKIE_SI = appPreferences.getString(Constant.APP_PREF_COOKIE_SI)
         Constant.COOKIE_SV = appPreferences.getString(Constant.APP_PREF_COOKIE_SV)
@@ -101,6 +105,8 @@ class SplashActivity : BaseActivity() {
         }
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        dbHelper.updateFetchNotificationDataByAllRead(isNotificationRead = true)
 
         Handler(Looper.getMainLooper()).postDelayed({
             splashActivityBinding.apply {

@@ -334,8 +334,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             imageViewFilter.visible()
             imageViewNotification.visible()
 
-            /*textViewNotificationCount.visible()
-            textViewNotificationCount.text = "3"*/
         }
     }
 

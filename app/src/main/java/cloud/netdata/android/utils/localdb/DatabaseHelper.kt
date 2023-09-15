@@ -409,10 +409,14 @@ class DatabaseHelper(context: Context) :
         db.close()
     }
 
-    fun updateFetchNotificationDataByAllRead() {
+    fun updateFetchNotificationDataByAllRead(isNotificationRead: Boolean = false) {
         val values = ContentValues().apply {
-            put(FN_IS_READ, 1)
-            put(FN_IS_NOTIFICATION_READ, 1)
+            if(isNotificationRead){
+                put(FN_IS_NOTIFICATION_READ, 1)
+            } else {
+                put(FN_IS_READ, 1)
+                put(FN_IS_NOTIFICATION_READ, 1)
+            }
         }
 
         val db = writableDatabase
