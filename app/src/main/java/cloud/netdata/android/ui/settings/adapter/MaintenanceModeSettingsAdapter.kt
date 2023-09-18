@@ -44,7 +44,12 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
         init {
             binding.apply {
                 switchDisableAllNotifications.setOnClickListener {
-                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition], switchDisableAllNotifications.isChecked)
+                    if(!switchDisableAllNotifications.isChecked){
+                        callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition], switchDisableAllNotifications.isChecked)
+                    } else {
+                        list[absoluteAdapterPosition].isTempSelected = true
+                        notifyItemChanged(absoluteAdapterPosition)
+                    }
                 }
                 textViewUntilDate.setOnClickListener {
                     datePicker()
@@ -92,6 +97,12 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
                 switchDisableAllNotifications.isChecked = false
                 radioGroupAllNotifications.gone()
             }
+
+            if(item.isTempSelected){
+                switchDisableAllNotifications.isChecked = true
+                radioGroupAllNotifications.visible()
+            }
+
             textViewDisableAllNotification.text = item.name
         }
         fun datePicker()=with(binding){

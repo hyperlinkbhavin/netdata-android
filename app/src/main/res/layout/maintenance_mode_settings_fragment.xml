@@ -91,7 +91,6 @@
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
                     android:text="@string/label_forever"
-                    android:checked="true"
                     android:button="@drawable/dw_radio_button_selector"
                     android:paddingStart="@dimen/dp_8"/>
 

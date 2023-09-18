@@ -48,10 +48,10 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     itemPosition = position
                     clickPosition = 1
                     if (isChecked) {
-                        if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
+                        /*if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
                             appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
                         }
-                        callSilenceSpace(item)
+                        callSilenceSpace(item)*/
                     } else {
                         if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
                             appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
@@ -155,7 +155,12 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     @SuppressLint("NotifyDataSetChanged")
     private fun manageClick() = with(binding) {
         switchDisableAllNotifications.setOnClickListener {
-            changeAllNotificationData(switchDisableAllNotifications.isChecked)
+            if(switchDisableAllNotifications.isChecked){
+                binding.constraintDisableNotifications.isSelected = true
+                binding.radioGroupAllNotifications.visible()
+            } else {
+                changeAllNotificationData(switchDisableAllNotifications.isChecked)
+            }
         }
 
         textViewUntilDate.setOnClickListener {
@@ -163,8 +168,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             datePicker()
         }
 
-        radioButtonForever.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked) {
+        radioButtonForever.setOnClickListener {
+            if (radioButtonForever.isChecked) {
                 textViewUntilDate.text = "DD/MM/YY, HH:MM"
             }
             spaceList.forEach {

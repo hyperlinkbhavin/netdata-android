@@ -12,6 +12,7 @@ data class SpaceList(
     @SerializedName("permissions"    ) var permissions    : ArrayList<String> = arrayListOf(),
     @SerializedName("plan"           ) var plan           : String?           = null,
     @SerializedName("planDefinition" ) var planDefinition : PlanDefinition?   = PlanDefinition(),
+    var isTempSelected: Boolean = false,
     var isSelected: Boolean = false,
     var isForever: Boolean = false,
     var isUntil: Boolean = false,
