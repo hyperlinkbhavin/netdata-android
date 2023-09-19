@@ -392,10 +392,10 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     it.untilDate = "$date, $selectedHour:$minutes"
                 }
 
-                changeAllNotificationData(true, true)
                 textViewUntilDate.text = "$date, $selectedHour:$minutes"
                 radioButtonUntil.isChecked = true
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()
+                changeAllNotificationData(true, true)
             },
             hour,
             minute,
