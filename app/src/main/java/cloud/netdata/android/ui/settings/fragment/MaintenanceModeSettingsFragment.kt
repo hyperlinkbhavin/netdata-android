@@ -35,6 +35,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private var isChanged = false
     private var manageSpaceList = ArrayList<SpaceList>()
     private var isAllChange = false
+    private var isUntil = false
     private var allChangeIndex = -1
 
     private val apiViewModel by lazy {
@@ -172,13 +173,14 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             if (radioButtonForever.isChecked) {
                 textViewUntilDate.text = "DD/MM/YY, HH:MM"
             }
+            isUntil = false
             spaceList.forEach {
                 it.isForever = true
                 it.isUntil = false
                 it.untilDate = ""
             }
 
-            changeAllNotificationData(true)
+            changeAllNotificationData(true, isUntil)
         }
 
         radioButtonUntil.setOnClickListener {
@@ -209,11 +211,17 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     itemPosition = allChangeIndex
                     clickPosition = 1
                     isChanged = true
-                    callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, clickPosition)
+                    if(spaceList[allChangeIndex].isForever){
+                        callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, clickPosition)
+                    } else {
+                        isChanged = false
+                        callSilenceSpace(spaceList[itemPosition])
+                    }
                 } else {
-                    changeAllNotificationData(true)
+                    changeAllNotificationData(true, isUntil)
                 }
             } else {
+
                 isAllChange = false
                 allChangeIndex = -1
                 getCheckData()
@@ -246,7 +254,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     clickPosition = 4
                     callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, allChangeIndex)
                 } else {
-                    changeAllNotificationData(false)
+                    changeAllNotificationData(false, isUntil)
                 }
             } else {
                 isAllChange = false
@@ -335,15 +343,23 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         }
     }
 
-    private fun getCheckData() {
+    private fun getCheckData() = with(binding) {
         val data = spaceList.find { !it.isSelected && !it.plan.equals(Constant.COMMUNITY, true)
                 && !it.plan.equals(Constant.EARLY_BIRD, true) }
         if (data?.name.isNullOrEmpty()) {
-            binding.switchDisableAllNotifications.isChecked = true
-            binding.radioGroupAllNotifications.visible()
+            switchDisableAllNotifications.isChecked = true
+            radioGroupAllNotifications.visible()
+            val newData = spaceList.find { it.isSelected && !it.plan.equals(Constant.COMMUNITY, true)
+                    && !it.plan.equals(Constant.EARLY_BIRD, true) }
+            if(newData!!.isUntil){
+                radioButtonUntil.isChecked = true
+                textViewUntilDate.text = newData.untilDate
+            } else {
+                radioButtonForever.isChecked = true
+            }
         } else {
-            binding.switchDisableAllNotifications.isChecked = false
-            binding.radioGroupAllNotifications.gone()
+            switchDisableAllNotifications.isChecked = false
+            radioGroupAllNotifications.gone()
         }
     }
     fun datePicker()=with(binding){
@@ -386,6 +402,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     "$selectedMinute"
                 }
 
+                isUntil = true
                 spaceList.forEach {
                     it.isForever = false
                     it.isUntil = true
@@ -395,7 +412,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 textViewUntilDate.text = "$date, $selectedHour:$minutes"
                 radioButtonUntil.isChecked = true
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()
-                changeAllNotificationData(true, true)
+                changeAllNotificationData(isChecked = true, isUntil = isUntil)
             },
             hour,
             minute,
@@ -477,9 +494,11 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                                 && !silenceRule.id.isNullOrEmpty()){
                                 spaceList[spaceListItemPosition].silenceRuleIdList.add(silenceRule.id!!)
                                 if(silenceRule.lastsUntil != null){
-                                    spaceList[spaceListItemPosition].untilDate = ConvertDateTimeFormat.convertDate(silenceRule.lastsUntil!!,
+                                    spaceList[spaceListItemPosition].untilDate = ConvertDateTimeFormat.convertUTCToLocalDate(silenceRule.lastsUntil!!,
                                         DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW_ONE, DateTimeFormats.MAINTENANCE_MODE_DATE_FORMAT)
                                     spaceList[spaceListItemPosition].isUntil = true
+                                } else {
+                                    spaceList[spaceListItemPosition].isForever = true
                                 }
                             }
                         }
@@ -541,11 +560,11 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 spaceList[itemPosition].silenceRuleName = it.data.name
                 updateData(itemPosition, clickPosition)
                 if(isAllChange){
-                    changeAllNotificationData(true)
+                    changeAllNotificationData(true, isUntil)
                 }
             } else {
                 if(isAllChange){
-                    changeAllNotificationData(true)
+                    changeAllNotificationData(true, isUntil)
                 }
                 showMessage("Something wrong for ${spaceList[itemPosition].name}")
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()
@@ -570,11 +589,11 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     callSilenceSpace(spaceList[itemPosition])
                 }
                 if(isAllChange){
-                    changeAllNotificationData(false)
+                    changeAllNotificationData(false, isUntil)
                 }
             } else {
                 if(isAllChange){
-                    changeAllNotificationData(false)
+                    changeAllNotificationData(false, isUntil)
                 }
             }
         }

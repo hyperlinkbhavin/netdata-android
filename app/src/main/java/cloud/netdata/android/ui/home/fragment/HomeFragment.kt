@@ -1,9 +1,11 @@
 package cloud.netdata.android.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -58,6 +60,13 @@ import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okio.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -111,6 +120,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     )
                         .addBundle(bundleOf(Constant.BUNDLE_URL to url))
                         .start()
+
+//                    sendRequestWithAuthorization(url, session.userSession)
+
                 }
 
                 R.id.imageViewPriority -> {
@@ -213,6 +225,29 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             typeAndComponentFilterAdapter.notifyItemChanged(pos)
         }
 
+    }
+
+    fun sendRequestWithAuthorization(url: String, authorizationHeader: String) {
+        // Build the URL with the authorization header as a query parameter
+        val uri = Uri.parse(url).buildUpon()
+            .appendQueryParameter("Authorization", authorizationHeader)
+            .build()
+
+        // Create an Intent to open the URL in Chrome
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+        // Specify the package name of the Chrome browser
+        intent.setPackage("com.android.chrome")
+
+        try {
+            // Attempt to open the URL in Chrome
+            startActivity(intent)
+        } catch (e: Exception) {
+            // If Chrome is not installed or an error occurs, open the URL in the default browser
+            val defaultIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()))
+            startActivity(defaultIntent)
+        }
     }
 
     private var isAllButtonSelected = true
