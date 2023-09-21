@@ -1,6 +1,7 @@
 package cloud.netdata.android.ui.home.fragment
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.res.ColorStateList
@@ -15,10 +16,7 @@ import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.appcompat.widget.AppCompatRadioButton
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
@@ -60,13 +58,7 @@ import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.Response
-import okio.IOException
+import kotlinx.android.synthetic.main.include_toolbar_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -81,6 +73,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         ViewModelProvider(this)[ApiViewModel::class.java]
     }
 
+    lateinit var customDialog: AlertDialog
     private var notificationReceiver: NotificationBroadcastReceiver? = null
     lateinit var flexLayoutManager: FlexboxLayoutManager
     lateinit var dbHelper: DatabaseHelper
@@ -114,15 +107,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     readUnreadNotification(item, isSwipeRead = true)
                     val url = "https://app.netdata.cloud/webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
                             "?space_id=${item.data!!.netdata!!.space!!.id}&room_id=${item.data!!.netdata!!.room[0].id}#token=${session.userSession.drop(7)}"
-                    navigator.loadActivity(
-                        IsolatedFullActivity::class.java,
-                        HomeDetailsFragment::class.java
-                    )
-                        .addBundle(bundleOf(Constant.BUNDLE_URL to url))
-                        .start()
 
-//                    sendRequestWithAuthorization(url, session.userSession)
-
+                    if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_WEBVIEW)){
+                        redirectAlertInWebview(item, url)
+                    } else if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_BROWSER)){
+                        redirectAlertInChrome(url, session.userSession)
+                    } else {
+                        showAlertDialog(item ,url)
+                    }
                 }
 
                 R.id.imageViewPriority -> {
@@ -227,7 +219,16 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     }
 
-    fun sendRequestWithAuthorization(url: String, authorizationHeader: String) {
+    private fun redirectAlertInWebview(item: HomeNotificationList, url: String){
+        navigator.loadActivity(
+            IsolatedFullActivity::class.java,
+            HomeDetailsFragment::class.java
+        )
+            .addBundle(bundleOf(Constant.BUNDLE_URL to url))
+            .start()
+    }
+
+    private fun redirectAlertInChrome(url: String, authorizationHeader: String) {
         // Build the URL with the authorization header as a query parameter
         val uri = Uri.parse(url).buildUpon()
             .appendQueryParameter("Authorization", authorizationHeader)
@@ -248,6 +249,38 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             val defaultIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri.toString()))
             startActivity(defaultIntent)
         }
+    }
+
+    private fun showAlertDialog(item: HomeNotificationList, url: String) {
+        customDialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
+                .setMessage(getString(R.string.btn_delete)).create()
+        val view = layoutInflater.inflate(R.layout.custom_alert_dialog, null)
+        val textViewLabelWebview =
+            view.findViewById<AppCompatTextView>(R.id.textViewLabelWebview)
+        val textViewLabelBrowser =
+            view.findViewById<AppCompatTextView>(R.id.textViewLabelBrowser)
+        val checkboxDontAskAgain =
+            view.findViewById<AppCompatCheckBox>(R.id.checkboxDontAskAgain)
+
+        textViewLabelWebview.setOnClickListener {
+            if(checkboxDontAskAgain.isChecked){
+                appPreferences.putBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_WEBVIEW, true)
+            }
+            redirectAlertInWebview(item, url)
+            customDialog.dismiss()
+        }
+
+        textViewLabelBrowser.setOnClickListener {
+            if(checkboxDontAskAgain.isChecked){
+                appPreferences.putBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_BROWSER, true)
+            }
+            redirectAlertInChrome(url, session.userSession)
+            customDialog.dismiss()
+        }
+
+        customDialog.setView(view)
+        customDialog.setCanceledOnTouchOutside(true)
+        customDialog.show()
     }
 
     private var isAllButtonSelected = true

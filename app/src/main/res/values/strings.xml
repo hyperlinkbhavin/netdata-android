@@ -119,4 +119,8 @@
     <string name="label_you_have_seen_the_message">You have seen the message</string>
     <string name="label_undo">Undo</string>
     <string name="label_reset_all">Reset All</string>
+    <string name="title_netdata">Netdata</string>
+    <string name="label_where_should_we_navigate_you_to_show_alert_detail">Where should we navigate you to show alert detail?</string>
+    <string name="label_webview_in_app">Webview (in-app)</string>
+    <string name="label_browser">Browser</string>
 </resources>
