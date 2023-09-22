@@ -360,4 +360,9 @@
         <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
     </style>
 
+    <style name="roundedCorners">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/dp_10</item>
+    </style>
+
 </resources>

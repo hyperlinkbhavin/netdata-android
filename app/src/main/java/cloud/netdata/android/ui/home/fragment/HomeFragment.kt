@@ -253,25 +253,25 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private fun showAlertDialog(item: HomeNotificationList, url: String) {
         customDialog = AlertDialog.Builder(requireContext(), R.style.CustomAlertDialog)
-                .setMessage(getString(R.string.btn_delete)).create()
+                .setMessage("").create()
         val view = layoutInflater.inflate(R.layout.custom_alert_dialog, null)
-        val textViewLabelWebview =
-            view.findViewById<AppCompatTextView>(R.id.textViewLabelWebview)
-        val textViewLabelBrowser =
-            view.findViewById<AppCompatTextView>(R.id.textViewLabelBrowser)
-        val checkboxDontAskAgain =
-            view.findViewById<AppCompatCheckBox>(R.id.checkboxDontAskAgain)
+        val buttonWebview =
+            view.findViewById<AppCompatButton>(R.id.buttonWebview)
+        val buttonBrowser =
+            view.findViewById<AppCompatButton>(R.id.buttonBrowser)
+        val switchDontAskAgain =
+            view.findViewById<SwitchCompat>(R.id.switchDontAskAgain)
 
-        textViewLabelWebview.setOnClickListener {
-            if(checkboxDontAskAgain.isChecked){
+        buttonWebview.setOnClickListener {
+            if(switchDontAskAgain.isChecked){
                 appPreferences.putBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_WEBVIEW, true)
             }
             redirectAlertInWebview(item, url)
             customDialog.dismiss()
         }
 
-        textViewLabelBrowser.setOnClickListener {
-            if(checkboxDontAskAgain.isChecked){
+        buttonBrowser.setOnClickListener {
+            if(switchDontAskAgain.isChecked){
                 appPreferences.putBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_BROWSER, true)
             }
             redirectAlertInChrome(url, session.userSession)
@@ -698,19 +698,20 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     private fun getAllData(isUnread: Boolean = false): ArrayList<HomeNotificationList> {
         val data = ArrayList<HomeNotificationList>()
-        if (binding.editTextSearchServices.text!!.trim().isNotEmpty()) {
-            for (d in homeList) {
-                val text = binding.editTextSearchServices.text!!.trim()
-                //or use .equal(text) with you want equal match
-                //use .toLowerCase() for better matches
-                if (d.data!!.netdata!!.alert!!.name[0].contains(text, true)) {
-                    data.add(d)
+        try{
+            if (binding.editTextSearchServices.text!!.trim().isNotEmpty()) {
+                for (d in homeList) {
+                    val text = binding.editTextSearchServices.text!!.trim()
+                    //or use .equal(text) with you want equal match
+                    //use .toLowerCase() for better matches
+                    if (d.data!!.netdata!!.alert!!.name[0].contains(text, true)) {
+                        data.add(d)
+                    }
                 }
+            } else {
+                data.addAll(homeList)
             }
-        } else {
-            data.addAll(homeList)
-        }
-
+        } catch (e: Exception){}
         return if (isUnread) data.filter { !it.isRead } as ArrayList<HomeNotificationList>
         else data
     }

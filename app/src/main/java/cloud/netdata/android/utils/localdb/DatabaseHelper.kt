@@ -394,9 +394,11 @@ class DatabaseHelper(context: Context) :
             } else if(isPermanentRead){
                 put(FN_IS_READ, 1)
                 put(FN_IS_NOTIFICATION_READ, 1)
+                put(FN_IS_SPACE_READ, 1)
             } else if(isSwipeRead){
                 put(FN_IS_READ, if (item.isRead) 1 else 0)
                 put(FN_IS_NOTIFICATION_READ, 1)
+                put(FN_IS_SPACE_READ, 1)
                 put(FN_IS_AUTO_READ_STOP, 1)
             } else {
                 put(FN_IS_READ, if (item.isRead) 1 else 0)

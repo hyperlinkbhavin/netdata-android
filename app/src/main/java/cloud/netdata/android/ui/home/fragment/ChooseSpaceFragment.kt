@@ -286,7 +286,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     private fun countSpaceList(){
         var totalCount = 0
         for (space in spaceList) {
-            val matchingDataList = notificationList.filter { it.data!!.netdata!!.space!!.id == space.id && !it.isRead }
+            val matchingDataList = notificationList.filter { it.data!!.netdata!!.space!!.id == space.id && !it.isSpaceRead }
             space.count = matchingDataList.size
             totalCount += matchingDataList.size
         }

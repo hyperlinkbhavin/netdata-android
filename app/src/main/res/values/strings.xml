@@ -123,4 +123,7 @@
     <string name="label_where_should_we_navigate_you_to_show_alert_detail">Where should we navigate you to show alert detail?</string>
     <string name="label_webview_in_app">Webview (in-app)</string>
     <string name="label_browser">Browser</string>
+    <string name="btn_webview_in_app">WebView (In-app)</string>
+    <string name="btn_browser">Browser</string>
+    <string name="label_don_t_ask_again">Don\'t Ask Again</string>
 </resources>
