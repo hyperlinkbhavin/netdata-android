@@ -22,13 +22,44 @@
             style="@style/StyleEndGuideline"
             app:layout_constraintGuide_end="@dimen/dp_16" />
 
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewWarRoomsBack"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_back"
+            android:layout_marginTop="@dimen/dp_10"
+            android:padding="@dimen/dp_5"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewWarRoomsBack"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_back"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintStart_toEndOf="@id/imageViewWarRoomsBack"
+            app:layout_constraintTop_toTopOf="@id/imageViewWarRoomsBack"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewWarRoomsBack"/>
+
+        <View
+            android:id="@+id/viewBack"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            app:layout_constraintTop_toBottomOf="@id/textViewWarRoomsBack"
+            android:layout_marginTop="@dimen/dp_16"
+            />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelNotificationPriority"
             style="@style/AppTheme.AppTextView.SemiBoldBlack14"
             android:layout_marginTop="@dimen/dp_16"
             android:text="@string/label_notification_priority_small"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/viewBack" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelEditPrioritySettings"

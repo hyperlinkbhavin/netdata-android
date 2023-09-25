@@ -18,7 +18,8 @@ data class HomeNotificationList(
         @SerializedName("@timestamp" ) var timestamp : String?         = null,
         @SerializedName("host"       ) var host       : ArrayList<Host> = arrayListOf(),
         @SerializedName("Netdata"    ) var netdata    : Netdata?        = Netdata(),
-        @SerializedName("user"       ) var user       : User?           = User()
+        @SerializedName("user"       ) var user       : User?           = User(),
+        @SerializedName("labels"     ) var labels     : Labels?           = Labels()
     ){
         data class Host (
             @SerializedName("id"   ) var id   : String? = null,
@@ -95,6 +96,10 @@ data class HomeNotificationList(
             @SerializedName("id"    ) var id    : String? = null,
             @SerializedName("name"  ) var name  : String? = null,
             @SerializedName("email" ) var email : String? = null
+        )
+
+        data class Labels (
+            @SerializedName("info" ) var info : String? = null
         )
     }
 }

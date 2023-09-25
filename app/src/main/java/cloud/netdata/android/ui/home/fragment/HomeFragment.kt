@@ -854,6 +854,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         var priority = item.priority
 
+        val imageViewWarRoomsBack =
+            view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsBack)
         val imageViewNotificationWarning =
             view.findViewById<AppCompatImageView>(R.id.imageViewNotificationWarning)
         val textViewSpaceWarningPercent =
@@ -887,6 +889,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         /*radioButtonCurrentNodes.isChecked = isCurrentNodes
         radioButtonAllNodes.isChecked = !isCurrentNodes*/
+        imageViewWarRoomsBack.setOnClickListener {
+            dialog.dismiss()
+        }
 
         if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.CRITICAL.type, true)) {
             imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(

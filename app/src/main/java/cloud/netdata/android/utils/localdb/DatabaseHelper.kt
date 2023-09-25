@@ -334,16 +334,28 @@ class DatabaseHelper(context: Context) :
     fun insertFetchNotificationData(id: Long, item: HomeNotificationList) {
         val values = ContentValues().apply {
             put(FN_ID, id)
-            put(FN_HOST_ID, item.data!!.host[0].id)
-            put(FN_HOST_NAME, item.data!!.host[0].name)
+            if(!item.data!!.host.isNullOrEmpty()){
+                put(FN_HOST_ID, item.data!!.host[0].id)
+                put(FN_HOST_NAME, item.data!!.host[0].name)
+            }
 
-            put(FN_ALERT_NAME, item.data!!.netdata!!.alert!!.name[0])
-            put(FN_ALERT_ROLE, item.data!!.netdata!!.alert!!.role[0])
+            item.data!!.netdata!!.alert!!.name.takeIf { it.isNotEmpty() }?.let {
+                put(FN_ALERT_NAME, it[0])
+            }
+
+            item.data!!.netdata!!.alert!!.role.takeIf { it.isNotEmpty() }?.let {
+                put(FN_ALERT_ROLE, it[0])
+            }
+
             put(FN_ALERT_CONFIG_HASH, item.data!!.netdata!!.alert!!.configHash)
             put(FN_ALERT_CLASS, item.data!!.netdata!!.alert!!.classes)
             put(FN_ALERT_TYPE, item.data!!.netdata!!.alert!!.type)
             put(FN_ALERT_COMPONENT, item.data!!.netdata!!.alert!!.component)
-            put(FN_ALERT_CURRENT_STATUS, item.data!!.netdata!!.alert!!.current!!.status[0])
+
+            item.data!!.netdata!!.alert!!.current!!.status.takeIf { it.isNotEmpty() }?.let {
+                put(FN_ALERT_CURRENT_STATUS, it[0])
+            }
+
             put(FN_ALERT_CURRENT_VALUE, item.data!!.netdata!!.alert!!.current!!.value)
             put(FN_ALERT_PREVIOUS_STATUS, item.data!!.netdata!!.alert!!.previous!!.status)
             put(FN_ALERT_PREVIOUS_VALUE, item.data!!.netdata!!.alert!!.previous!!.value)
@@ -359,7 +371,11 @@ class DatabaseHelper(context: Context) :
             put(FN_CHART_NAME, item.data!!.netdata!!.chart!!.name)
             put(FN_SPACE_ID, item.data!!.netdata!!.space!!.id)
             put(FN_SPACE_NAME, item.data!!.netdata!!.space!!.name)
-            put(FN_CONTEXT_NAME, item.data!!.netdata!!.context!!.name[0])
+
+            item.data!!.netdata!!.context!!.name.takeIf { it.isNotEmpty() }?.let {
+                put(FN_CONTEXT_NAME, it[0])
+            }
+
             put(FN_USER_ID, item.data!!.user!!.id)
             put(FN_USER_NAME, item.data!!.user!!.name)
             put(FN_USER_EMAIL, item.data!!.user!!.email)

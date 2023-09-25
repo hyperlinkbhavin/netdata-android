@@ -66,7 +66,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
         val defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 //        val defaultSoundUri: Any
 
-        try {
+        /*try {
             val notificationList = dbHelper.getAllDataFromFetchNotification(isSimpleData = true)
             Log.e("notificationList", notificationList.toString())
             val notificationPriorityData = dbHelper.getAllDataFromNotificationPriority()
@@ -88,11 +88,11 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
             isBanner = notificationPriority.isBanner == 1
             isSound = notificationPriority.isSound == 1
 
-            /*defaultSoundUri = if(!notificationPriority.soundUrl.isNullOrEmpty()){
+            *//*defaultSoundUri = if(!notificationPriority.soundUrl.isNullOrEmpty()){
             Uri.parse(notificationPriority.soundUrl)
         } else {
             RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-        }*/
+        }*//*
 
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
             intent.putExtra(Constant.PUSH_NOTIFICATION, data["alert_name"])
@@ -139,16 +139,6 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
                     .setContentIntent(pendingIntent)
             }
 
-            /*var builder = NotificationCompat.Builder(applicationContext, channelId)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setAutoCancel(true)
-                .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
-                .setOnlyAlertOnce(true)
-                .setSound(defaultSoundUri)
-                .setLights(Color.BLUE, 1, 1)
-                .setContentIntent(pendingIntent)*/
-
-
             builder = builder.setContent(getRemoteView(title, message))
 
             val notificationManger =
@@ -172,8 +162,47 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
                 notificationManger.notify(notificationID, builder.build())
             }
         } catch (e: Exception) {
+            Log.e("notification crash", e.toString())
+        }*/
 
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        intent.putExtra(Constant.PUSH_NOTIFICATION, data["alert_name"])
+        intent.putExtra(Constant.NOTIFICATION_ICON, "message")
+
+        val notificationID = System.currentTimeMillis().toInt()
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            notificationID,
+            intent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        var builder = NotificationCompat.Builder(applicationContext, channelId)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setAutoCancel(true)
+            .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
+            .setOnlyAlertOnce(true)
+            .setSound(defaultSoundUri)
+            .setLights(Color.BLUE, 1, 1)
+            .setContentIntent(pendingIntent)
+
+        builder = builder.setContent(getRemoteView(title, message))
+
+        val notificationManger =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel =
+                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+            notificationManger.createNotificationChannel(notificationChannel)
         }
+
+        Constant.MY_NOTIFICATION_MESSAGE = data["space_name"]!!.ifEmpty {
+            "Space"
+        }
+        val newIntent = Intent(Constant.MY_NOTIFICATION_ACTION)
+        sendBroadcast(newIntent)
+        notificationManger.notify(notificationID, builder.build())
     }
 
     private fun getRemoteView(title: String, message: String): RemoteViews {
