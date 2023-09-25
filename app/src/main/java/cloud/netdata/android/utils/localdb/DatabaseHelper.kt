@@ -86,6 +86,7 @@ class DatabaseHelper(context: Context) :
         private const val FN_USER_ID = "userId"
         private const val FN_USER_NAME = "userName"
         private const val FN_USER_EMAIL = "userEmail"
+        private const val FN_LABELS = "labels"
 
         private const val FN_IS_READ = "isRead"
         private const val FN_IS_SPACE_READ = "isSpaceRead"
@@ -127,7 +128,7 @@ class DatabaseHelper(context: Context) :
                     "$FN_ALERT_PREVIOUS_STATUS TEXT, $FN_ALERT_PREVIOUS_VALUE DOUBLE, $FN_ALERT_TRANSITION_ID TEXT, " +
                     "$FN_ALERT_ANNOTATION_INFO TEXT, $FN_ALERT_CONF_SOURCE TEXT, $FN_ALERT_CALC_EXPR TEXT, $FN_ALERT_URL TEXT, " +
                     "$FN_ALERT_EDIT_COMMAND TEXT, $FN_ALERT_EDIT_LINE TEXT, $FN_ROOMS TEXT, $FN_CHART_ID TEXT, $FN_CHART_NAME TEXT, " +
-                    "$FN_SPACE_ID TEXT, $FN_SPACE_NAME TEXT, $FN_CONTEXT_NAME TEXT, $FN_USER_ID TEXT, " +
+                    "$FN_SPACE_ID TEXT, $FN_SPACE_NAME TEXT, $FN_CONTEXT_NAME TEXT, $FN_USER_ID TEXT, $FN_LABELS TEXT, " +
                     "$FN_USER_NAME TEXT, $FN_USER_EMAIL TEXT, $FN_IS_READ INTEGER, $FN_IS_SPACE_READ INTEGER, " +
                     "$FN_IS_NOTIFICATION_READ INTEGER, $FN_IS_AUTO_READ_STOP TEXT, $FN_CREATED_AT TEXT, $FN_TIMESTAMP TEXT, $FN_PRIORITY TEXT )"
         db.execSQL(createTableFetchNotificationsQuery)
@@ -376,6 +377,10 @@ class DatabaseHelper(context: Context) :
                 put(FN_CONTEXT_NAME, it[0])
             }
 
+            if(!item.data!!.labels!!.info.isNullOrEmpty()){
+                put(FN_LABELS, item.data!!.labels!!.info)
+            }
+
             put(FN_USER_ID, item.data!!.user!!.id)
             put(FN_USER_NAME, item.data!!.user!!.name)
             put(FN_USER_EMAIL, item.data!!.user!!.email)
@@ -593,6 +598,7 @@ class DatabaseHelper(context: Context) :
                 val userId = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_ID))
                 val userName = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_NAME))
                 val userEmail = cursor.getString(cursor.getColumnIndexOrThrow(FN_USER_EMAIL))
+                val labels = cursor.getString(cursor.getColumnIndexOrThrow(FN_LABELS))
 
                 val isRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_READ))
                 val isSpaceRead = cursor.getInt(cursor.getColumnIndexOrThrow(FN_IS_SPACE_READ))
@@ -630,6 +636,7 @@ class DatabaseHelper(context: Context) :
                 allData.user!!.id = userId
                 allData.user!!.name = userName
                 allData.user!!.email = userEmail
+                allData.labels!!.info = labels
 
                 val roomsType = object : TypeToken<ArrayList<HomeNotificationList.Data.Netdata.Room>>() {}.type
                 val roomsList: ArrayList<HomeNotificationList.Data.Netdata.Room> = gson.fromJson(rooms, roomsType)

@@ -279,6 +279,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
             }
         }
         notificationList.addAll(dbHelper.getAllDataFromFetchNotification(isSimpleData = true))
+        Log.e("data", dbHelper.getAllDataFromFetchNotification(isSimpleData = true).toString())
         countSpaceList()
     }
 
