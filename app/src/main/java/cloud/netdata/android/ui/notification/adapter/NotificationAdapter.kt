@@ -9,9 +9,7 @@ import cloud.netdata.android.R
 import cloud.netdata.android.data.pojo.enumclass.Priority
 import cloud.netdata.android.data.pojo.response.HomeNotificationList
 import cloud.netdata.android.databinding.RowItemNotificationBinding
-import cloud.netdata.android.utils.AppUtils
-import cloud.netdata.android.utils.ConvertDateTimeFormat
-import cloud.netdata.android.utils.DateTimeFormats
+import cloud.netdata.android.utils.*
 import com.chauthai.swipereveallayout.ViewBinderHelper
 
 class NotificationAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) : RecyclerView.Adapter<NotificationAdapter.ViewHolder>() {
@@ -66,8 +64,17 @@ class NotificationAdapter(val callBack: (View, Int, HomeNotificationList) -> Uni
         fun bind(item: HomeNotificationList) = with(binding) {
 
             textViewSpaceName.text = item.data!!.netdata!!.space!!.name
-            textViewSpaceWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, isPercent = true)
-            textViewSpaceWarningText.text = item.data!!.netdata!!.alert!!.name[0]
+            if(item.data!!.labels!!.info.isNullOrEmpty()){
+                textViewSpaceWarningPercent.visible()
+                textViewSpaceWarningText.visible()
+                imageViewSpaceWarning.visible()
+                textViewSpaceWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, isPercent = true)
+                textViewSpaceWarningText.text = item.data!!.netdata!!.alert!!.name[0]
+            } else {
+                textViewSpaceWarningPercent.gone()
+                imageViewSpaceWarning.gone()
+                textViewSpaceWarningText.text = "• " + item.data!!.labels!!.info
+            }
             textViewNotificationDateTime.text = "${
                 ConvertDateTimeFormat.getPrettyTime(
                     ConvertDateTimeFormat.convertUTCToLocalDate(

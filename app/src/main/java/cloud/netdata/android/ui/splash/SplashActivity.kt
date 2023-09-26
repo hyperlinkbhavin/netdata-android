@@ -106,7 +106,7 @@ class SplashActivity : BaseActivity() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        dbHelper.updateFetchNotificationDataByAllRead(isNotificationRead = true)
+//        dbHelper.updateFetchNotificationDataByAllRead(isNotificationRead = true)
 
         Handler(Looper.getMainLooper()).postDelayed({
             splashActivityBinding.apply {

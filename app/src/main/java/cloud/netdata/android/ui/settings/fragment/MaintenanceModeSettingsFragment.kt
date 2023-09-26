@@ -49,10 +49,10 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     itemPosition = position
                     clickPosition = 1
                     if (isChecked) {
-                        /*if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
+                        if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
                             appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
                         }
-                        callSilenceSpace(item)*/
+//                        callSilenceSpace(item)
                     } else {
                         if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
                             appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
@@ -243,7 +243,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 }
             }*/
         } else {
-            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
             allChangeIndex += 1
             if(allChangeIndex != spaceList.size){
                 isAllChange = true

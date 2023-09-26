@@ -78,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_14"
                 android:src="@drawable/ic_space_warning"
+                app:layout_constraintBottom_toBottomOf="@id/textViewSpaceWarningPercent"
                 app:layout_constraintStart_toStartOf="@id/textViewSpaceName"
                 app:layout_constraintTop_toBottomOf="@id/textViewSpaceName" />
 
@@ -86,31 +87,31 @@
                 style="@style/AppTheme.AppTextView.BoldBlack16"
                 android:layout_marginStart="@dimen/dp_8"
                 android:text="54.3% •"
-                app:layout_constraintBottom_toBottomOf="@id/imageViewSpaceWarning"
+                android:layout_marginTop="@dimen/dp_10"
                 app:layout_constraintEnd_toStartOf="@id/textViewSpaceWarningText"
                 app:layout_constraintStart_toEndOf="@id/imageViewSpaceWarning"
-                app:layout_constraintTop_toTopOf="@id/imageViewSpaceWarning" />
+                app:layout_constraintTop_toBottomOf="@id/textViewSpaceName" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewSpaceWarningText"
                 style="@style/AppTheme.AppTextView.RegularBlack16"
                 android:layout_width="@dimen/dp_0"
                 android:layout_marginStart="@dimen/dp_4"
+                android:layout_marginTop="@dimen/dp_10"
                 android:text="@string/label_inbound_packets_dropped_ratio"
-                app:layout_constraintBottom_toBottomOf="@id/imageViewSpaceWarning"
                 app:layout_constraintEnd_toEndOf="@id/constraintTop"
                 app:layout_constraintStart_toEndOf="@id/textViewSpaceWarningPercent"
-                app:layout_constraintTop_toTopOf="@id/imageViewSpaceWarning" />
+                app:layout_constraintTop_toBottomOf="@id/textViewSpaceName" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/imageViewCalendar"
                 style="@style/ChangeTintColor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
                 android:src="@drawable/ic_calendar"
                 app:layout_constraintStart_toStartOf="@id/imageViewSpaceWarning"
-                app:layout_constraintTop_toBottomOf="@id/imageViewSpaceWarning" />
+                app:layout_constraintTop_toBottomOf="@id/textViewSpaceWarningText" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/textViewNotificationDateTime"

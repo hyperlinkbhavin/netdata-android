@@ -59,6 +59,7 @@ import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
 import kotlinx.android.synthetic.main.include_toolbar_main.*
+import kotlinx.android.synthetic.main.row_item_home.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -858,6 +859,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsBack)
         val imageViewNotificationWarning =
             view.findViewById<AppCompatImageView>(R.id.imageViewNotificationWarning)
+        val imageViewDiskSpace = view.findViewById<AppCompatImageView>(R.id.imageViewDiskSpace)
+        val imageViewWarRoomsList =
+            view.findViewById<AppCompatImageView>(R.id.imageViewWarRoomsList)
         val textViewSpaceWarningPercent =
             view.findViewById<AppCompatTextView>(R.id.textViewSpaceWarningPercent)
         val textViewSpaceWarningName =
@@ -893,18 +897,40 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             dialog.dismiss()
         }
 
-        if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.CRITICAL.type, true)) {
-            imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorRedFF)
-            )
-        } else if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.WARNING.type, true)) {
-            imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorYellowF9)
-            )
+        textViewNodeId.text = item.data!!.host[0].name
+        textViewPriority.text = "${item.priority} ${getString(R.string.label_priority)}"
+        textViewPriorityName.text = "${item.priority} ${getString(R.string.label_priority)}"
+        if(item.data!!.labels!!.info.isNullOrEmpty()){
+            if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.CRITICAL.type, true)) {
+                imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.colorRedFF)
+                )
+            } else if (item.data!!.netdata!!.alert!!.current!!.status[0].equals(AlertStatus.WARNING.type, true)) {
+                imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.colorYellowF9)
+                )
+            } else {
+                imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(requireContext(), R.color.colorPrimary)
+                )
+            }
+
+            textViewSpaceWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
+            textViewSpaceWarningName.text = item.data!!.netdata!!.alert!!.name[0]
+            textViewDiskSpace.text = item.data!!.netdata!!.chart!!.name
+            var roomList = ""
+            for(i in item.data!!.netdata!!.room){
+                roomList += "${i.name} • "
+            }
+            textViewWarRoomsList.text = roomList.dropLast(3)
         } else {
-            imageViewNotificationWarning.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(requireContext(), R.color.colorPrimary)
-            )
+            imageViewNotificationWarning.gone()
+            textViewSpaceWarningPercent.gone()
+            imageViewDiskSpace.gone()
+            textViewDiskSpace.gone()
+            imageViewWarRoomsList.gone()
+            textViewWarRoomsList.gone()
+            textViewSpaceWarningName.text = "• " + item.data!!.labels!!.info
         }
 
         if (item.priority.equals(Priority.HIGH_PRIORITY.shortName, true)) {
@@ -921,17 +947,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             seekBar.setProgress(15f)
         }
 
-        textViewSpaceWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
-        textViewSpaceWarningName.text = item.data!!.netdata!!.alert!!.name[0]
-        textViewNodeId.text = item.data!!.host[0].name
-        textViewDiskSpace.text = item.data!!.netdata!!.chart!!.name
-        var roomList = ""
-        for(i in item.data!!.netdata!!.room){
-            roomList += "${i.name} • "
-        }
-        textViewWarRoomsList.text = roomList.dropLast(3)
-        textViewPriority.text = "${item.priority} ${getString(R.string.label_priority)}"
-        textViewPriorityName.text = "${item.priority} ${getString(R.string.label_priority)}"
+
 
         buttonChangeNotificationPriority.setOnClickListener {
             /*if(buttonChangeNotificationPriority.text == getString(R.string.btn_done)){
@@ -1573,7 +1589,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         addFilterListData()
         val itemsToAdd = mutableListOf<HomeNotificationList>() // Change ItemType to the actual type of your items
 
-        itemsToAdd.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
+//        itemsToAdd.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
+        itemsToAdd.addAll(homeList.filter { homeItem ->
+            homeItem.data?.netdata?.room?.any { room ->
+                room.id == roomList[roomsItemPosition].id
+            } == true || homeItem.data?.netdata?.room.isNullOrEmpty()
+        })
+//        itemsToAdd.addAll(homeList)
         /*for (i in homeList) {
             var isContain = false
             for (j in i.data!!.netdata!!.room) {

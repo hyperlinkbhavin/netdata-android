@@ -2,9 +2,11 @@ package cloud.netdata.android.ui.home.adapter
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import cloud.netdata.android.R
@@ -50,7 +52,9 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
         init {
             binding.apply {
                 constraintTop.setOnClickListener {
-                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                    if(list[absoluteAdapterPosition].data!!.labels!!.info.isNullOrEmpty()){
+                        callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
+                    }
                 }
                 imageViewPriority.setOnClickListener {
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
@@ -127,7 +131,6 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
 //                imageViewMessage.imageTintList = ColorStateList.valueOf(ContextCompat.getColor(imageViewMessage.context, R.color.colorPrimary))
             }
 
-            textViewName.text = item.data!!.netdata!!.alert!!.name[0]
             textViewDateTime.text = "${
                 ConvertDateTimeFormat.getPrettyTime(
                     ConvertDateTimeFormat.convertUTCToLocalDate(
@@ -146,84 +149,109 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                 )
             }"
             textViewGKE.text = item.data!!.host[0].name
-            textViewDiskSpace.text = item.data!!.netdata!!.chart!!.id
 
-            var roomList = ""
-            if(item.data!!.netdata!!.room.size > 3){
-                textViewWarRoomsListCount.visible()
-                textViewWarRoomsListCount.text = "+${item.data!!.netdata!!.room.size-1}"
-                for((roomCount, i) in item.data!!.netdata!!.room.withIndex()){
-                    if(roomCount < 3){
+            if(!item.data!!.labels!!.info.isNullOrEmpty()){
+                imageViewDiskSpace.gone()
+                textViewDiskSpace.gone()
+                imageViewWarRoomsList.gone()
+                textViewWarRoomsList.gone()
+                imageViewTypeAndComponent.gone()
+                textViewTypeAndComponent.gone()
+                textViewLabelWarning.invisible()
+                textViewWarningPercent.invisible()
+                textViewCriticalPercent.gone()
+
+                textViewName.text = item.data!!.labels!!.info
+            } else {
+                imageViewDiskSpace.visible()
+                textViewDiskSpace.visible()
+                imageViewWarRoomsList.visible()
+                textViewWarRoomsList.visible()
+                imageViewTypeAndComponent.visible()
+                textViewTypeAndComponent.visible()
+                textViewLabelWarning.visible()
+                textViewWarningPercent.visible()
+
+                textViewName.text = item.data!!.netdata!!.alert!!.name[0]
+                textViewDiskSpace.text = item.data!!.netdata!!.chart!!.id
+
+                var roomList = ""
+                if(item.data!!.netdata!!.room.size > 3){
+                    textViewWarRoomsListCount.visible()
+                    textViewWarRoomsListCount.text = "+${item.data!!.netdata!!.room.size-1}"
+                    for((roomCount, i) in item.data!!.netdata!!.room.withIndex()){
+                        if(roomCount < 3){
+                            roomList += "${i.name} • "
+                        }
+                    }
+                } else {
+                    for(i in item.data!!.netdata!!.room){
                         roomList += "${i.name} • "
                     }
+                    textViewWarRoomsListCount.gone()
                 }
-            } else {
-                for(i in item.data!!.netdata!!.room){
-                    roomList += "${i.name} • "
+                textViewWarRoomsList.text = roomList.dropLast(3)
+                textViewTypeAndComponent.text = "Type & Component : ${item.data!!.netdata!!.alert!!.type} • ${item.data!!.netdata!!.alert!!.component}"
+                textViewLabelWarning.text = item.data!!.netdata!!.alert!!.current!!.status[0].replaceFirstChar {
+                    if (it.isLowerCase()) it.titlecase(
+                        Locale.getDefault()
+                    ) else it.toString()
                 }
-                textViewWarRoomsListCount.gone()
-            }
-            textViewWarRoomsList.text = roomList.dropLast(3)
-            textViewTypeAndComponent.text = "Type & Component : ${item.data!!.netdata!!.alert!!.type} • ${item.data!!.netdata!!.alert!!.component}"
-            textViewLabelWarning.text = item.data!!.netdata!!.alert!!.current!!.status[0].replaceFirstChar {
-                if (it.isLowerCase()) it.titlecase(
-                    Locale.getDefault()
-                ) else it.toString()
-            }
-            textViewWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
-            textViewCriticalPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
+                textViewWarningPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
+                textViewCriticalPercent.text = AppUtils.convertTwoDecimal(item.data!!.netdata!!.alert!!.current!!.value!!, true)
 
-            if (item.data!!.netdata!!.alert!!.current!!.status[0].equals("critical", true)) {
-                textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        textViewLabelWarning.context,
-                        R.color.colorRedFF
+                if (item.data!!.netdata!!.alert!!.current!!.status[0].equals("critical", true)) {
+                    textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            textViewLabelWarning.context,
+                            R.color.colorRedFF
+                        )
                     )
-                )
-                textViewWarningPercent.gone()
-                textViewCriticalPercent.visible()
-            } else if (item.data!!.netdata!!.alert!!.current!!.status[0].equals("warning", true)) {
-                textViewWarningPercent.visible()
-                textViewCriticalPercent.gone()
-                textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        textViewLabelWarning.context,
-                        R.color.colorYellowF9
+                    textViewWarningPercent.gone()
+                    textViewCriticalPercent.visible()
+                } else if (item.data!!.netdata!!.alert!!.current!!.status[0].equals("warning", true)) {
+                    textViewWarningPercent.visible()
+                    textViewCriticalPercent.gone()
+                    textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            textViewLabelWarning.context,
+                            R.color.colorYellowF9
+                        )
                     )
-                )
-                textViewWarningPercent.setTextColor(
-                    ContextCompat.getColor(
-                        textViewWarningPercent.context,
-                        R.color.colorYellowF9
+                    textViewWarningPercent.setTextColor(
+                        ContextCompat.getColor(
+                            textViewWarningPercent.context,
+                            R.color.colorYellowF9
+                        )
                     )
-                )
-                textViewWarningPercent.backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        textViewWarningPercent.context,
-                        R.color.colorLightYellowFF
+                    textViewWarningPercent.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            textViewWarningPercent.context,
+                            R.color.colorLightYellowFF
+                        )
                     )
-                )
-            } else {
-                textViewWarningPercent.visible()
-                textViewCriticalPercent.gone()
-                textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        textViewLabelWarning.context,
-                        R.color.colorPrimary
+                } else {
+                    textViewWarningPercent.visible()
+                    textViewCriticalPercent.gone()
+                    textViewLabelWarning.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            textViewLabelWarning.context,
+                            R.color.colorPrimary
+                        )
                     )
-                )
-                textViewWarningPercent.setTextColor(
-                    ContextCompat.getColor(
-                        textViewWarningPercent.context,
-                        R.color.colorPrimary
+                    textViewWarningPercent.setTextColor(
+                        ContextCompat.getColor(
+                            textViewWarningPercent.context,
+                            R.color.colorPrimary
+                        )
                     )
-                )
-                textViewWarningPercent.backgroundTintList = ColorStateList.valueOf(
-                    ContextCompat.getColor(
-                        textViewWarningPercent.context,
-                        R.color.colorGreen80
+                    textViewWarningPercent.backgroundTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            textViewWarningPercent.context,
+                            R.color.colorGreen80
+                        )
                     )
-                )
+                }
             }
 
             if (item.priority.equals(Priority.HIGH_PRIORITY.shortName, true)) {
@@ -245,6 +273,15 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
     fun updateList(filterList: ArrayList<HomeNotificationList>) {
         list = filterList
         notifyDataSetChanged()
+    }
+
+    fun viewShowHide(view: AppCompatTextView, item: String?){
+        if(!item.isNullOrEmpty()){
+            view.visible()
+            view.text = item
+        } else {
+            view.gone()
+        }
     }
 
 }
