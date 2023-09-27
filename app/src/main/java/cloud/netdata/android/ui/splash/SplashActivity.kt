@@ -106,7 +106,7 @@ class SplashActivity : BaseActivity() {
 
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-//        dbHelper.updateFetchNotificationDataByAllRead(isNotificationRead = true)
+        dbHelper.updateFetchNotificationDataByAllRead(isNotificationRead = true)
 
         Handler(Looper.getMainLooper()).postDelayed({
             splashActivityBinding.apply {
@@ -133,14 +133,18 @@ class SplashActivity : BaseActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             if (!AppUtils.isOpenRecently()) {
                 if (appPreferences.getBoolean(Constant.APP_PREF_IS_LOGIN)) {
-                    if (!appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNullOrEmpty()) {
+                    /*if (!appPreferences.getString(Constant.APP_PREF_SPACE_NAME).isNullOrEmpty()) {
                         loadActivity(HomeActivity::class.java).addBundle(bundleOf(Constant.BUNDLE_DEEPLINK to url)).byFinishingCurrent().start()
                     } else {
                         loadActivity(
                             IsolatedFullActivity::class.java,
                             ChooseSpaceFragment::class.java
                         ).byFinishingCurrent().start()
-                    }
+                    }*/
+                    loadActivity(
+                        IsolatedFullActivity::class.java,
+                        ChooseSpaceFragment::class.java
+                    ).byFinishingCurrent().start()
                 } else {
                     loadActivity(AuthActivity::class.java).addBundle(bundleOf(Constant.BUNDLE_DEEPLINK to url)).byFinishingCurrent().start()
                 }

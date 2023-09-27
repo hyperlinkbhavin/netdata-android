@@ -294,7 +294,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         super.onCreate(savedInstanceState)
         observeLinkDevice()
         observeFetchHomeNotification()
-        observeGetHomeNotificationOnNotify()
+//        observeGetHomeNotificationOnNotify()
         observeRoomList()
         observeDynamicLink()
     }
@@ -1457,8 +1457,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         return dateFormat.format(Date(currentTimeInMillis))
     }
 
-    private fun callFetchHomeNotification() {
-        showLoader()
+    private fun callFetchHomeNotification(isLoader: Boolean = true) {
+        if(isLoader){
+            showLoader()
+        }
         apiViewModel.callFetchHomeNotification()
     }
 
@@ -1472,7 +1474,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
-    private fun callGetHomeNotificationOnNotify() {
+    /*private fun callGetHomeNotificationOnNotify() {
         apiViewModel.callFetchHomeNotification()
     }
 
@@ -1480,9 +1482,9 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         apiViewModel.fetchHomeNotificationLiveData.observe(this) {
             if (!it.isError || it.responseCode == 200) {
                 if(it.data!!.isNotEmpty()){
-                    /*val gson = Gson()
+                    *//*val gson = Gson()
                     val type = object : TypeToken<List<HomeNotificationList>>() {}.type
-                    val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)*/
+                    val alarmDataList: List<HomeNotificationList> = gson.fromJson(Constant.dummyData, type)*//*
                     var lastId: Long = dbHelper.getLastIdFromTable("fetchNotifications")
                     for (item in it.data) {
                         lastId++
@@ -1493,7 +1495,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 }
             }
         }
-    }
+    }*/
 
     private fun insertDataIfEmpty(alertDataList: ArrayList<HomeNotificationList>) {
 //        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
@@ -1783,7 +1785,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     fun showNotificationSnackbar() {
         hideKeyBoard()
-        callGetHomeNotificationOnNotify()
+        callFetchHomeNotification(isLoader = false)
         if (view != null) {
             val message = "New Notification Generated in ${Constant.MY_NOTIFICATION_MESSAGE}!"
             val snackbar = Snackbar.make(binding.editTextSearchServices, message, Snackbar.LENGTH_LONG)

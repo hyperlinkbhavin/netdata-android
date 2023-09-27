@@ -41,7 +41,7 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
         NotificationAdapter() { view, position, item ->
             when (view.id) {
                 R.id.constraintTop -> {
-//                    dbHelper.updateFetchNotificationData(item, isNotificationRead = true)
+                    dbHelper.updateFetchNotificationData(item, isNotificationRead = true)
                     appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.data!!.netdata!!.space!!.name!!)
                     appPreferences.putString(Constant.APP_PREF_SPACE_ID, item.data!!.netdata!!.space!!.id!!)
                     appPreferences.putBoolean(Constant.APP_PREF_FROM_NOTIFICATION, true)

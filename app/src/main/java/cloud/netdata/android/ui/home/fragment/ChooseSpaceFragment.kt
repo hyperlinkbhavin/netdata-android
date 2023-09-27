@@ -23,6 +23,7 @@ import cloud.netdata.android.data.pojo.response.HomeNotificationList
 import cloud.netdata.android.data.pojo.response.SpaceList
 import cloud.netdata.android.databinding.ChooseSpaceFragmentBinding
 import cloud.netdata.android.di.component.FragmentComponent
+import cloud.netdata.android.ui.auth.AuthActivity
 import cloud.netdata.android.ui.auth.IsolatedFullActivity
 import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.home.HomeActivity
@@ -216,7 +217,10 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                     callFetchHomeNotification()
                 }
             } else {
-                showMessage("Something wrong! Try again")
+                showToast("Session expired! Please login again")
+                appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
+                appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
+                navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
             }
         }
     }

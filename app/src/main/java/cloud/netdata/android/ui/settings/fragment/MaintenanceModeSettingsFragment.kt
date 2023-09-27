@@ -209,10 +209,10 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     && !spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
                     && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
                     itemPosition = allChangeIndex
-                    clickPosition = 1
+                    clickPosition = 2
                     isChanged = true
                     if(spaceList[allChangeIndex].isForever){
-                        callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, clickPosition)
+                        callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, allChangeIndex)
                     } else {
                         isChanged = false
                         callSilenceSpace(spaceList[itemPosition])
@@ -409,8 +409,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                     it.untilDate = "$date, $selectedHour:$minutes"
                 }
 
-                textViewUntilDate.text = "$date, $selectedHour:$minutes"
                 radioButtonUntil.isChecked = true
+                textViewUntilDate.text = "$date, $selectedHour:$minutes"
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()
                 changeAllNotificationData(isChecked = true, isUntil = isUntil)
             },
