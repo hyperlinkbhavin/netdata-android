@@ -343,6 +343,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun getCheckData() = with(binding) {
         val data = spaceList.find { !it.isSelected && !it.plan.equals(Constant.COMMUNITY, true)
                 && !it.plan.equals(Constant.EARLY_BIRD, true) }
@@ -358,9 +359,11 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 radioButtonForever.isChecked = true
             }
         } else {
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
             switchDisableAllNotifications.isChecked = false
             radioGroupAllNotifications.gone()
         }
+        maintenanceModeSettingsAdapter.notifyDataSetChanged()
     }
     fun datePicker()=with(binding){
         val mCalendar = Calendar.getInstance()
