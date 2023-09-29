@@ -213,6 +213,16 @@
             app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewReachableText"
+            android:layout_width="@dimen/dp_0"
+            style="@style/AppTheme.AppTextView.RegularBlack35ToGreyCF12"
+            android:layout_marginTop="@dimen/dp_5"
+            android:visibility="invisible"
+            app:layout_constraintStart_toStartOf="@id/constraintTop"
+            app:layout_constraintTop_toBottomOf="@id/textViewWarRoomsList"
+            app:layout_constraintEnd_toEndOf="@id/constraintTop"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewLabelWarning"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
@@ -229,7 +239,7 @@
             android:paddingHorizontal="@dimen/dp_10"
             android:layout_marginTop="@dimen/dp_16"
             app:layout_constraintStart_toStartOf="@id/constraintTop"
-            app:layout_constraintTop_toBottomOf="@id/textViewTypeAndComponent"/>
+            app:layout_constraintTop_toBottomOf="@id/textViewReachableText"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewWarningPercent"

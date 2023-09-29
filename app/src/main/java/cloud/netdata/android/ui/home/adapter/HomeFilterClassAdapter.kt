@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import cloud.netdata.android.data.pojo.request.FilterList
 import cloud.netdata.android.databinding.RowItemFilterCheckboxBinding
+import cloud.netdata.android.utils.Constant
 import cloud.netdata.android.utils.visible
 
 class HomeFilterClassAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterClassAdapter.ViewHolder>() {
@@ -46,6 +47,17 @@ class HomeFilterClassAdapter(var list: ArrayList<FilterList>, val callBack: (Vie
 
         @SuppressLint("SetTextI18n")
         fun bind(item: FilterList) = with(binding) {
+            if(Constant.isReachable){
+                textViewFilterName.alpha = 0.2F
+                checkBoxFilter.alpha = 0.2F
+                checkBoxFilter.isClickable = false
+                checkBoxFilter.isFocusable = false
+            } else {
+                textViewFilterName.alpha = 1F
+                checkBoxFilter.alpha = 1F
+                checkBoxFilter.isClickable = true
+                checkBoxFilter.isFocusable = true
+            }
             textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
             textViewFilterCount.visible()

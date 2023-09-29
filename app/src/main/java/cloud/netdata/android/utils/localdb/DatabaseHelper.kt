@@ -498,6 +498,7 @@ class DatabaseHelper(context: Context) :
         isSimpleData: Boolean = false,
         spaceID: String = "1", roomID: String = "1",
         isSortBy: Boolean = false, isFilterBy: Boolean = false,
+        notificationTypeFilters: ArrayList<String> = ArrayList(),
         statusFilters: ArrayList<String> = ArrayList(),
         priorityFilters: ArrayList<String> = ArrayList(),
         nodesFilters: ArrayList<String> = ArrayList(),
@@ -524,6 +525,7 @@ class DatabaseHelper(context: Context) :
         } else if (isSortBy && isFilterBy) {
             selectQuery += " ${
                 filterByQuery(
+                    notificationTypeFilters = notificationTypeFilters,
                     statusFilters = statusFilters,
                     priorityFilters = priorityFilters,
                     nodesFilters = nodesFilters,
@@ -546,6 +548,7 @@ class DatabaseHelper(context: Context) :
 //            selectQuery = "SELECT * FROM $TABLE_FETCH_NOTIFICATIONS WHERE $FN_SPACE_ID = '$spaceID' AND $FN_ROOM_ID = '$roomID'"
             selectQuery += " ${
                 filterByQuery(
+                    notificationTypeFilters = notificationTypeFilters,
                     statusFilters = statusFilters,
                     priorityFilters = priorityFilters,
                     nodesFilters = nodesFilters,
@@ -698,6 +701,7 @@ class DatabaseHelper(context: Context) :
     }
 
     private fun filterByQuery(
+        notificationTypeFilters: ArrayList<String> = ArrayList(),
         statusFilters: ArrayList<String> = ArrayList(),
         priorityFilters: ArrayList<String> = ArrayList(),
         nodesFilters: ArrayList<String> = ArrayList(),
@@ -705,12 +709,30 @@ class DatabaseHelper(context: Context) :
         typeFilters: ArrayList<String> = ArrayList(),
     ): String {
         var query = ""
+        var notificationArg = ""
         var statusArg = ""
         var priorityArg = ""
         var nodesArg = ""
         var classArg = ""
         var typeArg = ""
         var compArg = ""
+
+        Log.e("type", notificationTypeFilters.toString())
+
+        if(notificationTypeFilters.isNotEmpty()){
+            if(notificationTypeFilters.size != 2){
+                for(i in notificationTypeFilters){
+                    notificationArg = if(i == "Reachability Notifications"){
+                        "$FN_LABELS IS NOT NULL OR $FN_LABELS != '' "
+                    } else {
+                        "$FN_LABELS IS NULL OR $FN_LABELS = '' "
+                    }
+                }
+            } else {
+                notificationArg = "$FN_LABELS IS NULL OR $FN_LABELS IS NOT NULL "
+            }
+
+        }
 
         if (statusFilters.isNotEmpty()) {
             for (i in statusFilters) {
@@ -746,6 +768,10 @@ class DatabaseHelper(context: Context) :
                 compArg += "$FN_ALERT_COMPONENT LIKE ('$i') OR "
             }
             compArg = compArg.dropLast(4)
+        }
+
+        if(notificationTypeFilters.isNotEmpty()){
+            query += " AND ($notificationArg)"
         }
 
         if (statusFilters.isNotEmpty()) {

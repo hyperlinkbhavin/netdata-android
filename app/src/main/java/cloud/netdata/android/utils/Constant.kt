@@ -9,6 +9,7 @@ object Constant {
     var TOKEN = ""
     var dynamicResponseUrl = ""
     var isDarkMode = false
+    var isReachable = false
 
     var isSortBy = false
 //    var notificationPriorityList = ArrayList<NotificationPriorityList>()

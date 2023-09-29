@@ -289,7 +289,7 @@
                             app:layout_constraintGuide_end="@dimen/dp_16" />
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/constraintAlertStatus"
+                            android:id="@+id/constraintNotificationType"
                             android:layout_width="@dimen/dp_0"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dp_8"
@@ -297,6 +297,59 @@
                             app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
                             app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
                             app:layout_constraintTop_toTopOf="parent">
+
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/textViewLabelNotificationType"
+                                style="@style/AppTheme.AppTextView.BoldBlack35ToGrey8F12"
+                                android:text="@string/label_notification_type"
+                                app:layout_constraintStart_toStartOf="@id/constraintNotificationType"
+                                app:layout_constraintTop_toTopOf="@id/constraintNotificationType" />
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/imageViewNotificationTypeDown"
+                                style="@style/ChangeTintColorBlack35ToGreyCF"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/dp_5"
+                                android:src="@drawable/ic_down"
+                                app:layout_constraintBottom_toBottomOf="@id/textViewLabelNotificationType"
+                                app:layout_constraintEnd_toEndOf="@id/constraintNotificationType"
+                                app:layout_constraintTop_toTopOf="@id/textViewLabelNotificationType" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewNotificationType"
+                                android:layout_width="@dimen/dp_0"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/dp_8"
+                                android:orientation="vertical"
+                                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                app:layout_constraintEnd_toEndOf="@id/constraintNotificationType"
+                                app:layout_constraintStart_toStartOf="@id/constraintNotificationType"
+                                app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationType"
+                                tools:itemCount="3"
+                                tools:listitem="@layout/row_item_filter_checkbox" />
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <View
+                            android:id="@+id/viewNotificationType"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="@dimen/dp_1"
+                            android:layout_marginTop="@dimen/sp_10"
+                            android:background="@color/colorBlack35"
+                            app:layout_constraintEnd_toEndOf="@id/constraintNotificationType"
+                            app:layout_constraintStart_toStartOf="@id/constraintNotificationType"
+                            app:layout_constraintTop_toBottomOf="@id/constraintNotificationType" />
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/constraintAlertStatus"
+                            android:layout_width="@dimen/dp_0"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/dp_8"
+                            android:layout_marginTop="@dimen/dp_16"
+                            app:layout_constraintEnd_toEndOf="@id/guidelineEndInner"
+                            app:layout_constraintStart_toStartOf="@id/guidelineStartInner"
+                            app:layout_constraintTop_toBottomOf="@id/constraintNotificationType">
 
                             <androidx.appcompat.widget.AppCompatTextView
                                 android:id="@+id/textViewLabelAlertStatus"

@@ -62,6 +62,7 @@ import kotlinx.android.synthetic.main.include_toolbar_main.*
 import kotlinx.android.synthetic.main.row_item_home.view.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -87,6 +88,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private var roomList = ArrayList<RoomList>()
     private var deeplink = ""
 
+    private var filterNotificationTypeList = ArrayList<FilterList>()
     private var filterStatusList = ArrayList<FilterList>()
     private var filterPriorityList = ArrayList<FilterList>()
     private var filterNodesList = ArrayList<FilterList>()
@@ -152,6 +154,18 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         }
     }
 
+    private val notificationTypeFilterAdapter by lazy {
+        HomeFilterAdapter(filterNotificationTypeList) { view, _, item ->
+            when (view.id) {
+                R.id.checkBoxFilter -> {
+                    Constant.isReachable = !filterNotificationTypeList[0].isSelected && filterNotificationTypeList[1].isSelected
+                    tempCount()
+                    filterCount()
+                }
+            }
+        }
+    }
+
     private val nodeFilterAdapter by lazy {
         HomeFilterNodeAdapter(filterNodesList) { view, _, _ ->
             when (view.id) {
@@ -164,7 +178,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private val alertStatusFilterAdapter by lazy {
-        HomeFilterAdapter(filterStatusList) { view, _, _ ->
+        HomeFilterAlertStatusAdapter(filterStatusList) { view, _, _ ->
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     tempCount()
@@ -308,6 +322,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     override fun bindData() {
+        Constant.isReachable = false
         dbHelper = DatabaseHelper(requireContext())
         toolbar()
         manageClick()
@@ -490,12 +505,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     fun filterSearch(text: String?) = with(binding) {
+        val tsNotification = ArrayList<FilterList>()
         val tsNode = ArrayList<FilterList>()
         val tsStatus = ArrayList<FilterList>()
         val tsPriority = ArrayList<FilterList>()
         val tsClass = ArrayList<FilterList>()
         val tsType = ArrayList<FilterList>()
 
+        notificationTypeFilterAdapter.updateList(getFilterResult(filterNotificationTypeList, tsNotification, text))
         nodeFilterAdapter.updateList(getFilterResult(filterNodesList, tsNode, text))
         alertStatusFilterAdapter.updateList(getFilterResult(filterStatusList, tsStatus, text))
         notificationPriorityFilterAdapter.updateList(
@@ -508,6 +525,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         classFilterAdapter.updateList(getFilterResult(filterClassificationList, tsClass, text))
         typeAndComponentFilterAdapter.updateList(getFilterResult(filterTypeCompList, tsType, text))
 
+        getFilterCondition(tsNotification, constraintNotificationType, viewNotificationType)
         getFilterCondition(tsNode, constraintNode, viewNode)
         getFilterCondition(tsStatus, constraintAlertStatus, viewAlertStatus)
         getFilterCondition(tsPriority, constraintNotificationPriority, viewNotificationPriority)
@@ -629,11 +647,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     isApplyFilter = true
                     constraintFilterSelected.visible()
                     filterSelectedAdapter.list.clear()
-                    setFilterSelectedData(filterNodesList, 1)
-                    setFilterSelectedData(filterStatusList, 2)
-                    setFilterSelectedData(filterPriorityList, 3)
-                    setFilterSelectedData(filterClassificationList, 4)
-                    setFilterSelectedData(filterTypeCompList, 5)
+                    setFilterSelectedData(filterNotificationTypeList, 1)
+                    setFilterSelectedData(filterNodesList, 2)
+                    setFilterSelectedData(filterStatusList, 3)
+                    setFilterSelectedData(filterPriorityList, 4)
+                    setFilterSelectedData(filterClassificationList, 5)
+                    setFilterSelectedData(filterTypeCompList, 6)
 
                     filterSelectedAdapter.notifyDataSetChanged()
 
@@ -733,11 +752,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun removeFilterSelected(position: Int, item: FilterSelectedList) {
 
         when (item.id) {
-            1 -> changeRemoveFilterData(filterNodesList, item)
-            2 -> changeRemoveFilterData(filterStatusList, item)
-            3 -> changeRemoveFilterData(filterPriorityList, item)
-            4 -> changeRemoveFilterData(filterClassificationList, item)
-            5 -> changeRemoveFilterData(filterTypeCompList, item)
+            1 -> changeRemoveFilterData(filterNotificationTypeList, item)
+            2 -> changeRemoveFilterData(filterNodesList, item)
+            3 -> changeRemoveFilterData(filterStatusList, item)
+            4 -> changeRemoveFilterData(filterPriorityList, item)
+            5 -> changeRemoveFilterData(filterClassificationList, item)
+            6 -> changeRemoveFilterData(filterTypeCompList, item)
         }
 
         tempCount()
@@ -1320,6 +1340,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun drawerFilter() = with(binding) {
+        recyclerViewNotificationType.adapter = notificationTypeFilterAdapter
         recyclerViewNode.adapter = nodeFilterAdapter
         recyclerViewAlertStatus.adapter = alertStatusFilterAdapter
         recyclerViewNotificationPriority.adapter = notificationPriorityFilterAdapter
@@ -1332,6 +1353,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun notifyDrawer() = with(binding) {
+        notificationTypeFilterAdapter.notifyDataSetChanged()
         nodeFilterAdapter.notifyDataSetChanged()
         alertStatusFilterAdapter.notifyDataSetChanged()
         classFilterAdapter.notifyDataSetChanged()
@@ -1340,6 +1362,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun filterCount(){
+        val tempNotificationTypeList: ArrayList<String> = getFilterTempList(filterNotificationTypeList)
         var tempNodeList = ArrayList<String>()
         if (filterNodesList.isNotEmpty()) {
             tempNodeList = filterNodesList.filter { it.isSelected }
@@ -1355,6 +1378,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
                     roomID = roomList[roomsItemPosition].id!!,
                     isFilterBy = true,
+                    notificationTypeFilters = tempNotificationTypeList,
                     statusFilters = tempStatusList,
                     priorityFilters = tempPriorityList,
                     nodesFilters = tempNodeList,
@@ -1364,6 +1388,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
         for (item in filterNodesList) {
             val matchingDataList = itemList.filter { it.data!!.host[0].id.equals(item.otherName, true)}
+            item.count = matchingDataList.size
+        }
+        for ((index, item) in filterNotificationTypeList.withIndex()) {
+            val matchingDataList = if(index == 0){
+                itemList.filter { it.data!!.labels!!.info.isNullOrEmpty()} as ArrayList<HomeNotificationList>
+            } else {
+                itemList.filter { !it.data!!.labels!!.info.isNullOrEmpty()} as ArrayList<HomeNotificationList>
+            }
+
             item.count = matchingDataList.size
         }
         for (item in filterStatusList) {
@@ -1388,14 +1421,15 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun filterTotalCount() {
+        val notificationTypeCount = filterNotificationTypeList.filter { it.isSelected }
         val nodeCount = filterNodesList.filter { it.isSelected }
         val alertStatusCount = filterStatusList.filter { it.isSelected }
         val notificationPriorityCount = filterPriorityList.filter { it.isSelected }
         val classCount = filterClassificationList.filter { it.isSelected }
         val typAndComponentCount = filterTypeCompList.filter { it.isSelected }
 
-        totalFilterCount =
-            nodeCount.size + alertStatusCount.size + notificationPriorityCount.size + classCount.size + typAndComponentCount.size
+        totalFilterCount = notificationTypeCount.size + nodeCount.size + alertStatusCount.size +
+                notificationPriorityCount.size + classCount.size + typAndComponentCount.size
     }
 
     private fun tempCount() = with(binding) {
@@ -1519,6 +1553,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         homeAdapter.list.clear()
 
          if (isFilterBy) {
+             var tempNotificationTypeList: ArrayList<String> = getFilterTempList(filterNotificationTypeList)
                 var tempNodeList = ArrayList<String>()
                 if (filterNodesList.isNotEmpty()) {
                     tempNodeList = filterNodesList.filter { it.isSelected }
@@ -1539,6 +1574,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                          roomID = roomList[roomsItemPosition].id!!,
                          isFilterBy = true,
                          isSortBy = true,
+                         notificationTypeFilters = tempNotificationTypeList,
                          statusFilters = tempStatusList,
                          priorityFilters = tempPriorityList,
                          nodesFilters = tempNodeList,
@@ -1555,6 +1591,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                          spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
                          roomID = roomList[roomsItemPosition].id!!,
                          isFilterBy = true,
+                         notificationTypeFilters = tempNotificationTypeList,
                          statusFilters = tempStatusList,
                          priorityFilters = tempPriorityList,
                          nodesFilters = tempNodeList,
@@ -1635,6 +1672,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         val tempNodeList = ArrayList<HomeNotificationList.Data.Host>()
         val tempClassList = ArrayList<HomeNotificationList.Data.Netdata.Alert>()
         val tempTypeCompList = ArrayList<HomeNotificationList.Data.Netdata.Alert>()
+
+        if (filterNotificationTypeList.isEmpty()) {
+            filterNotificationTypeList.add(FilterList("Alert Notifications", "4", 0))
+            filterNotificationTypeList.add(FilterList("Reachability Notifications", "3", 0))
+        }
 
         if (filterStatusList.isEmpty()) {
             filterStatusList.add(FilterList(AlertStatus.CRITICAL.type, "4", 0))

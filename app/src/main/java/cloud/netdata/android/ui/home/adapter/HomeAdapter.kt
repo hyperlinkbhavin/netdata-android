@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.marginStart
 import androidx.recyclerview.widget.RecyclerView
 import cloud.netdata.android.R
 import cloud.netdata.android.data.pojo.enumclass.Priority
@@ -160,8 +161,10 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                 textViewLabelWarning.invisible()
                 textViewWarningPercent.invisible()
                 textViewCriticalPercent.gone()
+                textViewReachableText.visible()
 
                 textViewName.text = item.data!!.labels!!.info
+                textViewReachableText.text = "Netdata Cloud is not able to reach the node ${item.data!!.host[0].name}"
             } else {
                 imageViewDiskSpace.visible()
                 textViewDiskSpace.visible()
@@ -171,6 +174,7 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                 textViewTypeAndComponent.visible()
                 textViewLabelWarning.visible()
                 textViewWarningPercent.visible()
+                textViewReachableText.invisible()
 
                 textViewName.text = item.data!!.netdata!!.alert!!.name[0]
                 textViewDiskSpace.text = item.data!!.netdata!!.chart!!.id

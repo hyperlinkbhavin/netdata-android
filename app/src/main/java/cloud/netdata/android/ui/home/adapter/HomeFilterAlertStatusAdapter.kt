@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import cloud.netdata.android.data.pojo.request.FilterList
 import cloud.netdata.android.databinding.RowItemFilterCheckboxBinding
 import cloud.netdata.android.utils.Constant
+import cloud.netdata.android.utils.gone
 import cloud.netdata.android.utils.visible
 
-class HomeFilterTypeCompAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterTypeCompAdapter.ViewHolder>() {
+class HomeFilterAlertStatusAdapter(var list: ArrayList<FilterList>, val callBack: (View, Int, FilterList) -> Unit) : RecyclerView.Adapter<HomeFilterAlertStatusAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -38,8 +39,8 @@ class HomeFilterTypeCompAdapter(var list: ArrayList<FilterList>, val callBack: (
         init {
             binding.apply {
                 checkBoxFilter.setOnClickListener {
-                    /*list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
-                    notifyItemChanged(absoluteAdapterPosition)*/
+                    list[absoluteAdapterPosition].isSelected = !list[absoluteAdapterPosition].isSelected
+                    notifyItemChanged(absoluteAdapterPosition)
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
             }
@@ -60,9 +61,18 @@ class HomeFilterTypeCompAdapter(var list: ArrayList<FilterList>, val callBack: (
             }
             textViewFilterName.text = item.name
             checkBoxFilter.isChecked = item.isSelected
+
             textViewFilterCount.visible()
             textViewFilterCount.text = item.count.toString()
+
+            if(item.isIcon){
+                imageViewPriority.visible()
+                imageViewPriority.setImageResource(item.icon!!)
+            } else {
+                imageViewPriority.gone()
+            }
         }
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -70,4 +80,5 @@ class HomeFilterTypeCompAdapter(var list: ArrayList<FilterList>, val callBack: (
         list = filterList
         notifyDataSetChanged()
     }
+
 }
