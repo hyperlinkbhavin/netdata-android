@@ -46,6 +46,7 @@ import cloud.netdata.android.ui.notification.fragment.NotificationFragment
 import cloud.netdata.android.ui.settings.fragment.MaintenanceModeSettingsFragment
 import cloud.netdata.android.ui.settings.fragment.SettingsFragment
 import cloud.netdata.android.utils.*
+import cloud.netdata.android.utils.Constant.isReachable
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.customapi.DynamicViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
@@ -182,7 +183,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             when (view.id) {
                 R.id.checkBoxFilter -> {
                     tempCount()
-                    filterCount()
+                    filterCount(forAlertStatus = true)
                 }
             }
         }
@@ -1361,7 +1362,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         notificationPriorityFilterAdapter.notifyDataSetChanged()
     }
 
-    private fun filterCount(){
+    private fun filterCount(forReachable: Boolean = false, forAlertStatus: Boolean = false){
         val tempNotificationTypeList: ArrayList<String> = getFilterTempList(filterNotificationTypeList)
         var tempNodeList = ArrayList<String>()
         if (filterNodesList.isNotEmpty()) {
@@ -1390,18 +1391,24 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             val matchingDataList = itemList.filter { it.data!!.host[0].id.equals(item.otherName, true)}
             item.count = matchingDataList.size
         }
-        for ((index, item) in filterNotificationTypeList.withIndex()) {
-            val matchingDataList = if(index == 0){
-                itemList.filter { it.data!!.labels!!.info.isNullOrEmpty()} as ArrayList<HomeNotificationList>
-            } else {
-                itemList.filter { !it.data!!.labels!!.info.isNullOrEmpty()} as ArrayList<HomeNotificationList>
-            }
 
-            item.count = matchingDataList.size
+        if(forReachable){
+            for ((index, item) in filterNotificationTypeList.withIndex()) {
+                val matchingDataList = if(index == 0){
+                    itemList.filter { it.data!!.labels!!.info.isNullOrEmpty()} as ArrayList<HomeNotificationList>
+                } else {
+                    itemList.filter { !it.data!!.labels!!.info.isNullOrEmpty()} as ArrayList<HomeNotificationList>
+                }
+
+                item.count = matchingDataList.size
+            }
         }
-        for (item in filterStatusList) {
-            val matchingDataList = itemList.filter { it.data!!.netdata!!.alert!!.current!!.status[0].equals(item.name, true)}
-            item.count = matchingDataList.size
+
+        if(!forAlertStatus){
+            for (item in filterStatusList) {
+                val matchingDataList = itemList.filter { it.data!!.netdata!!.alert!!.current!!.status[0].equals(item.name, true)}
+                item.count = matchingDataList.size
+            }
         }
         for (item in filterPriorityList) {
             val matchingDataList = itemList.filter { it.priority.equals(item.name, true)}
@@ -1654,7 +1661,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
 
         homeAdapter.notifyDataSetChanged()
-        filterCount()
+        filterCount(forReachable = true)
         drawerFilter()
         getNotificationCount()
     }

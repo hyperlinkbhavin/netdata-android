@@ -51,11 +51,13 @@ class HomeFilterAlertStatusAdapter(var list: ArrayList<FilterList>, val callBack
             if(Constant.isReachable){
                 textViewFilterName.alpha = 0.2F
                 checkBoxFilter.alpha = 0.2F
+                textViewFilterCount.alpha = 0.2F
                 checkBoxFilter.isClickable = false
                 checkBoxFilter.isFocusable = false
             } else {
                 textViewFilterName.alpha = 1F
                 checkBoxFilter.alpha = 1F
+                textViewFilterCount.alpha = 1F
                 checkBoxFilter.isClickable = true
                 checkBoxFilter.isFocusable = true
             }
