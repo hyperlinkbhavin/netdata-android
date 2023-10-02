@@ -204,7 +204,7 @@ abstract class BaseFragment<T : ViewBinding> : Fragment(), HasComponent<Fragment
             val snackView = snackbar.view
             val params = snackView.layoutParams as FrameLayout.LayoutParams
             params.gravity = Gravity.TOP
-            params.setMargins(0,20,0,0)
+            params.setMargins(0,50,0,0)
             snackView.layoutParams = params
             val textView =
                 snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView

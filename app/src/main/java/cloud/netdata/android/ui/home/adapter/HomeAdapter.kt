@@ -53,9 +53,10 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
         init {
             binding.apply {
                 constraintTop.setOnClickListener {
-                    if(list[absoluteAdapterPosition].data!!.labels!!.info.isNullOrEmpty()){
+                    /*if(list[absoluteAdapterPosition].data!!.labels!!.info.isNullOrEmpty()){
                         callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
-                    }
+                    }*/
+                    callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
                 imageViewPriority.setOnClickListener {
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])

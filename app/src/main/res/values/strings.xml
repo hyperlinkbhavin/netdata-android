@@ -127,4 +127,5 @@
     <string name="btn_browser">Browser</string>
     <string name="label_don_t_ask_again">Don\'t Ask Again</string>
     <string name="label_notification_type">Notification Type</string>
+    <string name="label_webview_is_not_available_for_reachability_notifications">Webview is not available for reachability notifications</string>
 </resources>

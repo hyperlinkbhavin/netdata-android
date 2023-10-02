@@ -1,9 +1,12 @@
 package cloud.netdata.android.ui.home.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextPaint
@@ -33,6 +36,10 @@ import cloud.netdata.android.utils.Constant
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
 import cloud.netdata.android.utils.visible
+import com.fondesa.kpermissions.extension.onAccepted
+import com.fondesa.kpermissions.extension.onDenied
+import com.fondesa.kpermissions.extension.onPermanentlyDenied
+import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.google.gson.Gson
 import java.util.Locale.filter
 
@@ -86,6 +93,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     }
 
     override fun bindData() {
+        getPermission()
         dbHelper = DatabaseHelper(requireContext())
         toolbar()
         manageClick()
@@ -300,5 +308,28 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         chooseSpaceAdapter.list.clear()
         chooseSpaceAdapter.list.addAll(spaceList)
         chooseSpaceAdapter.notifyDataSetChanged()
+    }
+
+    private fun getPermission() {
+//        hideLoader()
+        val activityPermission by lazy {
+            permissionsBuilder(
+                Manifest.permission.POST_NOTIFICATIONS
+            ).build()
+        }
+        activityPermission
+            .onAccepted {
+
+            }
+            .onDenied {
+                showMessage("You need to grant the notification permission to receive notifications from this app.")
+                Handler(Looper.getMainLooper()).postDelayed({
+                    getPermission()
+                },3000)
+            }
+            .onPermanentlyDenied {
+
+            }
+            .send()
     }
 }

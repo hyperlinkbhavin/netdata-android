@@ -19,6 +19,7 @@ import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.settings.adapter.SettingsAdapter
 import cloud.netdata.android.utils.Constant
 import cloud.netdata.android.utils.customapi.ApiViewModel
+import cloud.netdata.android.utils.localdb.DatabaseHelper
 
 class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
 
@@ -26,6 +27,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
         ViewModelProvider(this)[ApiViewModel::class.java]
     }
 
+    lateinit var dbHelper: DatabaseHelper
     lateinit var customDialog: AlertDialog
 
     private val settingsAdapter by lazy {
@@ -109,6 +111,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
     }
 
     override fun bindData() {
+        dbHelper = DatabaseHelper(requireContext())
         toolbar()
         setAdapter()
     }
@@ -284,6 +287,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
     private fun observeUnlinkDevice() {
         apiViewModel.unlinkDeviceLiveData.observe(this) {
             hideLoader()
+            dbHelper.deleteAllFetchNotification()
             appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
             appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
             navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()

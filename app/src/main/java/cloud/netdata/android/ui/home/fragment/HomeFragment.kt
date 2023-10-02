@@ -1,5 +1,6 @@
 package cloud.netdata.android.ui.home.fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
@@ -7,6 +8,7 @@ import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -16,6 +18,7 @@ import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -50,6 +53,10 @@ import cloud.netdata.android.utils.Constant.isReachable
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.customapi.DynamicViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
+import com.fondesa.kpermissions.extension.onAccepted
+import com.fondesa.kpermissions.extension.onDenied
+import com.fondesa.kpermissions.extension.onPermanentlyDenied
+import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -108,16 +115,20 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         HomeAdapter() { view, position, item ->
             when (view.id) {
                 R.id.constraintTop -> {
-                    readUnreadNotification(item, isSwipeRead = true)
-                    val url = "https://app.netdata.cloud/webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
-                            "?space_id=${item.data!!.netdata!!.space!!.id}&room_id=${item.data!!.netdata!!.room[0].id}#token=${session.userSession.drop(7)}"
+                    if(item.data!!.labels!!.info.isNullOrEmpty()){
+                        readUnreadNotification(item, isSwipeRead = true)
+                        val url = "https://app.netdata.cloud/webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
+                                "?space_id=${item.data!!.netdata!!.space!!.id}&room_id=${item.data!!.netdata!!.room[0].id}#token=${session.userSession.drop(7)}"
 
-                    if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_WEBVIEW)){
-                        redirectAlertInWebview(item, url)
-                    } else if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_BROWSER)){
-                        redirectAlertInChrome(url, session.userSession)
+                        if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_WEBVIEW)){
+                            redirectAlertInWebview(item, url)
+                        } else if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_BROWSER)){
+                            redirectAlertInChrome(url, session.userSession)
+                        } else {
+                            showAlertDialog(item ,url)
+                        }
                     } else {
-                        showAlertDialog(item ,url)
+                        showMessage(getString(R.string.label_webview_is_not_available_for_reachability_notifications))
                     }
                 }
 

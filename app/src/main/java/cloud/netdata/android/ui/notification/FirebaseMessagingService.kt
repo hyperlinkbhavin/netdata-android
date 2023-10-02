@@ -107,36 +107,20 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
             )
 
             //@mipmap/ic_app_logo_round
-            var builder: Any
-            if (isVibrate && isSound) {
-                Log.e("if 1","if 1")
-                builder = NotificationCompat.Builder(applicationContext, channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
-                    .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
-                    .setOnlyAlertOnce(true)
-                    .setSound(defaultSoundUri)
-                    .setLights(Color.BLUE, 1, 1)
-                    .setContentIntent(pendingIntent)
-            } else if (isVibrate) {
-                Log.e("if 2","if 2")
-                builder = NotificationCompat.Builder(applicationContext, channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
-                    .setVibrate(longArrayOf(1000, 1000, 1000, 1000))
-                    .setOnlyAlertOnce(true)
-                    .setLights(Color.BLUE, 1, 1)
-                    .setContentIntent(pendingIntent)
-            } else {
-                Log.e("else","else")
-                builder = NotificationCompat.Builder(applicationContext, channelId)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setAutoCancel(true)
-                    .setVibrate(longArrayOf(0, 0, 0, 0))
-                    .setOnlyAlertOnce(true)
-                    .setSound(defaultSoundUri)
-                    .setLights(Color.BLUE, 1, 1)
-                    .setContentIntent(pendingIntent)
+            var builder = NotificationCompat.Builder(applicationContext, channelId)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentIntent(pendingIntent)
+            if(isBanner){
+                Log.e("isBanner", isBanner.toString())
+                builder.priority = NotificationCompat.PRIORITY_LOW
+            }
+            if (isSound) {
+                Log.e("isSound", isSound.toString())
+                builder.setSound(defaultSoundUri)
+            }
+            if (isVibrate) {
+                Log.e("isVibrate",isVibrate.toString())
+                builder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
             }
 
             builder = builder.setContent(getRemoteView(title, message))
@@ -157,10 +141,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
 
             sendBroadcast(newIntent)
 
-            if (isBanner) {
-                Log.e("fire", "fire notification")
-                notificationManger.notify(notificationID, builder.build())
-            }
+            notificationManger.notify(notificationID, builder.build())
         } catch (e: Exception) {
             Log.e("notification crash", e.toString())
         }
