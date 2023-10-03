@@ -1,6 +1,5 @@
 package cloud.netdata.android.ui.home.fragment
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Intent
@@ -8,7 +7,6 @@ import android.content.IntentFilter
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -18,7 +16,6 @@ import android.util.Log
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -49,14 +46,9 @@ import cloud.netdata.android.ui.notification.fragment.NotificationFragment
 import cloud.netdata.android.ui.settings.fragment.MaintenanceModeSettingsFragment
 import cloud.netdata.android.ui.settings.fragment.SettingsFragment
 import cloud.netdata.android.utils.*
-import cloud.netdata.android.utils.Constant.isReachable
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.customapi.DynamicViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
-import com.fondesa.kpermissions.extension.onAccepted
-import com.fondesa.kpermissions.extension.onDenied
-import com.fondesa.kpermissions.extension.onPermanentlyDenied
-import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -70,7 +62,6 @@ import kotlinx.android.synthetic.main.include_toolbar_main.*
 import kotlinx.android.synthetic.main.row_item_home.view.*
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class HomeFragment : BaseFragment<HomeFragmentBinding>() {
@@ -843,6 +834,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                                     homeList[i].isRead = true
                                     homeList[i].isNotificationRead = true
                                     homeList[i].isTempMessageRead = true
+
                                     readUnreadNotification(item, isPermanentRead = true)
                                     Handler(Looper.getMainLooper()).postDelayed({
                                         homeList[i].isTempMessageRead = false
@@ -865,7 +857,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         isPermanentRead: Boolean = false,
         isSwipeRead: Boolean = false
     ) {
-        dbHelper.updateFetchNotificationData(item, isPermanentRead = isPermanentRead, isSwipeRead = isSwipeRead)
+        dbHelper.updateFetchNotificationData(
+            item,
+            isPermanentRead = isPermanentRead,
+            isSwipeRead = isSwipeRead
+        )
         homeAdapter.list.clear()
         if (isAllButtonSelected) {
             homeAdapter.list.addAll(getAllData())
@@ -873,10 +869,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             homeAdapter.list.addAll(getAllData(isUnread = true))
         }
         homeAdapter.notifyDataSetChanged()
-        binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
-        binding.buttonUnread.text =
-            "${getString(R.string.btn_unread)} (${getAllData(isUnread = true).size})"
-        getNotificationCount()
+        binding.let {
+            binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
+            binding.buttonUnread.text =
+                "${getString(R.string.btn_unread)} (${getAllData(isUnread = true).size})"
+            getNotificationCount()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -1570,8 +1568,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         homeList.clear()
         homeAdapter.list.clear()
 
-         if (isFilterBy) {
-             var tempNotificationTypeList: ArrayList<String> = getFilterTempList(filterNotificationTypeList)
+        try {
+            if (isFilterBy) {
+                var tempNotificationTypeList: ArrayList<String> =
+                    getFilterTempList(filterNotificationTypeList)
                 var tempNodeList = ArrayList<String>()
                 if (filterNodesList.isNotEmpty()) {
                     tempNodeList = filterNodesList.filter { it.isSelected }
@@ -1583,98 +1583,101 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 val tempPriorityList: ArrayList<String> = getFilterTempList(filterPriorityList)
                 val tempTypeList: ArrayList<String> = getFilterTempList(filterTypeCompList)
 
-             if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt() != -1 ||
-                 appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt() != -1 ||
-                 appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt() != -1){
-                 homeList.addAll(
-                     dbHelper.getAllDataFromFetchNotification(
-                         spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
-                         roomID = roomList[roomsItemPosition].id!!,
-                         isFilterBy = true,
-                         isSortBy = true,
-                         notificationTypeFilters = tempNotificationTypeList,
-                         statusFilters = tempStatusList,
-                         priorityFilters = tempPriorityList,
-                         nodesFilters = tempNodeList,
-                         classFilters = tempClassList,
-                         typeFilters = tempTypeList,
-                         sortByTimeItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt(),
-                         sortByNotificationPriorityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt(),
-                         sortByCriticalityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt()
-                     )
-                 )
-             } else {
-                 homeList.addAll(
-                     dbHelper.getAllDataFromFetchNotification(
-                         spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
-                         roomID = roomList[roomsItemPosition].id!!,
-                         isFilterBy = true,
-                         notificationTypeFilters = tempNotificationTypeList,
-                         statusFilters = tempStatusList,
-                         priorityFilters = tempPriorityList,
-                         nodesFilters = tempNodeList,
-                         classFilters = tempClassList,
-                         typeFilters = tempTypeList
-                     )
-                 )
-             }
+                if(appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt() != -1 ||
+                    appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt() != -1 ||
+                    appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt() != -1){
+                    homeList.addAll(
+                        dbHelper.getAllDataFromFetchNotification(
+                            spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                            roomID = roomList[roomsItemPosition].id!!,
+                            isFilterBy = true,
+                            isSortBy = true,
+                            notificationTypeFilters = tempNotificationTypeList,
+                            statusFilters = tempStatusList,
+                            priorityFilters = tempPriorityList,
+                            nodesFilters = tempNodeList,
+                            classFilters = tempClassList,
+                            typeFilters = tempTypeList,
+                            sortByTimeItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt(),
+                            sortByNotificationPriorityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt(),
+                            sortByCriticalityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt()
+                        )
+                    )
+                } else {
+                    homeList.addAll(
+                        dbHelper.getAllDataFromFetchNotification(
+                            spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                            roomID = roomList[roomsItemPosition].id!!,
+                            isFilterBy = true,
+                            notificationTypeFilters = tempNotificationTypeList,
+                            statusFilters = tempStatusList,
+                            priorityFilters = tempPriorityList,
+                            nodesFilters = tempNodeList,
+                            classFilters = tempClassList,
+                            typeFilters = tempTypeList
+                        )
+                    )
+                }
 
-        } else if (appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt() != -1 ||
-             appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt() != -1 ||
-             appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt() != -1) {
-            homeList.addAll(
-                dbHelper.getAllDataFromFetchNotification(
-                    spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
-                    roomID = roomList[roomsItemPosition].id!!,
-                    isSortBy = true,
-                    sortByTimeItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt(),
-                    sortByNotificationPriorityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt(),
-                    sortByCriticalityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt()
+            } else if (appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt() != -1 ||
+                appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt() != -1 ||
+                appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt() != -1) {
+                homeList.addAll(
+                    dbHelper.getAllDataFromFetchNotification(
+                        spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                        roomID = roomList[roomsItemPosition].id!!,
+                        isSortBy = true,
+                        sortByTimeItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_TIME).toInt(),
+                        sortByNotificationPriorityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_PRIORITY).toInt(),
+                        sortByCriticalityItemPosition = appPreferences.getString(Constant.APP_PREF_SORTING_BY_CRITICALITY).toInt()
+                    )
                 )
-            )
 //            homeAdapter.list.addAll(homeList)
-        } else {
-            homeList.addAll(
-                dbHelper.getAllDataFromFetchNotification(
-                    spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
-                    roomID = roomList[roomsItemPosition].id!!
+            } else {
+                homeList.addAll(
+                    dbHelper.getAllDataFromFetchNotification(
+                        spaceID = appPreferences.getString(Constant.APP_PREF_SPACE_ID),
+                        roomID = roomList[roomsItemPosition].id!!
+                    )
                 )
-            )
 //            homeAdapter.list.addAll(homeList)
-        }
+            }
 
-        addFilterListData()
-        val itemsToAdd = mutableListOf<HomeNotificationList>() // Change ItemType to the actual type of your items
+            addFilterListData()
+            val itemsToAdd = mutableListOf<HomeNotificationList>() // Change ItemType to the actual type of your items
 
 //        itemsToAdd.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
-        itemsToAdd.addAll(homeList.filter { homeItem ->
-            homeItem.data?.netdata?.room?.any { room ->
-                room.id == roomList[roomsItemPosition].id
-            } == true || homeItem.data?.netdata?.room.isNullOrEmpty()
-        })
+            itemsToAdd.addAll(homeList.filter { homeItem ->
+                homeItem.data?.netdata?.room?.any { room ->
+                    room.id == roomList[roomsItemPosition].id
+                } == true || homeItem.data?.netdata?.room.isNullOrEmpty()
+            })
 //        itemsToAdd.addAll(homeList)
-        /*for (i in homeList) {
-            var isContain = false
-            for (j in i.data!!.netdata!!.room) {
-                if (j.id == roomList[roomsItemPosition].id!!) {
-                    isContain = true
+            /*for (i in homeList) {
+                var isContain = false
+                for (j in i.data!!.netdata!!.room) {
+                    if (j.id == roomList[roomsItemPosition].id!!) {
+                        isContain = true
+                    }
                 }
-            }
-            if(isContain) itemsToAdd.add(i)
-        }*/
+                if(isContain) itemsToAdd.add(i)
+            }*/
 //        homeAdapter.list.addAll(homeList.filter { it.data!!.netdata!!.room.any { room -> room.id == roomList[roomsItemPosition].id!!}})
-        homeAdapter.list.addAll(itemsToAdd)
-        homeList.clear()
-        homeList.addAll(homeAdapter.list)
-        val unreadItem = homeAdapter.list.filter { !it.isRead }
+            homeAdapter.list.addAll(itemsToAdd)
+            homeList.clear()
+            homeList.addAll(homeAdapter.list)
+            val unreadItem = homeAdapter.list.filter { !it.isRead }
 
-        binding.buttonAll.text = "${getString(R.string.btn_all)} (${homeAdapter.list.size})"
-        binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
+            binding.buttonAll.text = "${getString(R.string.btn_all)} (${homeAdapter.list.size})"
+            binding.buttonUnread.text = "${getString(R.string.btn_unread)} (${unreadItem.size})"
 
-        homeAdapter.notifyDataSetChanged()
-        filterCount(forReachable = true)
-        drawerFilter()
-        getNotificationCount()
+            homeAdapter.notifyDataSetChanged()
+            filterCount(forReachable = true)
+            drawerFilter()
+            getNotificationCount()
+
+        } catch (e: Exception) {
+        }
     }
 
     private fun getFilterTempList(list1: ArrayList<FilterList>): ArrayList<String> {

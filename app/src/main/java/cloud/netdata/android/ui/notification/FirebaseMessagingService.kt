@@ -1,8 +1,10 @@
 package cloud.netdata.android.ui.notification
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -12,6 +14,7 @@ import android.os.Build
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import cloud.netdata.android.R
 import cloud.netdata.android.core.AppSession
 import cloud.netdata.android.ui.home.HomeActivity
@@ -80,13 +83,15 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
             }
             Log.e("alertData", alertData.toString())
 
-            val notificationPriority =
-                notificationPriorityData.find { it.priority.equals(alertData!!.priority, true) }
-            Log.e("PRIORITY", notificationPriority.toString())
+            if(alertData != null){
+                val notificationPriority =
+                    notificationPriorityData.find { it.priority.equals(alertData!!.priority, true) }
+                Log.e("PRIORITY", notificationPriority.toString())
 
-            isVibrate = notificationPriority!!.isVibration == 1
-            isBanner = notificationPriority.isBanner == 1
-            isSound = notificationPriority.isSound == 1
+                isVibrate = notificationPriority!!.isVibration == 1
+                isBanner = notificationPriority.isBanner == 1
+                isSound = notificationPriority.isSound == 1
+            }
 
             /*defaultSoundUri = if(!notificationPriority.soundUrl.isNullOrEmpty()){
             Uri.parse(notificationPriority.soundUrl)
@@ -110,6 +115,9 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
             var builder = NotificationCompat.Builder(applicationContext, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentIntent(pendingIntent)
+                .setCustomBigContentView(
+                    setBigContentView(title, message)
+                ) // set more view content when SwipeDown (pull down)
             if(isBanner){
                 Log.e("isBanner", isBanner.toString())
                 builder.priority = NotificationCompat.PRIORITY_LOW
@@ -193,6 +201,34 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
         remoteView.setTextViewText(R.id.message, message)
         remoteView.setImageViewResource(R.id.icon, R.drawable.ic_logo)
 
+        return remoteView
+    }
+
+
+    @SuppressLint("RemoteViewLayout")
+    private fun setBigContentView(title: String, message: String): RemoteViews {
+//        val videoUri = Uri.parse(img)
+//        val thumbnail = extractVideoThumbnail(videoUri)
+
+        /*val uiModeManager = getSystemService(Context.UI_MODE_SERVICE) as UiModeManager
+        val isNightModeEnabled = uiModeManager.nightMode == UiModeManager.MODE_NIGHT_YES
+
+        val textColor = if (isNightModeEnabled) {
+            // Use a light color for dark mode
+            ContextCompat.getColor(applicationContext, R.color.colorWhite)
+        } else {
+            // Use a dark color for light mode
+            ContextCompat.getColor(applicationContext, R.color.colorBlack1C)
+        }*/
+        val remoteView = RemoteViews("cloud.netdata.android", R.layout.long_push_notification)
+        remoteView.setTextViewText(R.id.textViewLongTitle, title)
+//        remoteView.setTextColor(R.id.textViewLongTitle, textColor)
+
+        remoteView.setTextViewText(R.id.textViewLongMessage, message)
+//        remoteView.setTextColor(R.id.textViewLongMessage, textColor)
+
+//        remoteView.setImageViewBitmap(R.id.imageViewVideoThumbnail, thumbnail)
+        remoteView.setImageViewResource(R.id.icon, R.mipmap.ic_launcher)
         return remoteView
     }
 

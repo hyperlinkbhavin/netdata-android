@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="horizontal"
+    >
+
+    <!--<LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/colorPurple4F"
+            android:padding="2dp"
+            android:src="@mipmap/ic_launcher_app"
+            android:visibility="gone" />
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewLongTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:singleLine="true"
+            style="@style/AppTheme.AppTextView.BoldBlack16"
+            tools:text="Title" />
+
+        <TextView
+            android:id="@+id/textViewLongMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Message"
+            style="@style/AppTheme.AppTextView.RegularBlack15"/>
+
+        <ImageView
+            android:id="@+id/imageViewVideoThumbnail"
+            android:layout_width="@dimen/dp_100"
+            android:visibility="gone"
+            android:layout_height="@dimen/dp_100"
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>

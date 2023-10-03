@@ -4,7 +4,6 @@
     android:id="@+id/linear_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorWhite"
     android:orientation="horizontal"
     app:chainUseRtl="true"
     android:padding="0dp">
@@ -20,6 +19,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:padding="5dp"
+            android:visibility="gone"
             android:src="@drawable/ic_logo" />
     </LinearLayout>
 
@@ -36,10 +36,10 @@
             android:id="@+id/title_push"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/AppTheme.AppTextView.BoldBlack16"
             android:text="Title"
             android:maxLines="1"
             android:ellipsize="end"
-            android:textColor="#000"
             android:textStyle="bold" />
 
         <!-- TextView for Body -->
@@ -47,8 +47,8 @@
             android:id="@+id/message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/AppTheme.AppTextView.RegularBlack15"
             android:text="Message"
-            android:maxLines="1"
             android:ellipsize="end"
             android:textSize="14sp" />
 

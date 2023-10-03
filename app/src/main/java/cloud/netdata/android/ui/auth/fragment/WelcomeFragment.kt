@@ -50,6 +50,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
         dbHelper = DatabaseHelper(requireContext())
         manageClick()
 
+        dbHelper.deleteAllFetchNotification()
         val deeplink = arguments?.getString(Constant.BUNDLE_DEEPLINK)
 
         if(!deeplink.isNullOrEmpty()){
