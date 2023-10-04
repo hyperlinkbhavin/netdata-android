@@ -133,7 +133,9 @@ class NotificationFragment : BaseFragment<NotificationFragmentBinding>() {
         val recyclerViewSelectWarRooms =
             view.findViewById<RecyclerView>(R.id.recyclerViewSelectWarRooms)
         val textViewLabelClose = view.findViewById<AppCompatTextView>(R.id.textViewLabelClose)
+        val textViewLabelSelectWarRooms = view.findViewById<AppCompatTextView>(R.id.textViewLabelSelectWarRooms)
         recyclerViewSelectWarRooms.adapter = allSpacesAdapter
+        textViewLabelSelectWarRooms.text = getString(R.string.label_select_spaces)
 
         if (spacesItemPosition != -1) {
             allSpacesAdapter.selectionPosition = spacesItemPosition

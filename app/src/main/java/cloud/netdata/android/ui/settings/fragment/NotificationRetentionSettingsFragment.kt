@@ -69,6 +69,7 @@ class NotificationRetentionSettingsFragment: BaseFragment<NotificationRetentionS
     private fun manageClick() = with(binding){
         buttonDone.setOnClickListener {
             storeData()
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SET_MESSAGE, true)
             navigator.goBack()
         }
     }

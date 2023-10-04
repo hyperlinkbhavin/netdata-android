@@ -115,7 +115,8 @@
     <string name="label_all_nodes">All nodes</string>
     <string name="hint_search_spaces">Search spaces...</string>
     <string name="label_all_spaces">All Spaces</string>
-    <string name="title_notification_retention_settings">Control Notification Retention Settings</string>
+    <string name="title_notification_retention_settings">Notification Retention Settings</string>
+    <string name="label_control_notification_retention_settings">From this menu you can control notification retention settings</string>
     <string name="label_you_have_seen_the_message">You have seen the message</string>
     <string name="label_undo">Undo</string>
     <string name="label_reset_all">Reset All</string>
@@ -128,4 +129,6 @@
     <string name="label_don_t_ask_again">Don\'t Ask Again</string>
     <string name="label_notification_type">Notification Type</string>
     <string name="label_webview_is_not_available_for_reachability_notifications">Webview is not available for reachability notifications</string>
+    <string name="msg_notification_retention_setting_success">Notification retention setting has been changed successfully</string>
+    <string name="label_select_spaces">Select Spaces</string>
 </resources>

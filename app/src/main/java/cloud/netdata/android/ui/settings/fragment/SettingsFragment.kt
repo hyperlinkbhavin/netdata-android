@@ -116,6 +116,14 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
         setAdapter()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_MESSAGE)){
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SET_MESSAGE, false)
+            showMessage(getString(R.string.msg_notification_retention_setting_success))
+        }
+    }
+
     private fun toolbar() = with(binding) {
         includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
         includeToolbar.textViewToolbarTitle.text = getString(R.string.title_settings)
@@ -154,7 +162,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
                 R.drawable.ic_settings_notification_retention,
                 getString(R.string.title_notification_retention_settings),
                 getString(
-                    R.string.label_change_your_theme_description
+                    R.string.label_control_notification_retention_settings
                 )
             )
         )
