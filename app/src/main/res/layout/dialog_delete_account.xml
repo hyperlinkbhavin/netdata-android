@@ -19,10 +19,12 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textViewDeleteAccountText"
+        android:layout_width="@dimen/dp_0"
         style="@style/AppTheme.AppTextView.RegularBlack14"
-        android:alpha="0.5"
-        android:text="Lorem ipsum dolor sit amet,\nsecteturadipiscing elit. Phasellus"
+        android:alpha="0.7"
+        android:text="@string/label_are_you_sure_you_want_to_delete_nyour_account"
         android:layout_marginTop="@dimen/dp_8"
+        android:layout_marginHorizontal="@dimen/dp_20"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

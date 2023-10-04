@@ -142,7 +142,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
         settingsAdapter.list.add(
             SettingsList(
                 R.drawable.ic_settings_maintenance_mode,
-                getString(R.string.title_maintenance_mode_settings),
+                getString(R.string.title_maintenance_mode),
                 getString(
                     R.string.label_maintenance_mode_settings_description
                 )
@@ -151,7 +151,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
         settingsAdapter.list.add(
             SettingsList(
                 R.drawable.ic_settings_notification_priority,
-                getString(R.string.title_notification_priority_settings),
+                getString(R.string.title_notification_priority),
                 getString(
                     R.string.label_notification_priority_settings_description
                 )
@@ -160,7 +160,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
         settingsAdapter.list.add(
             SettingsList(
                 R.drawable.ic_settings_notification_retention,
-                getString(R.string.title_notification_retention_settings),
+                getString(R.string.title_notification_retention),
                 getString(
                     R.string.label_control_notification_retention_settings
                 )

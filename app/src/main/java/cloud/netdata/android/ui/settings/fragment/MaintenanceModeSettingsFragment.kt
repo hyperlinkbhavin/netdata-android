@@ -150,7 +150,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private fun toolbar() = with(binding) {
         includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
         includeToolbar.textViewToolbarTitle.text =
-            getString(R.string.title_maintenance_mode_settings)
+            getString(R.string.title_maintenance_mode)
     }
 
     @SuppressLint("NotifyDataSetChanged")

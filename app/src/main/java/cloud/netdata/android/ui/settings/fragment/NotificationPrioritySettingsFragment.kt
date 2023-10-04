@@ -82,7 +82,7 @@ class NotificationPrioritySettingsFragment :
     private fun toolbar() = with(binding) {
         includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
         includeToolbar.textViewToolbarTitle.text =
-            getString(R.string.title_notification_priority_settings)
+            getString(R.string.title_notification_priority)
 
         /*checkSwitch(switchHighPrioritySound, buttonHighPriorityApplyCustomTune)
         checkSwitch(switchMediumPrioritySound, buttonMediumPriorityApplyCustomTune)
