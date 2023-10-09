@@ -23,6 +23,7 @@
     <string name="label_choose_a_space_to_continue">Choose A Space To Continue</string>
     <string name="label_you_have_a_total_of_3_notifications_in_your_spaces">You have a total of 0 notifications in your spaces</string>
     <string name="hint_search_services">Search services....</string>
+    <string name="hint_search">search</string>
     <string name="label_select_war_rooms">Select War rooms</string>
     <string name="label_close">Close</string>
     <string name="label_sort_by">Sort By</string>

@@ -1401,7 +1401,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             item.count = matchingDataList.size
         }
 
-        if(forReachable){
+//        if(forReachable){
             for ((index, item) in filterNotificationTypeList.withIndex()) {
                 val matchingDataList = if(index == 0){
                     itemList.filter { it.data!!.labels!!.info.isNullOrEmpty()} as ArrayList<HomeNotificationList>
@@ -1411,14 +1411,14 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
                 item.count = matchingDataList.size
             }
-        }
+//        }
 
-        if(!forAlertStatus){
+//        if(!forAlertStatus){
             for (item in filterStatusList) {
                 val matchingDataList = itemList.filter { it.data!!.netdata!!.alert!!.current!!.status[0].equals(item.name, true)}
                 item.count = matchingDataList.size
             }
-        }
+//        }
         for (item in filterPriorityList) {
             val matchingDataList = itemList.filter { it.priority.equals(item.name, true)}
             item.count = matchingDataList.size

@@ -128,7 +128,7 @@
                 android:layout_height="wrap_content"
                 android:layout_width="@dimen/dp_0"
                 style="@style/AppCompatEditTextSearch"
-                android:hint="@string/hint_search_services"
+                android:hint="@string/hint_search"
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="@dimen/dp_14"
                 android:layout_marginTop="@dimen/dp_16"

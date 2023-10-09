@@ -3,7 +3,6 @@ package cloud.netdata.android.ui.settings.adapter
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +13,6 @@ import cloud.netdata.android.databinding.RowItemMaintenanceModeSettingsBinding
 import cloud.netdata.android.utils.*
 import com.google.android.material.datepicker.MaterialDatePicker.Builder.datePicker
 import java.util.*
-import kotlin.collections.ArrayList
 
 class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBack: (View, Int, SpaceList, Boolean) -> Unit) : RecyclerView.Adapter<MaintenanceModeSettingsAdapter.ViewHolder>() {
 
@@ -58,11 +56,14 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
                     datePicker()
                 }
 
-                radioButtonForever.setOnCheckedChangeListener { buttonView, isChecked ->
-                    if(isChecked){
-                        textViewUntilDate.text = "DD/MM/YY, HH:MM"
-                        callBack.invoke(radioButtonForever, absoluteAdapterPosition, list[absoluteAdapterPosition], false)
-                    }
+                radioButtonForever.setOnClickListener {
+                    textViewUntilDate.text = "DD/MM/YY, HH:MM"
+                    callBack.invoke(
+                        radioButtonForever,
+                        absoluteAdapterPosition,
+                        list[absoluteAdapterPosition],
+                        false
+                    )
                 }
 
             }
@@ -101,6 +102,7 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
             if(item.isTempSelected){
                 switchDisableAllNotifications.isChecked = true
                 radioGroupAllNotifications.visible()
+                item.isTempSelected = false
             }
 
             textViewDisableAllNotification.text = item.name

@@ -4,11 +4,8 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
@@ -22,11 +19,13 @@ import cloud.netdata.android.ui.settings.adapter.MaintenanceModeSettingsAdapter
 import cloud.netdata.android.utils.*
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
-import com.google.android.datatransport.cct.internal.LogEvent
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragmentBinding>() {
+class DuplicateNewMaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragmentBinding>() {
 
     lateinit var dbHelper: DatabaseHelper
     private var spaceList = ArrayList<SpaceList>()
@@ -35,10 +34,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     private var clickPosition = -1
     private var isChanged = false
     private var manageSpaceList = ArrayList<SpaceList>()
-    private var isAllSilence = false
-    private var isAllUnsilence = false
+    private var isAllChange = false
     private var isUntil = false
-    private var untilDate = ""
     private var allChangeIndex = -1
 
     private val apiViewModel by lazy {
@@ -51,14 +48,22 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 R.id.switchDisableAllNotifications -> {
                     itemPosition = position
                     clickPosition = 1
-                    if (!isChecked) {
+                    if (isChecked) {
+                        if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
+                        }
+//                        callSilenceSpace(item)
+                    } else {
+                        if(item.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)){
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
+                        }
                         val ruleId = ArrayList<String>()
+                        /*if(!item.silenceRuleId.isNullOrEmpty()){
+                            ruleId.add(item.silenceRuleId!!)
+                        }*/
                         ruleId.addAll(item.silenceRuleIdList)
-                        spaceList[itemPosition].isSelected = false
-                        spaceList[itemPosition].isForever = false
-                        spaceList[itemPosition].isUntil = false
-                        spaceList[itemPosition].untilDate = ""
-                        callUnsilenceSpace(item, ruleId)
+                        callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
                     }
 
                 }
@@ -76,41 +81,36 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     }
 
     private fun changeUntil(item: SpaceList, position: Int){
-        if(!item.isUntil){
-            itemPosition = position
-            clickPosition = 2
-            spaceList[itemPosition].isSelected = true
-            spaceList[itemPosition].isUntil = true
-            if(item.isForever){
-                isChanged = true
-                spaceList[itemPosition].isForever = false
-                val ruleId = ArrayList<String>()
-                ruleId.addAll(spaceList[itemPosition].silenceRuleIdList)
-                callUnsilenceSpace(spaceList[itemPosition], ruleId)
-            } else {
-                isChanged = false
-                callSilenceSpace(spaceList[itemPosition])
-            }
+        itemPosition = position
+        clickPosition = 2
+        item.isUntil = true
+        if(item.silenceRuleIdList.isNotEmpty()){
+            isChanged = true
+            val ruleId = ArrayList<String>()
+            ruleId.addAll(item.silenceRuleIdList)
+            callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
+        } else {
+            isChanged = false
+            callSilenceSpace(item)
         }
     }
 
     private fun changeForever(item: SpaceList, position: Int){
-        if(!item.isForever){
-            itemPosition = position
-            clickPosition = 3
-            spaceList[itemPosition].isForever = true
-            spaceList[itemPosition].isSelected = true
-            if(item.isUntil){
-                isChanged = true
-                spaceList[itemPosition].isUntil = false
-                spaceList[itemPosition].untilDate = ""
-                val ruleId = ArrayList<String>()
-                ruleId.addAll(spaceList[itemPosition].silenceRuleIdList)
-                callUnsilenceSpace(spaceList[itemPosition], ruleId)
-            } else {
-                isChanged = false
-                callSilenceSpace(spaceList[itemPosition])
-            }
+        item.isForever = true
+        item.isUntil = false
+        item.untilDate = ""
+        itemPosition = position
+        clickPosition = 3
+        if(item.silenceRuleIdList.isNotEmpty()){
+            isChanged = true
+            val ruleId = ArrayList<String>()
+            ruleId.addAll(item.silenceRuleIdList)
+            callUnsilenceSpace(item, ruleId, position)
+//                        updateData(itemPosition, clickPosition)
+        } else {
+            isChanged = false
+            callSilenceSpace(item)
         }
     }
 
@@ -160,11 +160,12 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 binding.constraintDisableNotifications.isSelected = true
                 binding.radioGroupAllNotifications.visible()
             } else {
-                unsilenceAllNotification()
+                changeAllNotificationData(switchDisableAllNotifications.isChecked)
             }
         }
 
         textViewUntilDate.setOnClickListener {
+            isChanged = true
             datePicker()
         }
 
@@ -173,143 +174,90 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 textViewUntilDate.text = "DD/MM/YY, HH:MM"
             }
             isUntil = false
-            /*spaceList.filter {
-                !it.plan.equals(Constant.COMMUNITY, true)
-                        && !it.plan.equals(Constant.EARLY_BIRD, true)
-            }.forEach {
+            spaceList.forEach {
                 it.isForever = true
                 it.isUntil = false
                 it.untilDate = ""
-            }*/
+            }
 
-            changeAllNotificationData(true)
+            changeAllNotificationData(true, isUntil)
         }
 
         radioButtonUntil.setOnClickListener {
+            isChanged = true
             datePicker()
         }
     }
 
     @SuppressLint("NotifyDataSetChanged", "SuspiciousIndentation")
-    private fun changeAllNotificationData(isUnsilence: Boolean = false) {
-        appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
-        if(isUnsilence){
+    private fun changeAllNotificationData(isChecked: Boolean, isUntil: Boolean = false) {
+        if (isChecked) {
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
+            binding.radioGroupAllNotifications.visible()
             allChangeIndex += 1
             if(allChangeIndex != spaceList.size){
-                isAllSilence = true
-                itemPosition = allChangeIndex
+                isAllChange = true
 
-                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                if(!spaceList[allChangeIndex].isSelected
+                    && !spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
+                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)
+                    && !isUntil){
                     itemPosition = allChangeIndex
                     clickPosition = 1
-                    Log.e("if item", spaceList[allChangeIndex].toString())
-                    callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList)
-                } else {
-                    isAllSilence = false
-                    allChangeIndex = -1
-                    Log.e("else item", spaceList[1].toString())
-                    changeAllNotificationData(false)
-                }
-            } else {
-                isAllSilence = false
-                allChangeIndex = -1
-                Log.e("else item", spaceList[1].toString())
-                changeAllNotificationData(false)
-            }
-        } else {
-            allChangeIndex += 1
-            if(allChangeIndex != spaceList.size){
-                isAllSilence = true
-                itemPosition = allChangeIndex
-
-                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
+                    callSilenceSpace(spaceList[allChangeIndex])
+                } else if(isUntil
+                    && !spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
                     && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
                     itemPosition = allChangeIndex
-                    clickPosition = 3
-                    callSilenceSpace(spaceList[allChangeIndex])
+                    clickPosition = 2
+                    isChanged = true
+                    if(spaceList[allChangeIndex].isForever){
+                        callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, allChangeIndex)
+                    } else {
+                        isChanged = false
+                        callSilenceSpace(spaceList[itemPosition])
+                    }
                 } else {
-                    isAllSilence = false
-                    allChangeIndex = -1
-                    Log.e("else item", spaceList[1].toString())
-                    getCheckData()
+                    changeAllNotificationData(true, isUntil)
                 }
             } else {
-                isAllSilence = false
+
+                isAllChange = false
                 allChangeIndex = -1
                 getCheckData()
             }
-        }
 
-        maintenanceModeSettingsAdapter.notifyDataSetChanged()
-    }
 
-    private fun unsilenceAllNotification(){
-        appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
-        allChangeIndex += 1
-        if(allChangeIndex != spaceList.size){
-            isAllUnsilence = true
-            itemPosition = allChangeIndex
+            /*for ((index, item) in spaceList.withIndex()) {
+                if (!item.isSelected) {
+                    itemPosition = index
+                    clickPosition = 1
+                    *//*item.isSelected = switchDisableAllNotifications.isChecked
+                    item.isForever = switchDisableAllNotifications.isChecked
+                    item.isUntil = false
+                    item.untilDate = ""*//*
 
-            if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
-                itemPosition = allChangeIndex
-                clickPosition = 1
-                callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList)
-            }
-        } else {
-            isAllUnsilence = false
-            allChangeIndex = -1
-            getCheckData()
-        }
-    }
-
-    @SuppressLint("NotifyDataSetChanged", "SuspiciousIndentation")
-    private fun changeAllNotificationUntilData(isUnsilence: Boolean = false) {
-            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
-        if(isUnsilence){
-            allChangeIndex += 1
-            if(allChangeIndex != spaceList.size){
-                isAllSilence = true
-                itemPosition = allChangeIndex
-
-                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
-                    itemPosition = allChangeIndex
-                    clickPosition = -1
-                    Log.e("if item", spaceList[allChangeIndex].toString())
-                    callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList)
-                } else {
-                    isAllSilence = false
-                    allChangeIndex = -1
-                    Log.e("else item", spaceList[1].toString())
-                    changeAllNotificationUntilData(false)
+//                    Handler(Looper.getMainLooper()).postDelayed({
+                    callSilenceSpace(item)
+//                    },2000)
                 }
-            } else {
-                isAllSilence = false
-                allChangeIndex = -1
-                Log.e("else item", spaceList[1].toString())
-                changeAllNotificationUntilData(false)
-            }
+            }*/
         } else {
+            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
             allChangeIndex += 1
             if(allChangeIndex != spaceList.size){
-                isAllSilence = true
-                itemPosition = allChangeIndex
+                isAllChange = true
 
                 if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
                     && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
                     itemPosition = allChangeIndex
                     clickPosition = 4
-                    callSilenceSpace(spaceList[allChangeIndex])
+                    callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList, allChangeIndex)
                 } else {
-                    isAllSilence = false
-                    allChangeIndex = -1
-                    Log.e("else item", spaceList[1].toString())
-                    getCheckData()
+                    changeAllNotificationData(false, isUntil)
                 }
             } else {
-                isAllSilence = false
+                isAllChange = false
                 allChangeIndex = -1
                 getCheckData()
             }
@@ -317,11 +265,11 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
     }
 
-    private fun changeDataForUnsilence(){
-        spaceList[itemPosition].silenceRuleId = ""
-        spaceList[itemPosition].silenceRuleName = ""
-        spaceList[itemPosition].silenceRuleIdList = arrayListOf()
-        updateData(clickPosition)
+    private fun changeDataForUnsilence(position: Int){
+        spaceList[position].silenceRuleId = ""
+        spaceList[position].silenceRuleName = ""
+        spaceList[position].silenceRuleIdList = arrayListOf()
+        updateData(position, clickPosition)
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -331,36 +279,64 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun updateData(clickPos: Int) {
+    private fun updateData(pos: Int, clickPos: Int) {
+
+//        appPreferences.putString(Constant.APP_PREF_SPACE_LIST_MAINTAIN, Gson().toJson(spaceList))
+
+        /*if(spaceList[pos].isSelected){
+            callSilenceSpace(item)
+        } else {
+            callUnsilenceSpace(item)
+        }*/
 
         try{
             when (clickPos) {
                 1 -> {
-                    spaceList[itemPosition].isSelected = false
-                    spaceList[itemPosition].isForever = false
-                    spaceList[itemPosition].isUntil = false
-                    spaceList[itemPosition].untilDate = ""
+                    spaceList[pos].isSelected = !spaceList[pos].isSelected
+                    spaceList[pos].isForever = !spaceList[pos].isForever
+                    spaceList[pos].isUntil = false
+                    spaceList[pos].untilDate = ""
                 }
                 2 -> {
-                    spaceList[itemPosition].isSelected = true
-                    spaceList[itemPosition].isForever = false
-                    spaceList[itemPosition].isUntil = true
+                    spaceList[pos].isForever = false
+                    spaceList[pos].isUntil = true
                 }
                 3 -> {
-                    spaceList[itemPosition].isSelected = true
-                    spaceList[itemPosition].isForever = true
-                    spaceList[itemPosition].isUntil = false
-                    spaceList[itemPosition].untilDate = ""
+                    spaceList[pos].isForever = true
+                    spaceList[pos].isUntil = false
+                    spaceList[pos].untilDate = ""
                 }
                 4 -> {
-                    spaceList[itemPosition].isSelected = true
-                    spaceList[itemPosition].isForever = false
-                    spaceList[itemPosition].isUntil = true
+                    spaceList[pos].isSelected = false
+                    spaceList[pos].isForever = false
+                    spaceList[pos].isUntil = false
+                    spaceList[pos].untilDate = ""
                 }
             }
 
             getCheckData()
 
+            /*dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
+                mapOf(
+                    "id" to space.id,
+                    "slug" to space.slug,
+                    "name" to space.name,
+                    "description" to space.description,
+                    "iconURL" to space.iconURL,
+                    "createdAt" to space.createdAt,
+                    "permissions" to space.permissions,
+                    "plan" to space.plan,
+                    "planDefinition" to space.planDefinition,
+                    "isSelected" to space.isSelected,
+                    "isForever" to space.isForever,
+                    "isUntil" to space.isUntil,
+                    "untilDate" to space.untilDate,
+                    "silenceRuleId" to space.silenceRuleId,
+                    "silenceRuleIdList" to arrayListOf(""),
+                    "silenceRuleName" to space.silenceRuleName,
+                    "count" to space.count,
+                )
+            }))*/
             maintenanceModeSettingsAdapter.notifyDataSetChanged()
         }
         catch (_: Exception){
@@ -383,16 +359,9 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 radioButtonForever.isChecked = true
             }
         } else {
-            switchDisableAllNotifications.isChecked = false
-            textViewUntilDate.text = "DD/MM/YY, HH:MM"
-            radioGroupAllNotifications.gone()
-        }
-        val sData = spaceList.find { it.id == appPreferences.getString(Constant.APP_PREF_SPACE_ID)
-                && (it.isUntil || it.isForever)}
-        if(sData != null){
-            appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, true)
-        } else {
             appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
+            switchDisableAllNotifications.isChecked = false
+            radioGroupAllNotifications.gone()
         }
         maintenanceModeSettingsAdapter.notifyDataSetChanged()
     }
@@ -437,21 +406,17 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 }
 
                 isUntil = true
-                spaceList.filter {
-                    !it.plan.equals(Constant.COMMUNITY, true)
-                            && !it.plan.equals(Constant.EARLY_BIRD, true)
-                }.forEach {
-                    it.isSelected = true
+                spaceList.filter { !it.plan.equals(Constant.COMMUNITY, true)
+                        && !it.plan.equals(Constant.EARLY_BIRD, true) }.forEach {
                     it.isForever = false
                     it.isUntil = true
                     it.untilDate = "$date, $selectedHour:$minutes"
-                    Log.e("ittt", it.toString())
                 }
 
                 radioButtonUntil.isChecked = true
                 textViewUntilDate.text = "$date, $selectedHour:$minutes"
                 maintenanceModeSettingsAdapter.notifyDataSetChanged()
-                changeAllNotificationUntilData(true)
+                changeAllNotificationData(isChecked = true, isUntil = isUntil)
             },
             hour,
             minute,
@@ -532,7 +497,6 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                             if(!spaceList[spaceListItemPosition].silenceRuleIdList.contains(silenceRule.id)
                                 && !silenceRule.id.isNullOrEmpty()){
                                 spaceList[spaceListItemPosition].silenceRuleIdList.add(silenceRule.id!!)
-                                spaceList[spaceListItemPosition].isSelected = true
                                 if(silenceRule.lastsUntil != null){
                                     spaceList[spaceListItemPosition].untilDate = ConvertDateTimeFormat.convertUTCToLocalDate(silenceRule.lastsUntil!!,
                                         DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW_ONE, DateTimeFormats.MAINTENANCE_MODE_DATE_FORMAT)
@@ -598,32 +562,25 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 spaceList[itemPosition].silenceRuleId = it.data!!.id
                 spaceList[itemPosition].silenceRuleIdList.add(it.data.id!!)
                 spaceList[itemPosition].silenceRuleName = it.data.name
-                updateData(clickPosition)
-                if(isAllSilence){
-                    if(isUntil){
-                        changeAllNotificationUntilData(false)
-                    } else {
-                        changeAllNotificationData(false)
-                    }
+                updateData(itemPosition, clickPosition)
+                if(isAllChange){
+                    changeAllNotificationData(true, isUntil)
                 }
-                Log.e("item", spaceList[itemPosition].toString())
             } else {
-                if(isAllSilence){
-                    if(isUntil){
-                        changeAllNotificationUntilData(false)
-                    } else {
-                        changeAllNotificationData(false)
-                    }
+                if(isAllChange){
+                    changeAllNotificationData(true, isUntil)
                 }
+                showMessage("Something wrong for ${spaceList[itemPosition].name}")
+                maintenanceModeSettingsAdapter.notifyDataSetChanged()
             }
         }
     }
 
-    private fun callUnsilenceSpace(item: SpaceList, ruleId: ArrayList<String>) {
+    private fun callUnsilenceSpace(item: SpaceList, ruleId: ArrayList<String>, position: Int) {
         showLoader()
+        changeDataForUnsilence(position)
         val ruleIdArrayList = ArrayList(ruleId.filter { it.isNotEmpty() }.distinct())
         apiViewModel.callUnsilenceSpace(item.id!!, ruleIdArrayList)
-        changeDataForUnsilence()
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -631,33 +588,16 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         apiViewModel.unsilenceSpaceLiveData.observe(this) {
             hideLoader()
             if(it.isError){
-                spaceList[itemPosition].silenceRuleIdList = ArrayList()
                 if(isChanged){
+                    isChanged = false
                     callSilenceSpace(spaceList[itemPosition])
                 }
-                if(isAllUnsilence){
-                    unsilenceAllNotification()
-                }
-                if(isAllSilence){
-                    if(isUntil){
-                        changeAllNotificationUntilData(true)
-                    } else {
-                        changeAllNotificationData(true)
-                    }
+                if(isAllChange){
+                    changeAllNotificationData(false, isUntil)
                 }
             } else {
-                if(isChanged){
-                    callSilenceSpace(spaceList[itemPosition])
-                }
-                if(isAllUnsilence){
-                    unsilenceAllNotification()
-                }
-                if(isAllSilence){
-                    if(isUntil){
-                        changeAllNotificationUntilData(true)
-                    } else {
-                        changeAllNotificationData(true)
-                    }
+                if(isAllChange){
+                    changeAllNotificationData(false, isUntil)
                 }
             }
         }
@@ -666,6 +606,24 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
     @SuppressLint("NotifyDataSetChanged")
     private fun checkAndStoreData(item: ArrayList<SpaceList>) {
         spaceList.clear()
+        /*if(dbHelper.getMaintenanceMode().isEmpty()){
+            dbHelper.insertMaintenanceMode(Gson().toJson(item))
+        }
+
+        val type = object : TypeToken<ArrayList<SpaceList>>() {}.type
+        val arrayList: ArrayList<SpaceList> =
+            Gson().fromJson(dbHelper.getMaintenanceMode(), type)
+
+        val idsInFirstList = item.map { it.id }
+        val idsInSecondList = arrayList.map { it.id }
+
+        val newDataToAdd = item.filter { !idsInSecondList.contains(it.id) }
+
+        arrayList.addAll(newDataToAdd)
+
+        val dataToRemove = arrayList.filter { it.id !in idsInFirstList }
+
+        arrayList.removeAll(dataToRemove.toSet())*/
 
         val tempSpaceList = item.sortedWith(
             compareBy(
@@ -678,6 +636,43 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
         spaceList.addAll(tempSpaceList)
 
+        /*dbHelper.updateMaintenanceMode(Gson().toJson(spaceList.map {space ->
+            mapOf(
+                "id" to space.id,
+                "slug" to space.slug,
+                "name" to space.name,
+                "description" to space.description,
+                "iconURL" to space.iconURL,
+                "createdAt" to space.createdAt,
+                "permissions" to space.permissions,
+                "plan" to space.plan,
+                "planDefinition" to space.planDefinition,
+                "isSelected" to space.isSelected,
+                "isForever" to space.isForever,
+                "isUntil" to space.isUntil,
+                "untilDate" to space.untilDate,
+                "silenceRuleId" to space.silenceRuleId,
+                "silenceRuleName" to space.silenceRuleName,
+                "count" to space.count,
+            )
+        }))*/
+
+        /*val currentDate = Calendar.getInstance().time
+        val dateFormat = SimpleDateFormat("dd/MM/yyyy, HH:mm", Locale.getDefault())
+
+        for((index, items) in spaceList.withIndex()){
+            try{
+                val ruleId = ArrayList<String>()
+                if(!items.silenceRuleId.isNullOrEmpty()){
+                    ruleId.add(items.silenceRuleId!!)
+                }
+                val dataDate = dateFormat.parse(items.untilDate!!)
+                if(dataDate != null && dataDate.before(currentDate)){
+                    callUnsilenceSpace(items, ruleId, index)
+                }
+            } catch (e: Exception){
+            }
+        }*/
         callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
     }
 }

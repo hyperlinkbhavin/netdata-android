@@ -38,6 +38,7 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
     private var isVibrate = false
     private var isBanner = false
     private var isSound = false
+    lateinit var builder: NotificationCompat.Builder
 
     companion object {
         const val DEFAULT_CHANNEL_ID = "7777"
@@ -112,25 +113,33 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
             )
 
             //@mipmap/ic_app_logo_round
-            var builder = NotificationCompat.Builder(applicationContext, channelId)
+            builder = NotificationCompat.Builder(applicationContext, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
                 .setContentIntent(pendingIntent)
                 .setCustomBigContentView(
                     setBigContentView(title, message)
                 ) // set more view content when SwipeDown (pull down)
+
             if(isBanner){
                 Log.e("isBanner", isBanner.toString())
+                builder.priority = NotificationCompat.PRIORITY_HIGH
+            } else {
                 builder.priority = NotificationCompat.PRIORITY_LOW
             }
             if (isSound) {
                 Log.e("isSound", isSound.toString())
                 builder.setSound(defaultSoundUri)
+            } else {
+                builder.setSilent(true)
             }
             if (isVibrate) {
                 Log.e("isVibrate",isVibrate.toString())
                 builder.setVibrate(longArrayOf(1000, 1000, 1000, 1000))
+            } else {
+                builder.setVibrate(longArrayOf(0, 0, 0, 0))
             }
-
             builder = builder.setContent(getRemoteView(title, message))
 
             val notificationManger =

@@ -236,7 +236,7 @@ object ConvertDateTimeFormat {
                 "$hour " + if (hour > 1) "hours ago" else "hour ago"
             minute > 0 -> time =
                 "$minute " + if (minute > 1) "minutes ago" else "minute ago"
-            second > 0 -> time = "$second " + if (second > 1) "seconds ago" else "second ago"
+            second >= 0 -> time = "$second " + if (second > 1) "seconds ago" else "second ago"
         }
         if (time != null)
             return time
