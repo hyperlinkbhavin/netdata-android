@@ -244,12 +244,14 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
             if (it.responseCode == 200) {
                 if(!it.data.isNullOrEmpty()){
                     val silencingRuleIdList = ArrayList<String>()
-                    it.data.forEach { silenceRule ->
-                        if(silenceRule.state.equals("ACTIVE", true)
-                            && silenceRule.integrationIds[0].equals("607bfd3c-02c1-4da2-b67a-0d01b518ce5d", true)){
-                            silencingRuleIdList.add(silenceRule.id!!)
+                    try {
+                        it.data.forEach { silenceRule ->
+                            if(silenceRule.state.equals("ACTIVE", true)
+                                && silenceRule.integrationIds[0].equals("607bfd3c-02c1-4da2-b67a-0d01b518ce5d", true)){
+                                silencingRuleIdList.add(silenceRule.id!!)
+                            }
                         }
-                    }
+                    } catch (e: Exception){}
 
                     spaceList[spaceListItemPosition].silenceRuleIdList.addAll(silencingRuleIdList)
                     spaceListItemPosition++
@@ -279,6 +281,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
     }
 
     private fun insertDataIfEmpty(alertDataList: ArrayList<HomeNotificationList>) {
+        notificationList.clear()
 //        if(dbHelper.getAllDataFromFetchNotification(isSimpleData = true).isEmpty()){
         if(alertDataList.isNotEmpty()){
             /*val gson = Gson()

@@ -64,17 +64,33 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
 
                         // Change Your Theme
                         5 -> {
-                            if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
-                                navigator.loadActivity(
-                                    IsolatedFullActivity::class.java,
-                                    ChangeThemeNightFragment::class.java
-                                ).start()
+                            if(appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name
+                                || appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Day.name){
+                                if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
+                                    navigator.loadActivity(
+                                        IsolatedFullActivity::class.java,
+                                        ChangeThemeNightFragment::class.java
+                                    ).start()
+                                } else {
+                                    navigator.loadActivity(
+                                        IsolatedFullActivity::class.java,
+                                        ChangeThemeDayFragment::class.java
+                                    ).start()
+                                }
                             } else {
-                                navigator.loadActivity(
-                                    IsolatedFullActivity::class.java,
-                                    ChangeThemeDayFragment::class.java
-                                ).start()
+                                if (Constant.isDarkMode) {
+                                    navigator.loadActivity(
+                                        IsolatedFullActivity::class.java,
+                                        ChangeThemeNightFragment::class.java
+                                    ).start()
+                                } else {
+                                    navigator.loadActivity(
+                                        IsolatedFullActivity::class.java,
+                                        ChangeThemeDayFragment::class.java
+                                    ).start()
+                                }
                             }
+
 
                         }
 

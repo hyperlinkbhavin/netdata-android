@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -821,29 +822,30 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                     // Update the UI to reflect the current visible item
                     // You can change the text, background, or any other view properties here
 
+                    try {
+                        handler.removeCallbacksAndMessages(null) // Remove any previous callbacks
+                        handler.postDelayed({
+                            // Check if the user stayed on the current item for 5 seconds
+                            if (System.currentTimeMillis() - timeOnCurrentItem >= 8000) {
+                                // Change the value of the visible item here
+                                for (i in firstVisibleItemPosition until lastVisibleItemPosition) {
+//                                Log.e("read", homeList[i].isAutoReadStop.toString())
+                                    if(!homeList[i].isAutoReadStop && !homeList[i].isRead){
+                                        val item = homeList[i]
+                                        homeList[i].isRead = true
+                                        homeList[i].isNotificationRead = true
+                                        homeList[i].isTempMessageRead = true
 
-                    handler.removeCallbacksAndMessages(null) // Remove any previous callbacks
-                    handler.postDelayed({
-                        // Check if the user stayed on the current item for 5 seconds
-                        if (System.currentTimeMillis() - timeOnCurrentItem >= 8000) {
-                            // Change the value of the visible item here
-                            for (i in firstVisibleItemPosition..lastVisibleItemPosition) {
-                                Log.e("read", homeList[i].isAutoReadStop.toString())
-                                if(!homeList[i].isAutoReadStop && !homeList[i].isRead){
-                                    val item = homeList[i]
-                                    homeList[i].isRead = true
-                                    homeList[i].isNotificationRead = true
-                                    homeList[i].isTempMessageRead = true
-
-                                    readUnreadNotification(item, isPermanentRead = true)
-                                    Handler(Looper.getMainLooper()).postDelayed({
-                                        homeList[i].isTempMessageRead = false
-                                        homeAdapter.notifyDataSetChanged()
-                                    }, 4000)
+                                        readUnreadNotification(item, isPermanentRead = true)
+                                        Handler(Looper.getMainLooper()).postDelayed({
+                                            homeList[i].isTempMessageRead = false
+                                            homeAdapter.notifyDataSetChanged()
+                                        }, 4000)
+                                    }
                                 }
                             }
-                        }
-                    }, 8000)
+                        }, 8000)
+                    } catch (e: Exception){}
                 }
             }
         } catch (_: Exception){
@@ -869,12 +871,12 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             homeAdapter.list.addAll(getAllData(isUnread = true))
         }
         homeAdapter.notifyDataSetChanged()
-        binding.let {
+        try {
             binding.buttonAll.text = "${getString(R.string.btn_all)} (${getAllData().size})"
             binding.buttonUnread.text =
                 "${getString(R.string.btn_unread)} (${getAllData(isUnread = true).size})"
+        } catch (e: Exception){}
             getNotificationCount()
-        }
     }
 
     @SuppressLint("SetTextI18n")
