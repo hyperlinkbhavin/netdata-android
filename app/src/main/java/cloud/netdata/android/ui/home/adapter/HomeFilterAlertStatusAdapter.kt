@@ -43,6 +43,9 @@ class HomeFilterAlertStatusAdapter(var list: ArrayList<FilterList>, val callBack
                     notifyItemChanged(absoluteAdapterPosition)
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }
+                textViewFilterName.setOnClickListener {
+                    checkBoxFilter.performClick()
+                }
             }
         }
 

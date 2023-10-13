@@ -20,9 +20,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import cloud.netdata.android.R
+import cloud.netdata.android.data.pojo.enumclass.Priority
 import cloud.netdata.android.data.pojo.response.HomeNotificationList
+import cloud.netdata.android.data.pojo.response.NotificationPriorityList
 import cloud.netdata.android.data.pojo.response.SpaceList
 import cloud.netdata.android.databinding.ChooseSpaceFragmentBinding
 import cloud.netdata.android.di.component.FragmentComponent
@@ -70,7 +73,9 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                         } else {
                             appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
                         }
-                        navigator.loadActivity(HomeActivity::class.java).byFinishingAll().start()
+                        navigator.loadActivity(HomeActivity::class.java).
+                            addBundle(bundleOf(Constant.BUNDLE_SPACE_ID to item.id,
+                            Constant.BUNDLE_SPACE_NAME to item.name)).byFinishingAll().start()
                     }
                 }
             }
@@ -99,6 +104,44 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         manageClick()
         setAdapter()
         editTextChanged()
+
+        try {
+            if(dbHelper.getAllDataFromNotificationPriority().isEmpty()){
+                dbHelper.insertNotificationPriorityData(
+                    NotificationPriorityList(
+                        1,
+                        Priority.HIGH_PRIORITY.shortName,
+                        1,
+                        "",
+                        "",
+                        1,
+                        1
+                    )
+                )
+                dbHelper.insertNotificationPriorityData(
+                    NotificationPriorityList(
+                        2,
+                        Priority.MEDIUM_PRIORITY.shortName,
+                        0,
+                        "",
+                        "",
+                        0,
+                        0
+                    )
+                )
+                dbHelper.insertNotificationPriorityData(
+                    NotificationPriorityList(
+                        3,
+                        Priority.LOW_PRIORITY.shortName,
+                        0,
+                        "",
+                        "",
+                        0,
+                        0
+                    )
+                )
+            }
+        } catch (e: Exception){}
     }
 
     override fun onResume() {

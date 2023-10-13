@@ -87,6 +87,14 @@ class HomeAdapter(val callBack: (View, Int, HomeNotificationList) -> Unit) :
                     notifyItemChanged(absoluteAdapterPosition)*/
                 }
 
+                imageViewMessageRead.setOnClickListener {
+                    leftViewSwipe.performClick()
+                }
+
+                imageViewMessageUnread.setOnClickListener {
+                    leftViewSwipe.performClick()
+                }
+
                 rightViewSwipe.setOnClickListener {
                     callBack.invoke(it, absoluteAdapterPosition, list[absoluteAdapterPosition])
                 }

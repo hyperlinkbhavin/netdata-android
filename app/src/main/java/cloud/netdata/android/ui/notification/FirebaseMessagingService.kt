@@ -4,17 +4,15 @@ import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
-import android.app.UiModeManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import cloud.netdata.android.R
 import cloud.netdata.android.core.AppSession
 import cloud.netdata.android.ui.home.HomeActivity
@@ -66,6 +64,10 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
         data: Map<String, String>
     ) {
         val intent = Intent(this, HomeActivity::class.java)
+        val mBundle = Bundle()
+        mBundle.putString(Constant.BUNDLE_SPACE_ID, data["space_id"])
+        mBundle.putString(Constant.BUNDLE_SPACE_NAME, data["space_name"])
+        intent.putExtras(mBundle)
 
         var defaultSoundUri: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 //        val defaultSoundUri: Any
@@ -89,9 +91,11 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
                     notificationPriorityData.find { it.priority.equals(alertData!!.priority, true) }
                 Log.e("PRIORITY", notificationPriority.toString())
 
-                isVibrate = notificationPriority!!.isVibration == 1
-                isBanner = notificationPriority.isBanner == 1
-                isSound = notificationPriority.isSound == 1
+                if(notificationPriority != null){
+                    isVibrate = notificationPriority.isVibration == 1
+                    isBanner = notificationPriority.isBanner == 1
+                    isSound = notificationPriority.isSound == 1
+                }
             }
 
             /*defaultSoundUri = if(!notificationPriority.soundUrl.isNullOrEmpty()){
@@ -242,7 +246,12 @@ class FirebaseMessagingService() : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.e("Message Data", remoteMessage.data["alert_name"].toString())
+        Log.e("Message Data", remoteMessage.data.toString())
+        Log.e("Message alert name", remoteMessage.data["alert_name"].toString())
+        Log.e("Message alert name", remoteMessage.data["space_id"].toString())
+        Log.e("Message alert name", remoteMessage.data["space_name"].toString())
+        Log.e("Message alert name", remoteMessage.data["node_id"].toString())
+        Log.e("Message alert name", remoteMessage.data["node_name"].toString())
         generateNotification(
             remoteMessage.notification!!.title!!,
             remoteMessage.notification!!.body!!,

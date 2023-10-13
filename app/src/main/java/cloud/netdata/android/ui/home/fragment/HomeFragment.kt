@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -108,14 +107,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             when (view.id) {
                 R.id.constraintTop -> {
                     if(item.data!!.labels!!.info.isNullOrEmpty()){
-                        readUnreadNotification(item, isSwipeRead = true)
                         val url = "https://app.netdata.cloud/webviews/alerts/${item.data!!.netdata!!.alert!!.transition!!.id}" +
                                 "?space_id=${item.data!!.netdata!!.space!!.id}&room_id=${item.data!!.netdata!!.room[0].id}#token=${session.userSession.drop(7)}"
 
                         if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_WEBVIEW)){
                             redirectAlertInWebview(item, url)
                         } else if(appPreferences.getBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_BROWSER)){
-                            redirectAlertInChrome(url, session.userSession)
+                            redirectAlertInChrome(item, url, session.userSession)
                         } else {
                             showAlertDialog(item ,url)
                         }
@@ -239,6 +237,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     private fun redirectAlertInWebview(item: HomeNotificationList, url: String){
+        readUnreadNotification(item, isPermanentRead = true)
         navigator.loadActivity(
             IsolatedFullActivity::class.java,
             HomeDetailsFragment::class.java
@@ -247,7 +246,8 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             .start()
     }
 
-    private fun redirectAlertInChrome(url: String, authorizationHeader: String) {
+    private fun redirectAlertInChrome(item: HomeNotificationList, url: String, authorizationHeader: String) {
+        readUnreadNotification(item, isPermanentRead = true)
         // Build the URL with the authorization header as a query parameter
         val uri = Uri.parse(url).buildUpon()
             .appendQueryParameter("Authorization", authorizationHeader)
@@ -293,7 +293,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             if(switchDontAskAgain.isChecked){
                 appPreferences.putBoolean(Constant.APP_PREF_IS_SET_ALERT_FOR_BROWSER, true)
             }
-            redirectAlertInChrome(url, session.userSession)
+            redirectAlertInChrome(item, url, session.userSession)
             customDialog.dismiss()
         }
 
@@ -326,18 +326,33 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     }
 
     override fun bindData() {
+        try {
+            if (arguments?.containsKey(Constant.BUNDLE_SPACE_ID)!!
+                && arguments?.containsKey(Constant.BUNDLE_SPACE_NAME)!!
+            ) {
+                appPreferences.putString(
+                    Constant.APP_PREF_SPACE_ID,
+                    arguments?.getString(Constant.BUNDLE_SPACE_ID)!!
+                )
+                appPreferences.putString(
+                    Constant.APP_PREF_SPACE_NAME,
+                    arguments?.getString(Constant.BUNDLE_SPACE_NAME)!!
+                )
+            }
+        } catch (e: Exception) {
+            Log.e("crasss", e.toString())
+        }
+
         Constant.isReachable = false
         dbHelper = DatabaseHelper(requireContext())
         toolbar()
         manageClick()
         setAdapter()
 //        addData()
-        isAllButtonSelected = appPreferences.getBooleanDefTrue(Constant.APP_PREF_IS_ALL_BUTTON_SELECTED)
+        isAllButtonSelected =
+            appPreferences.getBooleanDefTrue(Constant.APP_PREF_IS_ALL_BUTTON_SELECTED)
 
-        try {
-            manageNotificationRetentionData()
-        } catch (e: Exception) {
-        }
+        manageNotificationRetentionData()
 
         binding.buttonAll.isSelected = isAllButtonSelected
         binding.buttonUnread.isSelected = !isAllButtonSelected
@@ -453,33 +468,36 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun manageNotificationRetentionData() {
-        var notificationRetentionList = ArrayList<NotificationRetention>()
-        if (appPreferences.getString(Constant.APP_PREF_NOTIFICATION_RETENTION).isEmpty()) {
-            notificationRetentionList.clear()
-            notificationRetentionList.add(NotificationRetention("1 day", 1))
-            notificationRetentionList.add(NotificationRetention("1 week", 7))
-            notificationRetentionList.add(NotificationRetention("2 weeks", 14, true))
-            notificationRetentionList.add(NotificationRetention("1 month", 30))
-            appPreferences.putString(
-                Constant.APP_PREF_NOTIFICATION_RETENTION,
-                Gson().toJson(notificationRetentionList)
-            )
-        } else {
-            val gson = Gson()
-            val type = object : TypeToken<List<NotificationRetention>>() {}.type
-            notificationRetentionList = gson.fromJson(
-                appPreferences.getString(Constant.APP_PREF_NOTIFICATION_RETENTION),
-                type
-            )
-        }
+        try {
+            var notificationRetentionList = ArrayList<NotificationRetention>()
+            if (appPreferences.getString(Constant.APP_PREF_NOTIFICATION_RETENTION).isEmpty()) {
+                notificationRetentionList.clear()
+                notificationRetentionList.add(NotificationRetention("1 day", 1))
+                notificationRetentionList.add(NotificationRetention("1 week", 7))
+                notificationRetentionList.add(NotificationRetention("2 weeks", 14, true))
+                notificationRetentionList.add(NotificationRetention("1 month", 30))
+                appPreferences.putString(
+                    Constant.APP_PREF_NOTIFICATION_RETENTION,
+                    Gson().toJson(notificationRetentionList)
+                )
+            } else {
+                val gson = Gson()
+                val type = object : TypeToken<List<NotificationRetention>>() {}.type
+                notificationRetentionList = gson.fromJson(
+                    appPreferences.getString(Constant.APP_PREF_NOTIFICATION_RETENTION),
+                    type
+                )
+            }
 
-        val data = notificationRetentionList.find { it.isSelected }
-        if (data != null) {
-            dbHelper.deleteFetchNotificationOlderThanWeek(
-                ConvertDateTimeFormat.getDaysBeforeDate(data.value)
-            )
+            val data = notificationRetentionList.find { it.isSelected }
+            if (data != null) {
+                dbHelper.deleteFetchNotificationOlderThanWeek(
+                    ConvertDateTimeFormat.getDaysBeforeDate(data.value)
+                )
+            }
+            homeAdapter.notifyDataSetChanged()
+        } catch (e: Exception) {
         }
-        homeAdapter.notifyDataSetChanged()
     }
 
     @SuppressLint("SetTextI18n")

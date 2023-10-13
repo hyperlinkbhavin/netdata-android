@@ -48,7 +48,7 @@
             style="@style/ChangeBackgroundTintWhiteToBlack1C"
             android:background="@drawable/dw_corner_four_bg"
             android:layout_marginTop="@dimen/dp_16"
-            android:padding="@dimen/dp_16"
+            android:padding="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/textViewLabelNotificationPriorityText">
@@ -59,6 +59,7 @@
                 android:text="@string/label_high_priority"
                 android:drawableStart="@drawable/ic_high_priority"
                 android:drawablePadding="@dimen/dp_10"
+                android:layout_marginStart="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toTopOf="@id/constraintHighPriority"/>
 
@@ -68,7 +69,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toBottomOf="@id/textViewLabelHighPriority"
                 />
@@ -117,7 +119,7 @@
                 android:layout_height="wrap_content"
                 style="@style/AppCompatButtonGreenWithCorner"
                 android:text="@string/btn_apply_custom_tune_from_your_os"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_11"
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toBottomOf="@id/switchHighPrioritySound"/>
@@ -128,7 +130,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toBottomOf="@id/buttonHighPriorityApplyCustomTune"
                 />
@@ -148,7 +151,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintHighPriority"
                 app:layout_constraintTop_toBottomOf="@id/switchHighPriorityBanner"
                 />
@@ -171,7 +175,7 @@
             style="@style/ChangeBackgroundTintWhiteToBlack1C"
             android:background="@drawable/dw_corner_four_bg"
             android:layout_marginTop="@dimen/dp_16"
-            android:padding="@dimen/dp_16"
+            android:padding="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/constraintHighPriority">
@@ -182,6 +186,7 @@
                 android:text="@string/label_medium_priority"
                 android:drawableStart="@drawable/ic_medium_priority"
                 android:drawablePadding="@dimen/dp_10"
+                android:layout_marginStart="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                 app:layout_constraintTop_toTopOf="@id/constraintMediumPriority"/>
 
@@ -191,7 +196,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                 app:layout_constraintTop_toBottomOf="@id/textViewLabelMediumPriority"
                 />
@@ -251,7 +257,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                 app:layout_constraintTop_toBottomOf="@id/buttonMediumPriorityApplyCustomTune"
                 />
@@ -271,7 +278,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintMediumPriority"
                 app:layout_constraintTop_toBottomOf="@id/switchMediumPriorityBanner"
                 />
@@ -294,7 +302,7 @@
             style="@style/ChangeBackgroundTintWhiteToBlack1C"
             android:background="@drawable/dw_corner_four_bg"
             android:layout_marginTop="@dimen/dp_16"
-            android:padding="@dimen/dp_16"
+            android:padding="@dimen/dp_10"
             app:layout_constraintStart_toStartOf="@id/guidelineStart"
             app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
             app:layout_constraintTop_toBottomOf="@id/constraintMediumPriority">
@@ -305,6 +313,7 @@
                 android:text="@string/label_low_priority"
                 android:drawableStart="@drawable/ic_low_priority"
                 android:drawablePadding="@dimen/dp_10"
+                android:layout_marginStart="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                 app:layout_constraintTop_toTopOf="@id/constraintLowPriority"/>
 
@@ -314,7 +323,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                 app:layout_constraintTop_toBottomOf="@id/textViewLabelLowPriority"
                 />
@@ -374,7 +384,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                 app:layout_constraintTop_toBottomOf="@id/buttonLowPriorityApplyCustomTune"
                 />
@@ -394,7 +405,8 @@
                 android:layout_width="wrap_content"
                 app:trackTint="@color/colorGreyE9"
                 android:thumb="@drawable/dw_switch_thumb_bg"
-                android:layout_marginTop="@dimen/dp_16"
+                android:layout_marginTop="@dimen/dp_10"
+                android:padding="@dimen/dp_6"
                 app:layout_constraintStart_toStartOf="@id/constraintLowPriority"
                 app:layout_constraintTop_toBottomOf="@id/switchLowPriorityBanner"
                 />

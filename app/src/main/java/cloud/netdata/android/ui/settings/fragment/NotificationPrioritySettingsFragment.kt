@@ -5,6 +5,7 @@ import android.content.res.ColorStateList
 import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,6 +27,7 @@ import com.fondesa.kpermissions.extension.onPermanentlyDenied
 import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.android.synthetic.main.notification_priority_settings_fragment.*
 
 
 class NotificationPrioritySettingsFragment :
@@ -253,57 +255,61 @@ class NotificationPrioritySettingsFragment :
             //            manageNightModeForBottomSheet()
         }
 
-        buttonHighPriorityChangeSoundTune.setOnClickListener {
-            buttonHighPriorityApplyCustomTune.performClick()
-        }
-
-        buttonMediumPriorityChangeSoundTune.setOnClickListener {
-            buttonMediumPriorityApplyCustomTune.performClick()
-        }
-
-        buttonLowPriorityChangeSoundTune.setOnClickListener {
-            buttonLowPriorityApplyCustomTune.performClick()
-        }
-
         switchHighPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
-            dbHelper.updateNotificationPriorityData(
-                isBanner = if (isChecked) 1 else 0,
-                conditionID = 1
-            )
+            switchCheckChangeEvent(isChecked, 1, true)
         }
 
         switchMediumPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
-            dbHelper.updateNotificationPriorityData(
-                isBanner = if (isChecked) 1 else 0,
-                conditionID = 2
-            )
+            switchCheckChangeEvent(isChecked, 2, true)
         }
 
         switchLowPriorityBanner.setOnCheckedChangeListener { buttonView, isChecked ->
-            dbHelper.updateNotificationPriorityData(
-                isBanner = if (isChecked) 1 else 0,
-                conditionID = 3
-            )
+            switchCheckChangeEvent(isChecked, 3, true)
         }
 
         switchHighPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
-            dbHelper.updateNotificationPriorityData(
-                isVibration = if (isChecked) 1 else 0,
-                conditionID = 1
-            )
+            switchCheckChangeEvent(isChecked, 1, false)
         }
 
         switchMediumPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
-            dbHelper.updateNotificationPriorityData(
-                isVibration = if (isChecked) 1 else 0,
-                conditionID = 2
-            )
+            switchCheckChangeEvent(isChecked, 2, false)
         }
 
         switchLowPriorityVibration.setOnCheckedChangeListener { buttonView, isChecked ->
+            switchCheckChangeEvent(isChecked, 3, false)
+        }
+
+        performClickEvent(buttonHighPriorityChangeSoundTune, buttonHighPriorityApplyCustomTune)
+        performClickEvent(buttonMediumPriorityChangeSoundTune, buttonMediumPriorityApplyCustomTune)
+        performClickEvent(buttonLowPriorityChangeSoundTune, buttonLowPriorityApplyCustomTune)
+
+        performClickEvent(textViewLabelHighPrioritySound, switchHighPrioritySound)
+        performClickEvent(textViewLabelHighPriorityBanner, switchHighPriorityBanner)
+        performClickEvent(textViewLabelHighPriorityVibration, switchHighPriorityVibration)
+        performClickEvent(textViewLabelMediumPrioritySound, switchMediumPrioritySound)
+        performClickEvent(textViewLabelMediumPriorityBanner, switchMediumPriorityBanner)
+        performClickEvent(textViewLabelMediumPriorityVibration, switchMediumPriorityVibration)
+        performClickEvent(textViewLabelLowPrioritySound, switchLowPrioritySound)
+        performClickEvent(textViewLabelLowPriorityBanner, switchLowPriorityBanner)
+        performClickEvent(textViewLabelLowPriorityVibration, switchLowPriorityVibration)
+    }
+
+    private fun performClickEvent(view1: View, view2: View){
+        view1.setOnClickListener {
+            view2.performClick()
+        }
+    }
+
+    private fun switchCheckChangeEvent(isChecked: Boolean, conditionId: Int, isBanner: Boolean = false){
+        if(isBanner){
+            dbHelper.updateNotificationPriorityData(
+                isBanner = if (isChecked) 1 else 0,
+                conditionID = conditionId
+            )
+        } else {
             dbHelper.updateNotificationPriorityData(
                 isVibration = if (isChecked) 1 else 0,
-                conditionID = 3
+                conditionID = conditionId
             )
         }
     }

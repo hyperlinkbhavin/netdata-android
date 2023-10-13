@@ -38,6 +38,8 @@ object Constant {
 
     const val BUNDLE_DEEPLINK = "BUNDLE_DEEPLINK"
     const val BUNDLE_URL = "BUNDLE_URL"
+    const val BUNDLE_SPACE_ID = "BUNDLE_SPACE_ID"
+    const val BUNDLE_SPACE_NAME = "BUNDLE_SPACE_NAME"
 
     const val PUSH_NOTIFICATION = "PUSH_NOTIFICATION"
     const val NOTIFICATION_ICON = "NOTIFICATION_ICON"

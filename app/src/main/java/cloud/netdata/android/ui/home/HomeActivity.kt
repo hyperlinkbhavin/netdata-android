@@ -27,10 +27,17 @@ class HomeActivity : BaseActivity(), View.OnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        load(HomeFragment::class.java).setBundle(
+        /*load(HomeFragment::class.java).setBundle(
             bundleOf(
                 Constant.BUNDLE_DEEPLINK to intent.getStringExtra(
                     Constant.BUNDLE_DEEPLINK))
+        ).replace(false)*/
+        load(HomeFragment::class.java).setBundle(
+            bundleOf(
+                Constant.BUNDLE_DEEPLINK to intent.getStringExtra(
+                    Constant.BUNDLE_DEEPLINK),
+            Constant.BUNDLE_SPACE_ID to intent.getStringExtra(Constant.BUNDLE_SPACE_ID),
+            Constant.BUNDLE_SPACE_NAME to intent.getStringExtra(Constant.BUNDLE_SPACE_NAME))
         ).replace(false)
 
     }
