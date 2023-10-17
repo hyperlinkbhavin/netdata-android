@@ -308,6 +308,12 @@
         <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
     </style>
 
+    <style name="AppTheme.AppTextView.SemiBoldBlack18" parent="Widget.BaseAppTextView">
+        <item name="android:textSize">@dimen/sp_18</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/font_ibm_plex_sans_semi_bold</item>
+    </style>
+
     <style name="AppTheme.AppTextView.SemiBoldBlack20" parent="Widget.BaseAppTextView">
         <item name="android:textSize">@dimen/sp_20</item>
         <item name="android:textColor">@color/colorWhite</item>

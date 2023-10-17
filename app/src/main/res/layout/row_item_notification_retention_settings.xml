@@ -9,7 +9,7 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/textViewTitle"
-        style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+        style="@style/AppTheme.AppTextView.SemiBoldBlack18"
         android:layout_width="@dimen/dp_0"
         android:layout_height="wrap_content"
         tools:text="@string/label_day_theme"

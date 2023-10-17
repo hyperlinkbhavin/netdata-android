@@ -266,6 +266,12 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                         callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
                     }
                     callFetchHomeNotification()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        if(!appPreferences.getBoolean(Constant.APP_PREF_IS_FIRST_LOGIN)){
+                            showMessage("You will only receive new notifications from the alerts")
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_FIRST_LOGIN, true)
+                        }
+                    },1000)
                 }
             } else {
                 showToast("Session expired! Please login again")

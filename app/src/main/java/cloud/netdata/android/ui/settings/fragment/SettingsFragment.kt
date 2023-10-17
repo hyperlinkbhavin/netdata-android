@@ -142,7 +142,7 @@ class SettingsFragment : BaseFragment<SettingsFragmentBinding>() {
 
     private fun toolbar() = with(binding) {
         includeToolbar.imageViewBack.setOnClickListener { navigator.goBack() }
-        includeToolbar.textViewToolbarTitle.text = getString(R.string.title_settings)
+        includeToolbar.textViewToolbarTitle.text = getString(R.string.title_global_settings)
     }
 
     @SuppressLint("NotifyDataSetChanged")
