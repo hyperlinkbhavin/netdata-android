@@ -206,7 +206,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     private fun spannableString(count: String) {
         val spanString =
-            SpannableString("You have a total of $count notifications in your spaces")
+            SpannableString("You have a total of $count unread notifications in your spaces")
         val termsAndCondition: ClickableSpan = object : ClickableSpan() {
             override fun onClick(textView: View) {
 

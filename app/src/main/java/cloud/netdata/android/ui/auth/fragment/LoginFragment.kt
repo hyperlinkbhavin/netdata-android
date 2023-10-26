@@ -96,7 +96,7 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
         apiViewModel.magicLinkLiveData.observe(this) {
             hideLoader()
             if(!it.isError){
-                showMessage("Please verify the email that was sent to your mail account.")
+                showMessage("Click on the Authentication Link sent to your Email address on this device.")
             }
         }
     }

@@ -1886,7 +1886,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             params.setMargins(0,70,0,0)
             snackView.layoutParams = params
             val textView =
-                snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+                snackView.findViewById(R.id.snackbar_text) as TextView
             textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
             textView.maxLines = 4
 
@@ -1909,7 +1909,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
     private fun showSilenceSpaceSnackbar() {
         hideKeyBoard()
         if (view != null) {
-            val message = "This space is silence tap on settings to get navigated to the maintenance mode screen"
+            val message = "This space is silenced tap on settings to get navigated to the maintenance mode screen"
             val snackbar = Snackbar.make(binding.editTextSearchServices, message, Snackbar.LENGTH_LONG)
             snackbar.duration = 600000
             snackbar.setActionTextColor(Color.BLACK)
@@ -1923,7 +1923,7 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             params.setMargins(0,100,0,0)
             snackView.layoutParams = params
             val textView =
-                snackView.findViewById(com.google.android.material.R.id.snackbar_text) as TextView
+                snackView.findViewById(R.id.snackbar_text) as TextView
             textView.setTextColor(ContextCompat.getColor(requireContext(), R.color.colorWhite))
             textView.maxLines = 4
 
