@@ -42,6 +42,7 @@
         style="@style/AppTheme.AppTextView.MediumBlack18"
         android:layout_marginTop="@dimen/dp_30"
         android:text="@string/label_welcome_to_netdata_notifications"
+        android:textAlignment="center"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintTop_toBottomOf="@id/imageViewLogo"/>

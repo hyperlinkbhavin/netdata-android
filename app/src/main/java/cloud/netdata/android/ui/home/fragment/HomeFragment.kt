@@ -814,13 +814,13 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 //        recyclerViewFilterSelected.layoutManager = flexLayoutManager
         recyclerViewFilterSelected.adapter = filterSelectedAdapter
 
-        recyclerViewHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        /*recyclerViewHome.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             @SuppressLint("NotifyDataSetChanged")
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
                 updateVisibleItems()
             }
-        })
+        })*/
     }
 
     @SuppressLint("NotifyDataSetChanged")
