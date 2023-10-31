@@ -51,6 +51,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 R.id.switchDisableAllNotifications -> {
                     itemPosition = position
                     clickPosition = 1
+                    isChanged = false
                     if (!isChecked) {
                         val ruleId = ArrayList<String>()
                         ruleId.addAll(item.silenceRuleIdList)
@@ -621,6 +622,7 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
     private fun callUnsilenceSpace(item: SpaceList, ruleId: ArrayList<String>) {
         showLoader()
+        Log.e("rule", ruleId.toString())
         val ruleIdArrayList = ArrayList(ruleId.filter { it.isNotEmpty() }.distinct())
         apiViewModel.callUnsilenceSpace(item.id!!, ruleIdArrayList)
         changeDataForUnsilence()

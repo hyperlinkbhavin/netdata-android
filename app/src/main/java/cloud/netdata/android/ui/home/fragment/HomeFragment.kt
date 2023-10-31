@@ -1081,7 +1081,17 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
             override fun onStartTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {}
 
-            override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {}
+            override fun onStopTrackingTouch(view: RangeSeekBar?, isLeft: Boolean) {
+                if (isLeft) {
+                    // Determine which midpoint to snap to
+                    val newValue = when (view?.leftSeekBar?.progress?.toInt()) {
+                        in 1..30 -> 15f
+                        in 31..60 -> 45f
+                        else -> 75f
+                    }
+                    view?.setProgress(newValue)
+                }
+            }
         })
 
         dialog.setCancelable(false)
@@ -1915,6 +1925,10 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             snackbar.setActionTextColor(Color.BLACK)
             snackbar.setAction("Settings") {
                 navigator.loadActivity(IsolatedFullActivity::class.java, MaintenanceModeSettingsFragment::class.java).start()
+                snackbar.dismiss()
+            }
+            snackbar.view.setOnClickListener {
+                appPreferences.putBoolean(Constant.APP_PREF_IS_SPACE_SILENCE, false)
                 snackbar.dismiss()
             }
             val snackView = snackbar.view

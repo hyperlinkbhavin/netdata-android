@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import cloud.netdata.android.R
 import cloud.netdata.android.data.URLFactory
 import cloud.netdata.android.data.pojo.request.APIRequest
 import cloud.netdata.android.databinding.AuthFragmentLoginBinding
@@ -96,7 +97,7 @@ class LoginFragment : BaseFragment<AuthFragmentLoginBinding>() {
         apiViewModel.magicLinkLiveData.observe(this) {
             hideLoader()
             if(!it.isError){
-                showMessage("Click on the Authentication Link sent to your Email address on this device.")
+                showMessage(getString(R.string.label_link_sent_on_email))
             }
         }
     }

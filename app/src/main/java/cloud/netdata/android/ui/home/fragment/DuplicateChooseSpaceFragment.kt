@@ -38,7 +38,6 @@ import cloud.netdata.android.ui.home.adapter.ChooseSpaceAdapter
 import cloud.netdata.android.ui.settings.fragment.SettingsFragment
 import cloud.netdata.android.utils.Constant
 import cloud.netdata.android.utils.ConvertDateTimeFormat
-import cloud.netdata.android.utils.DateTimeFormats
 import cloud.netdata.android.utils.customapi.ApiViewModel
 import cloud.netdata.android.utils.localdb.DatabaseHelper
 import cloud.netdata.android.utils.visible
@@ -48,8 +47,9 @@ import com.fondesa.kpermissions.extension.onPermanentlyDenied
 import com.fondesa.kpermissions.extension.permissionsBuilder
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.util.Locale.filter
 
-class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
+class DuplicateChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     lateinit var dbHelper: DatabaseHelper
 
@@ -65,16 +65,10 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         ChooseSpaceAdapter(){ view, position, item ->
             when(view.id){
                 R.id.constraintTop -> {
-                    if (item.plan.equals(
-                            Constant.EARLY_BIRD,
-                            true
-                        ) || item.plan.equals(Constant.COMMUNITY, true)
-                    ) {
-                        showSnackBar(
-                            "This Space is not on a paid plan and cannot receive notifications on the Mobile App. Please upgrade.",
-                            binding.textViewLabelChooseSpace
-                        )
-                    } else {
+                    if (item.plan.equals(Constant.EARLY_BIRD, true) || item.plan.equals(Constant.COMMUNITY, true)) {
+                    showSnackBar("This Space is not on a paid plan and cannot receive notifications on the Mobile App. Please upgrade.", binding.textViewLabelChooseSpace)
+                    }
+                    else {
                         appPreferences.putString(Constant.APP_PREF_SPACE_ID, item.id!!)
                         appPreferences.putString(Constant.APP_PREF_SPACE_NAME, item.name!!)
                         /*if(item.silenceRuleIdList.isNotEmpty()){
@@ -166,8 +160,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     private fun manageClick() = with(binding){
         includeToolbar.imageViewSetting.setOnClickListener {
-            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java)
-                .start()
+            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java).start()
         }
         swipeRefresh.setOnRefreshListener {
             callGetSpaceList()
@@ -247,44 +240,54 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     private fun callGetSpaceList(){
         showLoader()
-        spaceListItemPosition = 0
+        Log.e("spacecall", "spacecall")
         apiViewModel.callGetSpaceList()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun observeGetSpaceList(){
         apiViewModel.spaceListLiveData.observe(this){ list ->
-            if(list.responseCode == 200) {
-                if (list.data!!.isNotEmpty()) {
-                    checkAndStoreData(list.data)
-                } else {
-                    hideLoader()
+            hideLoader()
+            if(list.responseCode == 200){
+                if(list.data!!.isNotEmpty()){
+                    /*it.data.forEach {item ->
+                        dbHelper.insertSpaceData(item)
+                    }*/
+                    spaceList.clear()
+                    chooseSpaceAdapter.list.clear()
+                    val tempSpaceList = list.data.sortedWith(
+                        compareBy(
+                            // Custom order based on plan type
+                            { it.plan in listOf(Constant.COMMUNITY, Constant.EARLY_BIRD) }, // Plans other than "community" and "free" come first
+                            { it.plan != Constant.EARLY_BIRD }, // "community" plans come before "free" plans
+                            { it.plan } // Sort alphabetically within the same plan type
+                        )
+                    )
+                    spaceList.addAll(tempSpaceList)
+                    if(dbHelper.getMaintenanceMode().isEmpty()){
+                        dbHelper.insertMaintenanceMode(Gson().toJson(spaceList))
+                    }
+                    chooseSpaceAdapter.list.addAll(tempSpaceList)
+                    chooseSpaceAdapter.notifyDataSetChanged()
+                    if(spaceList[spaceListItemPosition].plan != Constant.COMMUNITY
+                        && spaceList[spaceListItemPosition].plan != Constant.EARLY_BIRD){
+                        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
+                    }
+                    callFetchHomeNotification()
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        if(!appPreferences.getBoolean(Constant.APP_PREF_IS_FIRST_LOGIN)){
+                            showMessage("You will only receive new notifications from the alerts")
+                            appPreferences.putBoolean(Constant.APP_PREF_IS_FIRST_LOGIN, true)
+                        }
+                    },1000)
                 }
             } else {
-                hideLoader()
                 showToast("Session expired! Please login again")
                 appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, false)
                 appPreferences.putString(Constant.APP_PREF_SPACE_NAME, "")
                 navigator.loadActivity(AuthActivity::class.java).byFinishingAll().start()
             }
         }
-    }
-
-    private fun checkAndStoreData(item: ArrayList<SpaceList>) {
-        spaceList.clear()
-
-        val tempSpaceList = item.sortedWith(
-            compareBy(
-                // Custom order based on plan type
-                { it.plan in listOf(Constant.COMMUNITY, Constant.EARLY_BIRD) }, // Plans other than "community" and "free" come first
-                { it.plan != Constant.EARLY_BIRD }, // "community" plans come before "free" plans
-                { it.plan } // Sort alphabetically within the same plan type
-            )
-        )
-
-        spaceList.addAll(tempSpaceList)
-        callFetchHomeNotification()
-        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
     }
 
     private fun callGetSilencingRules(spaceId: String) {
@@ -296,38 +299,22 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         apiViewModel.getSilencingRulesLiveData.observe(this) {
             hideLoader()
             if (it.responseCode == 200) {
-                if(!it.data.isNullOrEmpty()) {
-                    it.data.forEach { silenceRule ->
-                        if (silenceRule.state.equals("ACTIVE", true)
-                            && silenceRule.integrationIds[0].equals(
-                                "607bfd3c-02c1-4da2-b67a-0d01b518ce5d",
-                                true
-                            )
-                        ) {
-                            if(!spaceList[spaceListItemPosition].silenceRuleIdList.contains(silenceRule.id)
-                                && !silenceRule.id.isNullOrEmpty()){
-                                spaceList[spaceListItemPosition].silenceRuleIdList.add(silenceRule.id!!)
-                                spaceList[spaceListItemPosition].isSelected = true
-                                if(silenceRule.lastsUntil != null){
-                                    spaceList[spaceListItemPosition].untilDate = ConvertDateTimeFormat.convertUTCToLocalDate(silenceRule.lastsUntil!!,
-                                        DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW_ONE, DateTimeFormats.MAINTENANCE_MODE_DATE_FORMAT)
-                                    spaceList[spaceListItemPosition].isUntil = true
-                                } else {
-                                    spaceList[spaceListItemPosition].isForever = true
-                                }
+                if(!it.data.isNullOrEmpty()){
+                    val silencingRuleIdList = ArrayList<String>()
+                    try {
+                        it.data.forEach { silenceRule ->
+                            if(silenceRule.state.equals("ACTIVE", true)
+                                && silenceRule.integrationIds[0].equals("607bfd3c-02c1-4da2-b67a-0d01b518ce5d", true)){
+                                silencingRuleIdList.add(silenceRule.id!!)
                             }
                         }
+                    } catch (e: Exception){}
+
+                    spaceList[spaceListItemPosition].silenceRuleIdList.addAll(silencingRuleIdList)
+                    spaceListItemPosition++
+                    if(spaceListItemPosition != spaceList.size - 1){
+                        callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
                     }
-
-
-                }
-                spaceList[spaceListItemPosition].isSelected = !spaceList[spaceListItemPosition].silenceRuleIdList.isNullOrEmpty()
-                spaceListItemPosition++
-                if (spaceListItemPosition != spaceList.size - 1
-                    && !spaceList[spaceListItemPosition].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[spaceListItemPosition].plan.equals(Constant.EARLY_BIRD, true)
-                ) {
-                    callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
                 }
                 chooseSpaceAdapter.notifyDataSetChanged()
             }
@@ -399,7 +386,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
                 showMessage("You need to grant the notification permission to receive notifications from this app.")
                 Handler(Looper.getMainLooper()).postDelayed({
                     getPermission()
-                }, 3000)
+                },3000)
             }
             .onPermanentlyDenied {
 

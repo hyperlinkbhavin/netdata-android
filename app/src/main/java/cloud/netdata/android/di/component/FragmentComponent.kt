@@ -7,6 +7,7 @@ import cloud.netdata.android.ui.auth.fragment.QRCodeLoginFragment
 import cloud.netdata.android.ui.auth.fragment.WelcomeFragment
 import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.home.fragment.ChooseSpaceFragment
+import cloud.netdata.android.ui.home.fragment.DuplicateChooseSpaceFragment
 import cloud.netdata.android.ui.home.fragment.HomeDetailsFragment
 import cloud.netdata.android.ui.home.fragment.HomeFragment
 import cloud.netdata.android.ui.notification.fragment.NotificationFragment
@@ -34,5 +35,6 @@ interface FragmentComponent {
     fun inject(notificationRetentionSettingsFragment: NotificationRetentionSettingsFragment)
     fun inject(duplicateMaintenanceModeSettingsFragment: DuplicateMaintenanceModeSettingsFragment)
     fun inject(duplicateNewMaintenanceModeSettingsFragment: DuplicateNewMaintenanceModeSettingsFragment)
+    fun inject(duplicateChooseSpaceFragment: DuplicateChooseSpaceFragment)
 
 }

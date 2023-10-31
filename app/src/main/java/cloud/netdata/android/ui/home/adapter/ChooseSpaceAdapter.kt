@@ -93,7 +93,9 @@ class ChooseSpaceAdapter(val callBack: (View, Int, SpaceList) -> Unit) : Recycle
             } else {
                 textViewSpaceCount.gone()
             }
-            if(item.silenceRuleIdList.isNotEmpty()){
+            if(item.silenceRuleIdList.isNotEmpty()
+                && !item.plan.equals(Constant.COMMUNITY, true)
+                && !item.plan.equals(Constant.EARLY_BIRD, true)){
                 imageViewSilencingRules.visible()
             } else {
                 imageViewSilencingRules.gone()

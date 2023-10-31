@@ -6,7 +6,7 @@
     <string name="connection_exception">No Internet connection. Please check your Internet connection and try again.</string>
     <string name="socket_time_out_exception">Connection timeout</string>
     <string name="other_exception">Something is wrong here</string>
-    <string name="label_welcome_to_netdata_notifications">Welcome to Netdata notifications!</string>
+    <string name="label_welcome_to_netdata_notifications">Welcome to Netdata notifications app!</string>
     <string name="btn_sign_in_with_qr_code">Sign In With QR Code</string>
     <string name="label_or">OR</string>
     <string name="hint_enter_email_address">Enter email address</string>
@@ -137,4 +137,5 @@
     <string name="msg_notification_retention_setting_success">Notification retention setting has been changed successfully</string>
     <string name="label_select_spaces">Select Spaces</string>
     <string name="label_are_you_sure_you_want_to_delete_nyour_account">Are you sure you want to delete\nyour account?</string>
+    <string name="label_link_sent_on_email">Click on the Authentication Link sent to your Email address on this device.</string>
 </resources>
