@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dw_dialog_bg"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/dp_20">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineStart"
+            style="@style/StyleStartGuideline"
+            app:layout_constraintGuide_begin="@dimen/dp_16" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guidelineEnd"
+            style="@style/StyleEndGuideline"
+            app:layout_constraintGuide_end="@dimen/dp_16" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageViewInfoBack"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            style="@style/ChangeTintColor"
+            android:src="@drawable/ic_back"
+            android:layout_marginTop="@dimen/dp_10"
+            android:padding="@dimen/dp_5"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewInfoBack"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:text="@string/label_back"
+            android:layout_marginStart="@dimen/dp_10"
+            app:layout_constraintStart_toEndOf="@id/imageViewInfoBack"
+            app:layout_constraintTop_toTopOf="@id/imageViewInfoBack"
+            app:layout_constraintBottom_toBottomOf="@id/imageViewInfoBack"/>
+
+        <View
+            android:id="@+id/viewBack"
+            android:layout_height="@dimen/dp_1"
+            android:layout_width="match_parent"
+            style="@style/ChangeBackgroundBlack35ToWhite"
+            android:alpha="0.4"
+            app:layout_constraintTop_toBottomOf="@id/textViewInfoBack"
+            android:layout_marginTop="@dimen/dp_16"
+            />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textViewInfo"
+            style="@style/AppTheme.AppTextView.SemiBoldBlack14"
+            android:layout_width="@dimen/dp_0"
+            android:layout_marginTop="@dimen/dp_16"
+            android:text="@string/label_home_info"
+            app:layout_constraintStart_toStartOf="@id/guidelineStart"
+            app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+            app:layout_constraintTop_toBottomOf="@id/viewBack" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

@@ -138,4 +138,6 @@
     <string name="label_select_spaces">Select Spaces</string>
     <string name="label_are_you_sure_you_want_to_delete_nyour_account">Are you sure you want to delete\nyour account?</string>
     <string name="label_link_sent_on_email">Click on the Authentication Link sent to your Email address on this device.</string>
+    <string name="label_click_on_the_authentication_link_sent_to_your_email_on_this_device">Click on the Authentication link sent to your email on this device</string>
+    <string name="label_home_info">1) Swipe card left OR just tap on priority icon to mark a notification read / unread \n\n2) Swipe card right OR tap on the priority icon to change the notification priority</string>
 </resources>

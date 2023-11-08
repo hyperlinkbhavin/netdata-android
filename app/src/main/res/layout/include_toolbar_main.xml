@@ -17,7 +17,7 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageViewNetdata"
-        android:layout_height="@dimen/sp_12"
+        android:layout_height="@dimen/dp_12"
         android:layout_width="@dimen/dp_90"
         style="@style/ChangeTintColor"
         android:visibility="gone"
@@ -34,7 +34,7 @@
         app:layout_constraintStart_toEndOf="@id/imageViewLogo"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imageViewSetting">
+        app:layout_constraintEnd_toStartOf="@id/imageViewInfo">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/textViewSpace"
@@ -53,11 +53,24 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/imageViewInfo"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        style="@style/ChangeTintColor"
+        android:layout_marginEnd="@dimen/dp_10"
+        android:padding="@dimen/dp_6"
+        android:visibility="gone"
+        android:src="@drawable/ic_info_new"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imageViewSetting"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/imageViewSetting"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         style="@style/ChangeTintColor"
-        android:layout_marginEnd="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_10"
         android:padding="@dimen/dp_6"
         android:visibility="gone"
         android:src="@drawable/ic_setting"
@@ -70,7 +83,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         style="@style/ChangeTintColor"
-        android:layout_marginEnd="@dimen/dp_12"
+        android:layout_marginEnd="@dimen/dp_10"
         android:padding="@dimen/dp_6"
         android:visibility="gone"
         android:src="@drawable/ic_filter"

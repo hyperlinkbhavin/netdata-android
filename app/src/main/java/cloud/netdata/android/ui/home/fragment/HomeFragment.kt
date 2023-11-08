@@ -58,6 +58,7 @@ import com.google.gson.reflect.TypeToken
 import com.jaygoo.widget.OnRangeChangedListener
 import com.jaygoo.widget.RangeSeekBar
 import kotlinx.android.synthetic.main.bottom_sheet_notification_priority.*
+import kotlinx.android.synthetic.main.bottom_sheet_select_war_rooms.*
 import kotlinx.android.synthetic.main.include_toolbar_main.*
 import kotlinx.android.synthetic.main.row_item_home.view.*
 import java.text.SimpleDateFormat
@@ -436,6 +437,11 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
             imageViewSetting.visible()
             imageViewFilter.visible()
             imageViewNotification.visible()
+            imageViewInfo.visible()
+
+            imageViewInfo.setOnClickListener {
+                bottomSheetInfo()
+            }
 
         }
     }
@@ -1142,6 +1148,33 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
         allWarRoomsAdapter.notifyDataSetChanged()
 
         textViewLabelClose.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.setCancelable(false)
+        dialog.setContentView(view)
+        dialog.setCanceledOnTouchOutside(true)
+
+        dialog.setOnKeyListener { dialog, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                dialog.dismiss()
+            }
+            true
+        }
+
+        dialog.show()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun bottomSheetInfo() {
+
+        val dialog = BottomSheetDialog(requireContext())
+
+        val view = layoutInflater.inflate(R.layout.bottom_sheet_home_info, null)
+
+        val imageViewInfoBack = view.findViewById<AppCompatImageView>(R.id.imageViewInfoBack)
+
+        imageViewInfoBack.setOnClickListener {
             dialog.dismiss()
         }
 
