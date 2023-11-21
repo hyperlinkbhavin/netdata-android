@@ -77,18 +77,20 @@ class SplashActivity : BaseActivity() {
         val appLinkAction: String? = appLinkIntent.action
         val appLinkData: Uri? = appLinkIntent.data
 
-        if (appLinkData != null) {
-            Log.e("deeplink", appLinkData.toString())
-            if (appLinkData.toString().contains("/spaces/")) {
+        try{
+            if (appLinkData != null) {
+//                Log.e("deeplink", appLinkData.toString())
+                if (appLinkData.toString().contains("/spaces/")) {
 //                url = appLinkData.toString().split("=")[1]
-                url = appLinkData.toString()
-            } else {
-                val tokenPattern = "token=([^&]*)".toRegex()
-                val matchResult = tokenPattern.find(appLinkData.toString())
-                url = matchResult?.groupValues?.getOrNull(1)!!
-                Log.e("token", url)
+                    url = appLinkData.toString()
+                } else {
+                    val tokenPattern = "token=([^&]*)".toRegex()
+                    val matchResult = tokenPattern.find(appLinkData.toString())
+                    url = matchResult?.groupValues?.getOrNull(1)!!
+//                    Log.e("token", url)
+                }
             }
-        }
+        } catch (e: Exception){}
 
         if (appPreferences.getString(Constant.APP_PREF_DAY_NIGHT_MODE) == ThemeMode.Night.name) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

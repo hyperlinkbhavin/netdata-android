@@ -81,7 +81,8 @@
     <string name="label_share_app_description">Share link with anyone</string>
     <string name="label_terms_and_privacy_policy_description">Read terms &amp; privacy policy</string>
     <string name="label_change_your_theme_description">Select between Day and Night mode</string>
-    <string name="label_delete_account_description">Delete your account</string>
+    <string name="label_delete_account_description">This will unlink your device from the Netdata Cloud and Sign you out..
+\nNote: This does not delete your Netdata Cloud Account</string>
     <string name="label_sign_out_description">Sign out from your account</string>
     <string name="title_settings">Settings</string>
     <string name="title_global_settings">Global Settings</string>
