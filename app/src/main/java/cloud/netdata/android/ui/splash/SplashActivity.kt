@@ -63,7 +63,6 @@ class SplashActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        observeDynamicLink()
         dbHelper = DatabaseHelper(this)
 
         Constant.COOKIE_SI = appPreferences.getString(Constant.APP_PREF_COOKIE_SI)
