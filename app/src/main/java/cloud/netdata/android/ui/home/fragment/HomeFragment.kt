@@ -380,8 +380,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
 
 
         if (deeplink.isNotEmpty()) {
-//            callDynamicLink(deeplink)
-            Log.e("liiik", deeplink)
             if (deeplink.contains("app.netdata.cloud/spaces")) {
                 navigator.loadActivity(
                     IsolatedFullActivity::class.java,
@@ -389,7 +387,6 @@ class HomeFragment : BaseFragment<HomeFragmentBinding>() {
                 ).addBundle(bundleOf(Constant.BUNDLE_URL to deeplink))
                     .start()
             } else {
-//                showMessage("Fail to view alert due to a bad URL")
                 callLinkDevice()
             }
             deeplink = ""

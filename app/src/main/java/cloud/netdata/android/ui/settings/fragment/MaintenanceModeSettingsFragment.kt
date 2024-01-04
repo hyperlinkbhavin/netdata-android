@@ -200,8 +200,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 isAllSilence = true
                 itemPosition = allChangeIndex
 
-                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                if(spaceList[allChangeIndex].plan?.contains(Constant.COMMUNITY, true) != true
+                    && spaceList[allChangeIndex].plan?.contains(Constant.EARLY_BIRD, true) != true){
                     itemPosition = allChangeIndex
                     clickPosition = 1
                     Log.e("if item", spaceList[allChangeIndex].toString())
@@ -224,8 +224,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 isAllSilence = true
                 itemPosition = allChangeIndex
 
-                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                if(spaceList[allChangeIndex].plan?.contains(Constant.COMMUNITY, true) != true
+                    && spaceList[allChangeIndex].plan?.contains(Constant.EARLY_BIRD, true) != true){
                     itemPosition = allChangeIndex
                     clickPosition = 3
                     callSilenceSpace(spaceList[allChangeIndex])
@@ -252,8 +252,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
             isAllUnsilence = true
             itemPosition = allChangeIndex
 
-            if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+            if(spaceList[allChangeIndex].plan?.contains(Constant.COMMUNITY, true) != true
+                && spaceList[allChangeIndex].plan?.contains(Constant.EARLY_BIRD, true) != true){
                 itemPosition = allChangeIndex
                 clickPosition = 1
                 callUnsilenceSpace(spaceList[allChangeIndex], spaceList[allChangeIndex].silenceRuleIdList)
@@ -274,8 +274,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 isAllSilence = true
                 itemPosition = allChangeIndex
 
-                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                if(spaceList[allChangeIndex].plan?.contains(Constant.COMMUNITY, true) != true
+                    && spaceList[allChangeIndex].plan?.contains(Constant.EARLY_BIRD, true) != true){
                     itemPosition = allChangeIndex
                     clickPosition = -1
                     Log.e("if item", spaceList[allChangeIndex].toString())
@@ -298,8 +298,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 isAllSilence = true
                 itemPosition = allChangeIndex
 
-                if(!spaceList[allChangeIndex].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[allChangeIndex].plan.equals(Constant.EARLY_BIRD, true)){
+                if(spaceList[allChangeIndex].plan?.contains(Constant.COMMUNITY, true) != true
+                    && spaceList[allChangeIndex].plan?.contains(Constant.EARLY_BIRD, true) != true){
                     itemPosition = allChangeIndex
                     clickPosition = 4
                     callSilenceSpace(spaceList[allChangeIndex])
@@ -370,13 +370,13 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
     @SuppressLint("NotifyDataSetChanged")
     private fun getCheckData() = with(binding) {
-        val data = spaceList.find { !it.isSelected && !it.plan.equals(Constant.COMMUNITY, true)
-                && !it.plan.equals(Constant.EARLY_BIRD, true) }
+        val data = spaceList.find { !it.isSelected && it.plan?.contains(Constant.COMMUNITY, true) != true
+                && it.plan?.contains(Constant.EARLY_BIRD, true) != true }
         if (data?.name.isNullOrEmpty()) {
             switchDisableAllNotifications.isChecked = true
             radioGroupAllNotifications.visible()
-            val newData = spaceList.find { it.isSelected && !it.plan.equals(Constant.COMMUNITY, true)
-                    && !it.plan.equals(Constant.EARLY_BIRD, true) }
+            val newData = spaceList.find { it.isSelected && it.plan?.contains(Constant.COMMUNITY, true) != true
+                    && it.plan?.contains(Constant.EARLY_BIRD, true) != true }
             if(newData!!.isUntil){
                 radioButtonUntil.isChecked = true
                 textViewUntilDate.text = newData.untilDate
@@ -439,8 +439,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
 
                 isUntil = true
                 spaceList.filter {
-                    !it.plan.equals(Constant.COMMUNITY, true)
-                            && !it.plan.equals(Constant.EARLY_BIRD, true)
+                    it.plan?.contains(Constant.COMMUNITY, true) != true
+                            && it.plan?.contains(Constant.EARLY_BIRD, true) != true
                 }.forEach {
                     it.isSelected = true
                     it.isForever = false
@@ -550,8 +550,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
                 spaceList[spaceListItemPosition].isSelected = !spaceList[spaceListItemPosition].silenceRuleIdList.isNullOrEmpty()
                     spaceListItemPosition++
                     if (spaceListItemPosition != spaceList.size - 1
-                        && !spaceList[spaceListItemPosition].plan.equals(Constant.COMMUNITY, true)
-                        && !spaceList[spaceListItemPosition].plan.equals(Constant.EARLY_BIRD, true)
+                        && spaceList[spaceListItemPosition].plan?.contains(Constant.COMMUNITY, true) != true
+                        && spaceList[spaceListItemPosition].plan?.contains(Constant.EARLY_BIRD, true) != true
                     ) {
                         callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
                     } else {
@@ -672,8 +672,8 @@ class MaintenanceModeSettingsFragment: BaseFragment<MaintenanceModeSettingsFragm
         val tempSpaceList = item.sortedWith(
             compareBy(
                 // Custom order based on plan type
-                { it.plan in listOf(Constant.COMMUNITY, Constant.EARLY_BIRD) }, // Plans other than "community" and "free" come first
-                { it.plan != Constant.EARLY_BIRD }, // "community" plans come before "free" plans
+                { it.plan?.contains(Constant.COMMUNITY, true) == true || it.plan?.contains(Constant.EARLY_BIRD, true) == true }, // Plans containing "community" or "earlybird" come first
+                { it.plan?.contains(Constant.EARLY_BIRD, true) == true }, // "earlybird" plans come before other plans
                 { it.plan } // Sort alphabetically within the same plan type
             )
         )

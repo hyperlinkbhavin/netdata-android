@@ -54,7 +54,7 @@ class ChooseSpaceAdapter(val callBack: (View, Int, SpaceList) -> Unit) : Recycle
 
         @SuppressLint("SetTextI18n")
         fun bind(item: SpaceList) = with(binding) {
-            if (item.plan.equals("EarlyBird", true) || item.plan.equals("Community", true)) {
+            if (item.plan!!.contains(Constant.EARLY_BIRD, true) || item.plan!!.contains(Constant.COMMUNITY, true)) {
                 if (isDarkMode) {
                     constraintTop.backgroundTintList = ColorStateList.valueOf(
                         ContextCompat.getColor(
@@ -93,9 +93,10 @@ class ChooseSpaceAdapter(val callBack: (View, Int, SpaceList) -> Unit) : Recycle
             } else {
                 textViewSpaceCount.gone()
             }
-            if(item.silenceRuleIdList.isNotEmpty()
-                && !item.plan.equals(Constant.COMMUNITY, true)
-                && !item.plan.equals(Constant.EARLY_BIRD, true)){
+            if (item.silenceRuleIdList.isNotEmpty()
+                && (item.plan?.contains(Constant.COMMUNITY, true) != true)
+                && (item.plan?.contains(Constant.EARLY_BIRD, true) != true)
+            ) {
                 imageViewSilencingRules.visible()
             } else {
                 imageViewSilencingRules.gone()

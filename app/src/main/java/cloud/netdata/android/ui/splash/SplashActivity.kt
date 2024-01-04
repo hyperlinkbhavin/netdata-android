@@ -34,6 +34,8 @@ import java.util.*
 import javax.inject.Inject
 import android.content.Intent
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
+import cloud.netdata.android.R
 import cloud.netdata.android.utils.localdb.DatabaseHelper
 
 class SplashActivity : BaseActivity() {
@@ -105,7 +107,16 @@ class SplashActivity : BaseActivity() {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
 
-        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+//        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+
+        when {
+            Constant.isDarkMode -> {
+                window.statusBarColor = ContextCompat.getColor(this, R.color.colorBlack2B)
+            }
+            else -> {
+                window.statusBarColor = ContextCompat.getColor(this, R.color.colorWhiteF2)
+            }
+        }
 
         dbHelper.updateFetchNotificationDataByAllRead(isNotificationRead = true)
 

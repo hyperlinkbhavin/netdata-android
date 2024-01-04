@@ -71,7 +71,7 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
 
         @SuppressLint("SetTextI18n")
         fun bind(item: SpaceList) = with(binding) {
-            if (item.plan.equals(Constant.EARLY_BIRD, true) || item.plan.equals(Constant.COMMUNITY, true)) {
+            if (item.plan?.contains(Constant.EARLY_BIRD, true) == true || item.plan?.contains(Constant.COMMUNITY, true) == true) {
                 constraintDisableNotifications.setBackgroundResource(R.drawable.dw_corner_four_with_border_bg_inactive)
                 constraintDisableNotifications.isSelected = false
                 switchDisableAllNotifications.isClickable = false
@@ -82,8 +82,8 @@ class MaintenanceModeSettingsAdapter(var list: ArrayList<SpaceList>, val callBac
             }
 
                 if(item.isSelected
-                    && !item.plan.equals(Constant.EARLY_BIRD, true)
-                    && !item.plan.equals(Constant.COMMUNITY, true)){
+                    && item.plan?.contains(Constant.EARLY_BIRD, true) != true
+                    && item.plan?.contains(Constant.COMMUNITY, true) != true){
                 constraintDisableNotifications.isSelected = true
                 switchDisableAllNotifications.isChecked = true
                 radioGroupAllNotifications.visible()

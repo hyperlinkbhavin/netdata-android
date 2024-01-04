@@ -65,11 +65,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         ChooseSpaceAdapter(){ view, position, item ->
             when(view.id){
                 R.id.constraintTop -> {
-                    if (item.plan.equals(
-                            Constant.EARLY_BIRD,
-                            true
-                        ) || item.plan.equals(Constant.COMMUNITY, true)
-                    ) {
+                    if ((item.plan?.contains(Constant.EARLY_BIRD, true) == true) || (item.plan?.contains(Constant.COMMUNITY, true) == true)) {
                         showSnackBar(
                             "This Space is not on a paid plan and cannot receive notifications on the Mobile App. Please upgrade.",
                             binding.textViewLabelChooseSpace
@@ -276,8 +272,8 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         val tempSpaceList = item.sortedWith(
             compareBy(
                 // Custom order based on plan type
-                { it.plan in listOf(Constant.COMMUNITY, Constant.EARLY_BIRD) }, // Plans other than "community" and "free" come first
-                { it.plan != Constant.EARLY_BIRD }, // "community" plans come before "free" plans
+                { it.plan?.contains(Constant.COMMUNITY, true) == true || it.plan?.contains(Constant.EARLY_BIRD, true) == true }, // Plans containing "community" or "earlybird" come first
+                { it.plan?.contains(Constant.EARLY_BIRD, true) == true }, // "earlybird" plans come before other plans
                 { it.plan } // Sort alphabetically within the same plan type
             )
         )
@@ -296,40 +292,43 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
         apiViewModel.getSilencingRulesLiveData.observe(this) {
             hideLoader()
             if (it.responseCode == 200) {
-                if(!it.data.isNullOrEmpty()) {
-                    it.data.forEach { silenceRule ->
-                        if (silenceRule.state.equals("ACTIVE", true)
-                            && silenceRule.integrationIds[0].equals(
-                                "607bfd3c-02c1-4da2-b67a-0d01b518ce5d",
-                                true
-                            )
-                        ) {
-                            if(!spaceList[spaceListItemPosition].silenceRuleIdList.contains(silenceRule.id)
-                                && !silenceRule.id.isNullOrEmpty()){
-                                spaceList[spaceListItemPosition].silenceRuleIdList.add(silenceRule.id!!)
-                                spaceList[spaceListItemPosition].isSelected = true
-                                if(silenceRule.lastsUntil != null){
-                                    spaceList[spaceListItemPosition].untilDate = ConvertDateTimeFormat.convertUTCToLocalDate(silenceRule.lastsUntil!!,
-                                        DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW_ONE, DateTimeFormats.MAINTENANCE_MODE_DATE_FORMAT)
-                                    spaceList[spaceListItemPosition].isUntil = true
-                                } else {
-                                    spaceList[spaceListItemPosition].isForever = true
+                try {
+                    if(!it.data.isNullOrEmpty()) {
+                        it.data.forEach { silenceRule ->
+                            if (silenceRule.state.equals("ACTIVE", true)
+                                && silenceRule.integrationIds[0].equals(
+                                    "607bfd3c-02c1-4da2-b67a-0d01b518ce5d",
+                                    true
+                                )
+                            ) {
+                                if(!spaceList[spaceListItemPosition].silenceRuleIdList.contains(silenceRule.id)
+                                    && !silenceRule.id.isNullOrEmpty()){
+                                    spaceList[spaceListItemPosition].silenceRuleIdList.add(silenceRule.id!!)
+                                    spaceList[spaceListItemPosition].isSelected = true
+                                    if(silenceRule.lastsUntil != null){
+                                        spaceList[spaceListItemPosition].untilDate = ConvertDateTimeFormat.convertUTCToLocalDate(silenceRule.lastsUntil!!,
+                                            DateTimeFormats.SERVER_DATE_TIME_FORMAT_NEW_ONE, DateTimeFormats.MAINTENANCE_MODE_DATE_FORMAT)
+                                        spaceList[spaceListItemPosition].isUntil = true
+                                    } else {
+                                        spaceList[spaceListItemPosition].isForever = true
+                                    }
                                 }
                             }
                         }
                     }
 
+                    spaceList[spaceListItemPosition].isSelected = !spaceList[spaceListItemPosition].silenceRuleIdList.isNullOrEmpty()
+                    spaceListItemPosition++
 
-                }
-                spaceList[spaceListItemPosition].isSelected = !spaceList[spaceListItemPosition].silenceRuleIdList.isNullOrEmpty()
-                spaceListItemPosition++
-                if (spaceListItemPosition != spaceList.size - 1
-                    && !spaceList[spaceListItemPosition].plan.equals(Constant.COMMUNITY, true)
-                    && !spaceList[spaceListItemPosition].plan.equals(Constant.EARLY_BIRD, true)
-                ) {
-                    callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
-                }
-                chooseSpaceAdapter.notifyDataSetChanged()
+                    if(spaceListItemPosition < spaceList.size){
+                        if (!spaceList[spaceListItemPosition].plan.equals(Constant.COMMUNITY, true)
+                            && !spaceList[spaceListItemPosition].plan.equals(Constant.EARLY_BIRD, true)
+                        ) {
+                            callGetSilencingRules(spaceList[spaceListItemPosition].id!!)
+                        }
+                    }
+                    chooseSpaceAdapter.notifyDataSetChanged()
+                } catch (e: Exception){}
             }
         }
     }
