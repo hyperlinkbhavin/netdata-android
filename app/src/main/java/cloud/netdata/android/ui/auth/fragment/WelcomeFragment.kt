@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import cloud.netdata.android.data.pojo.request.APIRequest
 import cloud.netdata.android.databinding.AuthFragmentWelcomeBinding
 import cloud.netdata.android.di.component.FragmentComponent
+import cloud.netdata.android.ui.auth.IsolatedFullActivity
 import cloud.netdata.android.ui.base.BaseFragment
 import cloud.netdata.android.ui.home.fragment.ChooseSpaceFragment
 import cloud.netdata.android.utils.Constant
@@ -174,7 +175,7 @@ class WelcomeFragment: BaseFragment<AuthFragmentWelcomeBinding>() {
                 if(it.responseCode == 200){
                     session.user = it.data
                     appPreferences.putBoolean(Constant.APP_PREF_IS_LOGIN, true)
-                    navigator.load(ChooseSpaceFragment::class.java).replace(false)
+                    navigator.loadActivity(IsolatedFullActivity::class.java,ChooseSpaceFragment::class.java).byFinishingAll().start()
                 } else {
                     showMessage("Something wrong!")
                 }

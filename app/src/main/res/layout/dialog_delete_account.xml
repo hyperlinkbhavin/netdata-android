@@ -22,7 +22,7 @@
         android:layout_width="@dimen/dp_0"
         style="@style/AppTheme.AppTextView.RegularBlack14"
         android:alpha="0.7"
-        android:text="@string/label_are_you_sure_you_want_to_delete_nyour_account"
+        android:text="@string/label_this_will_unlink_your_device_from_your_netdata_account_do_you_want_to_continue"
         android:layout_marginTop="@dimen/dp_8"
         android:layout_marginHorizontal="@dimen/dp_20"
         android:textAlignment="center"

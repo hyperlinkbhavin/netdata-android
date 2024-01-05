@@ -162,8 +162,7 @@ class ChooseSpaceFragment: BaseFragment<ChooseSpaceFragmentBinding>() {
 
     private fun manageClick() = with(binding){
         includeToolbar.imageViewSetting.setOnClickListener {
-            navigator.loadActivity(IsolatedFullActivity::class.java, SettingsFragment::class.java)
-                .start()
+            navigator.load(SettingsFragment::class.java).replace(true)
         }
         swipeRefresh.setOnRefreshListener {
             callGetSpaceList()
